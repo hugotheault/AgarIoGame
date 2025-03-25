@@ -25,6 +25,7 @@ public class App extends Application {
         stage.setScene(scene);
         stage.show();
         stage.getIcons().add(new Image("icon.png"));
+        stage.setTitle("Agar.io - JavaFX");
     }
 
     private static Parent loadFXML(String fxml) throws IOException {

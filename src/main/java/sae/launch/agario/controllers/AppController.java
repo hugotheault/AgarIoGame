@@ -25,6 +25,7 @@ public class AppController {
 
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(root));
+        stage.setTitle("Agar.io - JavaFX");
         stage.show();
     }
 
