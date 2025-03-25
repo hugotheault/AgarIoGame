@@ -7,12 +7,12 @@ public class AI extends MovableObject {
 
     @Override
     public double getSpeed() {
-        return 0;
+        return this.getBaseMouvementSpeed() / this.getMass();
     }
 
     @Override
     public double getSpeed(double xCursor, double yCursor) {
-        return 0;
+        throw new IllegalCallerException("AI ne peux pas appeler cette méthode");
     }
 
 }

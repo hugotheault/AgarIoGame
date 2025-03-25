@@ -7,7 +7,7 @@ public class Player extends MovableObject {
 
     @Override
     public double getSpeed() {
-        return 0;
+        throw new IllegalCallerException("Player ne peux pas appeler cette méthode");
     }
 
     @Override
@@ -16,7 +16,7 @@ public class Player extends MovableObject {
             double slowRate = 100 * Math.abs((this.getX() - xCursor)/(this.getX()+this.getSlowRangeRay()));
             return this.getBaseMouvementSpeed() * slowRate / this.getMass();
         } else{
-            return this.getBaseMouvementSpeed();
+            return this.getBaseMouvementSpeed() / this.getMass();
         }
     }
 
