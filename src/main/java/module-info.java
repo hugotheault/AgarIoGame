@@ -1,4 +1,4 @@
-module sae.lauch.agario {
+module sae.launch.agario {
     requires javafx.controls;
     requires javafx.fxml;
     requires javafx.web;
@@ -8,9 +8,8 @@ module sae.lauch.agario {
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
 
-    opens sae.lauch.agario.views to javafx.fxml;
-    exports sae.lauch.agario.models;
-    opens sae.lauch.agario.models to javafx.fxml;
-    exports sae.lauch.agario.controllers;
-    opens sae.lauch.agario.controllers to javafx.fxml;
+    opens sae.launch.agario.models to javafx.fxml;
+    exports sae.launch.agario.models;
+    opens sae.launch.agario.controllers to javafx.fxml;
+    exports sae.launch.agario.controllers;
 }

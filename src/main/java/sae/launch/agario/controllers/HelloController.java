@@ -1,4 +1,4 @@
-package sae.lauch.agario.controllers;
+package sae.launch.agario.controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
