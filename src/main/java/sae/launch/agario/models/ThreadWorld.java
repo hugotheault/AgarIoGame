@@ -12,7 +12,7 @@ public class ThreadWorld extends Thread {
 
     @Override
     public void run() {
-        final int TARGET_FPS = 5;
+        final int TARGET_FPS = 30;
         final int OPTIMAL_TIME = 1000 / TARGET_FPS;
         while (true) {
             long lastTime = System.nanoTime();

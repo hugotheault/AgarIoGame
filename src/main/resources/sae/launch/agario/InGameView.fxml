@@ -11,11 +11,9 @@
 
    <center>
 
-      <Pane fx:id="pane" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <Pane fx:id="pane" prefHeight="400.0" prefWidth="400.0" BorderPane.alignment="CENTER" style="-fx-background-color: gray;">
 
          <children>
-            <Circle id="circleUser" fx:id="circleUser" fill="DODGERBLUE" layoutX="232.0" layoutY="188.0" radius="42.0" stroke="BLACK" strokeType="INSIDE" />
-            <Circle fill="DODGERBLUE" layoutX="109.0" layoutY="105.0" radius="10.0" stroke="BLACK" strokeType="INSIDE" />
             <Label layoutX="23.0" layoutY="320.0" text="Score :" />
             <Label layoutX="85.0" layoutY="330.0" prefHeight="21.0" prefWidth="55.0" />
          </children></Pane>
