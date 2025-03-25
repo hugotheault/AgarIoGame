@@ -1,4 +1,4 @@
-package sae.lauch.agario;
+package sae.lauch.agario.controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

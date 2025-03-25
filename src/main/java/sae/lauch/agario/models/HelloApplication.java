@@ -1,4 +1,4 @@
-package sae.lauch.agario;
+package sae.lauch.agario.models;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
