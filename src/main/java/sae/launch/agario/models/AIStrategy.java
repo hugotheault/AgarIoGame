@@ -4,6 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public interface AIStrategy {
-    public HashMap<String,Double> execStrategy();
+    public HashMap<String,Double> execStrategy(Double x, Double y);
 
 }

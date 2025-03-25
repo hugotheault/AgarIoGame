@@ -40,4 +40,6 @@ public abstract class Entity {
     public double getMass() {
         return mass;
     }
+
+    public boolean isPellet(){return this.getClass()==Pellet.class;}
 }
