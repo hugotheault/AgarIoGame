@@ -2,20 +2,23 @@ package sae.launch.agario.models;
 
 public class IDGenerator {
 
-    private static IDGenerator generator;
+    private IDGenerator generator;
     private int IDcounter;
 
-   private IDGenerator(){
-       IDcounter = 1;
-   }
-    public static IDGenerator getGenerator(){
-        if( generator == null){
-            generator = new IDGenerator();
+    private void IDGenerator(){
+        this.IDcounter = 0;
+    }
+
+    public int NextID(){
+        IDcounter+=1;
+        return IDcounter;
+    }
+
+    public IDGenerator getGenerator() {
+        if(generator == null){
+            return new IDGenerator();
         }
         return generator;
     }
 
-    public int NextID(){
-       return IDcounter++ ;
-    }
 }
