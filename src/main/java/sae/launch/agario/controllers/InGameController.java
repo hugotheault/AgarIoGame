@@ -30,7 +30,7 @@ public class InGameController implements Initializable {
 
     @FXML
     protected void onMenuButton(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sae/launch/agario/HelloView.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sae/launch/agario/AppView.fxml"));
         Parent root = loader.load();
 
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
