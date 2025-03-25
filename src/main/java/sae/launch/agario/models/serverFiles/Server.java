@@ -1,16 +1,14 @@
-package sae.launch.agario.models;
+package sae.launch.agario.models.serverFiles;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
 public class Server {
 	private Thread askConnexion = new Thread(new ServerSocketRunnerConnections(this));
-	private Thread threadWorld = new Thread(new ServerSocketRunnerMonde(this));
-	private ArrayList<Thread> clientConnexionList = new ArrayList<Thread>();
+	private Thread threadWorld = new Thread(new ServerSocketRunnerWorld(this));
+	private ArrayList<Thread> clientConnectionList = new ArrayList<Thread>();
 	private ArrayList<PrintWriter> printWriterList = new ArrayList<PrintWriter>();
 	
 	public Server() {
@@ -32,7 +30,7 @@ public class Server {
 
 
 	public ArrayList<Thread> getClientConnexionList() {
-		return clientConnexionList;
+		return clientConnectionList;
 	}
 
 
@@ -43,6 +41,12 @@ public class Server {
 
 
 
+	/*
+	* @parameters : The socket managing the connection to the server
+	* @does : Add a PrintWriter and a ClientHandler to the lists
+	* 			starts the ClientHandler thread
+	*
+	* */
 	public void addClient(Socket socket) {
 		ClientHandler clientHandler;
 		try {

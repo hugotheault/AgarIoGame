@@ -1,4 +1,4 @@
-package sae.launch.agario.models;
+package sae.launch.agario.models.serverFiles;
 
 import java.io.IOException;
 import java.io.InputStream;
