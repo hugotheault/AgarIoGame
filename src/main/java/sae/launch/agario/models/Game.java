@@ -1,16 +1,21 @@
 package sae.launch.agario.models;
 
 import sae.launch.agario.QuadTree;
+import sae.launch.agario.controllers.PelletController;
+
+import java.util.Random;
 
 public class Game {
     private double mapSize;
     private double initialSize;
     private double sizeScaleToEat; //Ex: 1.33 -> You need 33% more mass to eat someone else
-    private double pelletNb;
+    private int maxPelletNb;
     private double sizeToDivide;
     private double maxSpeed;
+    private double pelletSize;
 
     private QuadTree quadTree;
+    private Player player;
     private ThreadWorld threadWorld;
 
     
@@ -25,10 +30,12 @@ public class Game {
         this.mapSize = 1000;
         this.initialSize = 10;
         this.sizeScaleToEat = 1.15;
-        this.pelletNb = 100000;
+        this.maxPelletNb = 100000;
         this.sizeToDivide = 50;
         this.maxSpeed = 2;
+        this.pelletSize = 5;
         this.quadTree = new QuadTree(mapSize, mapSize, 6);
+        this.player = new Player(10, 100, 100, 50);
         this.threadWorld = new ThreadWorld(this, new Runnable() {
             @Override
             public void run() {
@@ -39,21 +46,66 @@ public class Game {
 
     }
 
-    private void updateGame() {
-        System.out.println("----------------");
-        System.out.println("X : " + playerXPercent);
-        System.out.println("Y : " + playerYPercent);
-    }
-
-    public Game(double mapSize, double initialSize, double sizeScaleToEat, double pelletNb, double sizeToDivide, double maxSpeed){
+    public Game(double mapSize, double initialSize, double sizeScaleToEat, int pelletNb, double sizeToDivide, double maxSpeed, double pelletSize){
         this.mapSize = mapSize;
         this.initialSize = initialSize;
         this.sizeScaleToEat = sizeScaleToEat;
-        this.pelletNb = pelletNb;
+        this.maxPelletNb = pelletNb;
         this.sizeToDivide = sizeToDivide;
         this.maxSpeed = maxSpeed;
         this.quadTree = new QuadTree(mapSize, mapSize, 6);
+        this.pelletSize = pelletSize;
     }
+
+    private void updateGame() {
+        updatePlayerPosition();
+
+        updatePelletsNumber();
+
+        System.out.println("----------------");
+        System.out.println("X : " + player.getX());
+        System.out.println("Y : " + player.getY());
+    }
+
+    private int compteur;
+    private void updatePelletsNumber() {
+        if(compteur <= 0) {
+            if (quadTree.getPelletsNumber() > this.maxPelletNb) {
+                IDGenerator generator = IDGenerator.getGenerator();
+                Random random = new Random();
+                int nbToAdd = this.maxPelletNb - quadTree.getPelletsNumber();
+                while (nbToAdd > 0){
+                    Pellet pellet = new Pellet(generator.NextID(), random.nextDouble(quadTree.getLength()), random.nextDouble(quadTree.getWidth()), pelletSize);
+                    PelletController pelletController = new PelletController(pellet, pellet.getX(), pellet.getY());
+                    quadTree.insert(pellet);
+                    nbToAdd--;
+                }
+            }
+            compteur = 30;
+        } else{
+            compteur--;
+        }
+    }
+
+    private void updatePlayerPosition() {
+        double directionX = playerXPercent - 0.5;
+        double directionY = playerYPercent - 0.5;
+
+        double magnitude = Math.sqrt(directionX * directionX + directionY * directionY);
+
+        if (magnitude != 0) {
+            directionX /= magnitude;
+            directionY /= magnitude;
+        }
+
+        double deltaX = directionX * maxSpeed;
+        double deltaY = directionY * maxSpeed;
+
+        player.setX(player.getX() + deltaX);
+        player.setY(player.getY() + deltaY);
+    }
+
+
 
     /*
     Getters and Setters
@@ -83,11 +135,11 @@ public class Game {
     }
 
     public double getPelletNb() {
-        return pelletNb;
+        return maxPelletNb;
     }
 
-    public void setPelletNb(double pelletNb) {
-        this.pelletNb = pelletNb;
+    public void setPelletNb(int pelletNb) {
+        this.maxPelletNb = pelletNb;
     }
 
     public double getSizeToDivide() {
@@ -97,6 +149,8 @@ public class Game {
     public void setSizeToDivide(double sizeToDivide) {
         this.sizeToDivide = sizeToDivide;
     }
+
+    public Player getPlayer(){return  this.player;}
 
     public void setPlayerXPercent(double playerXPercent) {
         this.playerXPercent = playerXPercent;

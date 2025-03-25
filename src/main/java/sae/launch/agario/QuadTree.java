@@ -1,6 +1,7 @@
 package sae.launch.agario;
 
 import sae.launch.agario.models.Entity;
+import sae.launch.agario.models.Pellet;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -138,4 +139,21 @@ public class QuadTree {
         return (ex >= x1 && ex <= x2 && ey >= y1 && ey <= y2);
     }
 
+    public int getPelletsNumber(){
+        int count = 0;
+        for (Entity entity : entities) {
+            if (entity instanceof Pellet) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public double getWidth() {
+        return this.width;
+    }
+
+    public double getLength() {
+        return this.length;
+    }
 }

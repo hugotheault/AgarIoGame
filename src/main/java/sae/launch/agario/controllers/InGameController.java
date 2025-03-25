@@ -1,6 +1,7 @@
 package sae.launch.agario.controllers;
 
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -27,10 +28,13 @@ public class InGameController implements Initializable {
     public void initialize(URL u, ResourceBundle r){
         Game game = new Game();
 
-       pane.setOnMouseMoved(event ->{
+        pane.setOnMouseMoved(event ->{
             game.setPlayerXPercent(event.getX() / pane.getWidth());
             game.setPlayerYPercent(event.getY() / pane.getHeight());
         });
+
+
+
     }
 
     @FXML

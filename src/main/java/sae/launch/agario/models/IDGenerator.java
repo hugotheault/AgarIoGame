@@ -2,7 +2,7 @@ package sae.launch.agario.models;
 
 public class IDGenerator {
 
-    private IDGenerator generator;
+    private static IDGenerator generator;
     private int IDcounter;
 
     private void IDGenerator(){
@@ -14,7 +14,7 @@ public class IDGenerator {
         return IDcounter;
     }
 
-    public IDGenerator getGenerator() {
+    public static IDGenerator getGenerator() {
         if(generator == null){
             return new IDGenerator();
         }
