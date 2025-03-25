@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.scene.Parent;
+import sae.launch.agario.QuadTree;
 
 import java.io.IOException;
 
