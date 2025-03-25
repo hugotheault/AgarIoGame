@@ -10,17 +10,21 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.scene.shape.Circle;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.animation.TranslateTransition;
+import javafx.util.Duration;
 
 public class InGameController implements Initializable {
     private @FXML Circle circleUser;
 
     @Override
     public void initialize(URL u, ResourceBundle r){
-
+        circleUser.setOnMouseMoved(event -> {
+            circleUser.setCenterX(event.getX());
+            circleUser.setCenterY(event.getY());
+        });
     }
 
     @FXML
