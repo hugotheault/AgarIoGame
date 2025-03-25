@@ -3,13 +3,12 @@ package sae.launch.agario.controllers;
 import javafx.fxml.FXML;
 import javafx.scene.shape.Circle;
 import sae.launch.agario.models.Pellet;
-import sae.launch.agario.models.PelletModel;
 
 import java.util.Random;
 
 public class PelletController {
 
-    private PelletModel pellet;
+    private Pellet pellet;
 
     @FXML
     private Circle pelletCircle;

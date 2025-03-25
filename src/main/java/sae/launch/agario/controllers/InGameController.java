@@ -1,5 +1,7 @@
 package sae.launch.agario.controllers;
 
+import javafx.animation.Timeline;
+import javafx.animation.KeyFrame;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
@@ -16,13 +18,13 @@ import javafx.scene.shape.Circle;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.animation.TranslateTransition;
 import javafx.util.Duration;
 import sae.launch.agario.models.Game;
 
 public class InGameController implements Initializable {
     private @FXML Circle circleUser;
     private @FXML Pane pane;
+<<<<<<< HEAD
     private Game game;
     @Override
     public void initialize(URL u, ResourceBundle r){
@@ -31,6 +33,14 @@ public class InGameController implements Initializable {
         pane.setOnMouseMoved(event ->{
             game.setPlayerXPercent(event.getX() / pane.getWidth());
             game.setPlayerYPercent(event.getY() / pane.getHeight());
+=======
+
+    @Override
+    public void initialize(URL u, ResourceBundle r){
+        pane.setOnMouseMoved(event ->{
+            circleUser.setCenterX(event.getX());
+            circleUser.setCenterY(event.getY());
+>>>>>>> origin/projet-instable-2
         });
 
 
@@ -48,9 +58,11 @@ public class InGameController implements Initializable {
         Parent root = loader.load();
 
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        System.out.println(((Node) event.getSource()).getScene().getWindow().getHeight());
         stage.setScene(new Scene(root));
 
         stage.show();
+
     }
 
 }
