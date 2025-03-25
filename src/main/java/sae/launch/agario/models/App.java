@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.scene.Parent;
+import sae.launch.agario.QuadTree;
 import javafx.scene.image.Image;
 import java.net.URL;
 import java.io.IOException;

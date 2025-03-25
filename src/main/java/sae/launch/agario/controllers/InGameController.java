@@ -25,7 +25,7 @@ public class InGameController implements Initializable {
 
     @Override
     public void initialize(URL u, ResourceBundle r){
-        pane.setOnMouseMoved(event ->{
+        pane.setOnMouseMoved(event ->{  
             circleUser.setCenterX(event.getX());
             circleUser.setCenterY(event.getY());
         });
