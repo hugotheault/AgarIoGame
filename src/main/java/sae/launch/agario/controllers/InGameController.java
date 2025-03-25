@@ -8,6 +8,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.scene.shape.Circle;
 import java.io.IOException;
@@ -15,15 +17,19 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.animation.TranslateTransition;
 import javafx.util.Duration;
+import sae.launch.agario.models.Game;
 
 public class InGameController implements Initializable {
     private @FXML Circle circleUser;
-
+    private @FXML Pane pane;
+    private Game game;
     @Override
     public void initialize(URL u, ResourceBundle r){
-        circleUser.setOnMouseMoved(event -> {
-            circleUser.setCenterX(event.getX());
-            circleUser.setCenterY(event.getY());
+        Game game = new Game();
+
+       pane.setOnMouseMoved(event ->{
+            game.setPlayerXPercent(event.getX() / pane.getWidth());
+            game.setPlayerYPercent(event.getY() / pane.getHeight());
         });
     }
 
