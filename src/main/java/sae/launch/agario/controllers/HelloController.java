@@ -12,10 +12,9 @@ import javafx.scene.Node;
 
 import java.io.IOException;
 
-public class AppController {
+public class HelloController {
     @FXML
     private Label welcomeText;
-
 
     @FXML
     protected void onLocalButtonClick(ActionEvent event) throws IOException {
