@@ -26,10 +26,10 @@ public class InGameController implements Initializable {
     @Override
     public void initialize(URL u, ResourceBundle r){
         Game game = new Game();
-        
+
        pane.setOnMouseMoved(event ->{
-            circleUser.setCenterX(event.getX());
-            circleUser.setCenterY(event.getY());
+            game.setPlayerXPercent(event.getX() / pane.getWidth());
+            game.setPlayerYPercent(event.getY() / pane.getHeight());
         });
     }
 

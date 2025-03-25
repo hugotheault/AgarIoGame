@@ -14,6 +14,8 @@ public class Game {
     private QuadTree quadTree;
     private ThreadWorld threadWorld;
 
+    
+
 
     private double playerXPercent;
     private double playerYPercent;
