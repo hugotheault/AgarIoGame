@@ -1,6 +1,9 @@
 package sae.launch.agario.models;
 
-public interface AIStrategy {
+import java.util.ArrayList;
+import java.util.HashMap;
 
+public interface AIStrategy {
+    public HashMap<String,Double> execStrategy();
 
 }
