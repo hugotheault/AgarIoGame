@@ -13,4 +13,6 @@ module sae.launch.agario {
     exports sae.launch.agario.models;
     opens sae.launch.agario.controllers to javafx.fxml;
     exports sae.launch.agario.controllers;
+    exports sae.launch.agario.models.serverFiles;
+    opens sae.launch.agario.models.serverFiles to javafx.fxml;
 }
