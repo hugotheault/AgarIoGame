@@ -3,6 +3,7 @@ package sae.launch.agario.controllers;
 import javafx.animation.Timeline;
 import javafx.animation.KeyFrame;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,17 +19,25 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.util.Duration;
+import sae.launch.agario.models.Game;
 
 public class InGameController implements Initializable {
     private @FXML Circle circleUser;
     private @FXML Pane pane;
 
+    private Game game;
     @Override
     public void initialize(URL u, ResourceBundle r){
+        Game game = new Game(pane);
+
         pane.setOnMouseMoved(event ->{
-            circleUser.setCenterX(event.getX());
-            circleUser.setCenterY(event.getY());
+            game.setPlayerXPercent(event.getX() / pane.getWidth());
+            game.setPlayerYPercent(event.getY() / pane.getHeight());
+
         });
+
+
+
     }
 
     @FXML
