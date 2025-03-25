@@ -15,16 +15,22 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.animation.TranslateTransition;
 import javafx.util.Duration;
+import sae.launch.agario.models.Game;
 
 public class InGameController implements Initializable {
     private @FXML Circle circleUser;
 
     @Override
     public void initialize(URL u, ResourceBundle r){
+        Game game = new Game();
+
+
+
         circleUser.setOnMouseMoved(event -> {
-            circleUser.setCenterX(event.getX());
-            circleUser.setCenterY(event.getY());
+            game.setPlayerXPercent(event.getX() / circleUser.getScene().getWidth());
+            game.setPlayerYPercent(event.getY() / circleUser.getScene().getHeight());
         });
+
     }
 
     @FXML
