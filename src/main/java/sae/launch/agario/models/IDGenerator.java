@@ -18,6 +18,4 @@ public class IDGenerator {
     public int NextID(){
        return IDcounter++ ;
     }
-
-
 }
