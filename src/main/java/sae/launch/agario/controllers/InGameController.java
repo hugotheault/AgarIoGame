@@ -24,23 +24,14 @@ import sae.launch.agario.models.Game;
 public class InGameController implements Initializable {
     private @FXML Circle circleUser;
     private @FXML Pane pane;
-<<<<<<< HEAD
     private Game game;
     @Override
     public void initialize(URL u, ResourceBundle r){
-        Game game = new Game();
+        Game game = new Game(pane);
 
         pane.setOnMouseMoved(event ->{
             game.setPlayerXPercent(event.getX() / pane.getWidth());
             game.setPlayerYPercent(event.getY() / pane.getHeight());
-=======
-
-    @Override
-    public void initialize(URL u, ResourceBundle r){
-        pane.setOnMouseMoved(event ->{
-            circleUser.setCenterX(event.getX());
-            circleUser.setCenterY(event.getY());
->>>>>>> origin/projet-instable-2
         });
 
 

@@ -141,9 +141,16 @@ public class QuadTree {
 
     public int getPelletsNumber(){
         int count = 0;
-        for (Entity entity : entities) {
-            if (entity instanceof Pellet) {
-                count++;
+        if(depth != 0){
+            count += NETree.getPelletsNumber();
+            count += NWTree.getPelletsNumber();
+            count += SETree.getPelletsNumber();
+            count += SWTree.getPelletsNumber();
+        }else {
+            for (Entity entity : entities) {
+                if (entity instanceof Pellet) {
+                    count++;
+                }
             }
         }
         return count;

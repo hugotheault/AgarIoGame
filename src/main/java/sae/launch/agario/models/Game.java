@@ -1,5 +1,7 @@
 package sae.launch.agario.models;
 
+import javafx.scene.layout.Pane;
+import javafx.scene.shape.Circle;
 import sae.launch.agario.QuadTree;
 import sae.launch.agario.controllers.PelletController;
 
@@ -17,7 +19,7 @@ public class Game {
     private QuadTree quadTree;
     private Player player;
     private ThreadWorld threadWorld;
-
+    private Pane pane;
     
 
 
@@ -26,7 +28,7 @@ public class Game {
 
 
     //Default constructor with default values
-    public Game(){
+    public Game(Pane pane){
         this.mapSize = 1000;
         this.initialSize = 10;
         this.sizeScaleToEat = 1.15;
@@ -36,6 +38,7 @@ public class Game {
         this.pelletSize = 5;
         this.quadTree = new QuadTree(mapSize, mapSize, 6);
         this.player = new Player(10, 100, 100, 50);
+        this.pane = pane;
         this.threadWorld = new ThreadWorld(this, new Runnable() {
             @Override
             public void run() {
@@ -63,20 +66,19 @@ public class Game {
         updatePelletsNumber();
 
         System.out.println("----------------");
-        System.out.println("X : " + player.getX());
-        System.out.println("Y : " + player.getY());
+        System.out.println("NB pellet : " + quadTree.getPelletsNumber());
     }
 
     private int compteur;
     private void updatePelletsNumber() {
         if(compteur <= 0) {
-            if (quadTree.getPelletsNumber() > this.maxPelletNb) {
+            System.out.println("Creation pellets");
+            if (quadTree.getPelletsNumber() < this.maxPelletNb) {
                 IDGenerator generator = IDGenerator.getGenerator();
                 Random random = new Random();
                 int nbToAdd = this.maxPelletNb - quadTree.getPelletsNumber();
                 while (nbToAdd > 0){
                     Pellet pellet = new Pellet(generator.NextID(), random.nextDouble(quadTree.getLength()), random.nextDouble(quadTree.getWidth()), pelletSize);
-                    PelletController pelletController = new PelletController(pellet, pellet.getX(), pellet.getY());
                     quadTree.insert(pellet);
                     nbToAdd--;
                 }
