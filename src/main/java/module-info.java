@@ -7,7 +7,6 @@ module sae.launch.agario {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
-    requires java.desktop;
 
     opens sae.launch.agario.models to javafx.fxml;
     exports sae.launch.agario.models;
