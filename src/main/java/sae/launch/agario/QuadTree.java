@@ -31,10 +31,10 @@ public class QuadTree {
         }
     }
 
-    public boolean insert(Entity entity, double x, double y){
-        if (x < 0 || x > length || y < 0 || y > width) {
-            return false;
-        }
+    public boolean insert(Entity entity){
+        double x = entity.getX();
+        double y = entity.getY();
+
 
         if (depth == 0) {
             entities.add(entity);
@@ -49,25 +49,25 @@ public class QuadTree {
             if (NWTree == null) {
                 NWTree = new QuadTree(halfLength, halfWidth, depth - 1);
             }
-            return NWTree.insert(entity, x, y);
+            return NWTree.insert(entity);
         } else if (x >= halfLength && y < halfWidth) {
             // NE
             if (NETree == null) {
                 NETree = new QuadTree(halfLength, halfWidth, depth - 1);
             }
-            return NETree.insert(entity, x, y);
+            return NETree.insert(entity);
         } else if (x < halfLength && y >= halfWidth) {
             // SW
             if (SWTree == null) {
                 SWTree = new QuadTree(halfLength, halfWidth, depth - 1);
             }
-            return SWTree.insert(entity, x, y);
+            return SWTree.insert(entity);
         } else {
             // SE
             if (SETree == null) {
                 SETree = new QuadTree(halfLength, halfWidth, depth - 1);
             }
-            return SETree.insert(entity, x, y);
+            return SETree.insert(entity);
         }
     }
 
@@ -84,17 +84,50 @@ public class QuadTree {
             return result;
         }
 
-        if (NWTree != null) {
-            result.addAll(NWTree.getEntitiesInRegion(x1, y1, x2, y2));
+        double halfLength = length / 2;
+        double halfWidth = width / 2;
+
+        //Split bottom and top to avoid going through all quadtrees
+        // Top
+        if (y2 > 0) {
+            if (x2 < halfLength) {
+                if (NWTree != null) {
+                    result.addAll(NWTree.getEntitiesInRegion(x1, y1, x2, y2));
+                }
+            } else if (x1 > halfLength) {
+                if (NETree != null) {
+                    result.addAll(NETree.getEntitiesInRegion(x1, y1, x2, y2));
+                }
+            } else {
+                if (NWTree != null) {
+                    result.addAll(NWTree.getEntitiesInRegion(x1, y1, x2, y2));
+                }
+                if (NETree != null) {
+                    result.addAll(NETree.getEntitiesInRegion(x1, y1, x2, y2));
+                }
+            }
         }
-        if (NETree != null) {
-            result.addAll(NETree.getEntitiesInRegion(x1, y1, x2, y2));
-        }
-        if (SWTree != null) {
-            result.addAll(SWTree.getEntitiesInRegion(x1, y1, x2, y2));
-        }
-        if (SETree != null) {
-            result.addAll(SETree.getEntitiesInRegion(x1, y1, x2, y2));
+
+        // Bottom
+        if (y1 < halfWidth) {
+            if (x2 < halfLength) {
+                // Only SW
+                if (SWTree != null) {
+                    result.addAll(SWTree.getEntitiesInRegion(x1, y1, x2, y2));
+                }
+            } else if (x1 > halfLength) {
+                // Only SE
+                if (SETree != null) {
+                    result.addAll(SETree.getEntitiesInRegion(x1, y1, x2, y2));
+                }
+            } else {
+                if (SWTree != null) {
+                    result.addAll(SWTree.getEntitiesInRegion(x1, y1, x2, y2));
+                }
+                if (SETree != null) {
+                    result.addAll(SETree.getEntitiesInRegion(x1, y1, x2, y2));
+                }
+            }
         }
 
         return result;
