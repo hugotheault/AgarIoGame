@@ -14,4 +14,5 @@ public class AI extends MovableObject {
     public double getSpeed(double xCursor, double yCursor) {
         return 0;
     }
+
 }

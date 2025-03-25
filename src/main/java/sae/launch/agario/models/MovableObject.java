@@ -5,8 +5,13 @@ import static java.lang.Math.round;
 public abstract class MovableObject extends Entity {
 
     private final int rangeHorizonModifier = 100;
+    private final double baseMouvementSpeed = 30;
+
+    private final double slowRangeRay;
     public MovableObject(int ID, double x, double y, double mass) {
         super(ID, x, y, mass);
+        slowRangeRay = this.getRay();
+
     }
     public double getRay() {
         return 10*Math.sqrt(this.getMass()) ;
@@ -20,6 +25,14 @@ public abstract class MovableObject extends Entity {
     }
     public abstract double getSpeed();
     public abstract double getSpeed(double xCursor,double yCursor);
+
+    public double getBaseMouvementSpeed() {
+        return baseMouvementSpeed;
+    }
+
+    public double getSlowRangeRay() {
+        return slowRangeRay;
+    }
 
     /**
      * Add the absorbedEntity mass to the MovableObject mass, this function didn't check anything
