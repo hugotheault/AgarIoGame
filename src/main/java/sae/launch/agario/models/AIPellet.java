@@ -1,5 +1,6 @@
 package sae.launch.agario.models;
 
+
 import sae.launch.agario.QuadTree;
 
 import java.util.ArrayList;
@@ -25,4 +26,5 @@ public class AIPellet implements AIStrategy {
         }
         return coordinates;
     }
+
 }

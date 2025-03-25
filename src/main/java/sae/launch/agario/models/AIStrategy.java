@@ -1,5 +1,6 @@
 package sae.launch.agario.models;
 
+
 import java.util.ArrayList;
 import java.util.HashMap;
 

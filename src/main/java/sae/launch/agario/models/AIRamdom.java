@@ -14,4 +14,5 @@ public class AIRamdom implements AIStrategy{
         coordinates.put("y", rand.nextDouble());
         return coordinates;
     }
+
 }
