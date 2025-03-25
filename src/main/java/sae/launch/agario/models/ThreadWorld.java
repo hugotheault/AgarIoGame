@@ -10,6 +10,9 @@ public class ThreadWorld extends Thread {
         this.task = runnable;
     }
 
+    /**
+     * This method will run it's task again and again to reach the target fps count
+     */
     @Override
     public void run() {
         final int TARGET_FPS = 30;

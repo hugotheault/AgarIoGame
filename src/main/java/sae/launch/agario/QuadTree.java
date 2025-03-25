@@ -14,22 +14,30 @@ public class QuadTree {
     private QuadTree SETree;
     private final int depth;
     private final double length;
-    private final double width;
+    private final double height;
     private final double xOffset;
     private final double yOffset;
 
     private HashSet<Entity> entities;
 
-    public QuadTree(double length, double width, int depth, double xOffset, double yOffset) {
+    /**
+     *
+     * @param length
+     * @param height
+     * @param depth
+     * @param xOffset X offset of the quadtree
+     * @param yOffset Y offset of the quadtree
+     */
+    public QuadTree(double length, double height, int depth, double xOffset, double yOffset) {
         this.depth = depth;
         this.length = length;
-        this.width = width;
+        this.height = height;
         this.xOffset = xOffset;
         this.yOffset = yOffset;
 
         if (depth > 0) {
             double halfLength = length / 2;
-            double halfWidth = width / 2;
+            double halfWidth = height / 2;
             this.NWTree = new QuadTree(halfLength, halfWidth, depth - 1, xOffset, yOffset);
             this.NETree = new QuadTree(halfLength, halfWidth, depth - 1, xOffset + halfLength, yOffset);
             this.SWTree = new QuadTree(halfLength, halfWidth, depth - 1, xOffset, yOffset + halfWidth);
@@ -39,6 +47,11 @@ public class QuadTree {
         }
     }
 
+    /**
+     * Insert a new entity into the quadtree
+     * @param entity the entity to insert
+     * @return if the insert is a success
+     */
     public boolean insert(Entity entity) {
         double x = entity.getX();
         double y = entity.getY();
@@ -49,7 +62,7 @@ public class QuadTree {
         }
 
         double halfLength = length / 2;
-        double halfWidth = width / 2;
+        double halfWidth = height / 2;
 
         if (x < xOffset + halfLength && y < yOffset + halfWidth) {
             // NW
@@ -66,10 +79,19 @@ public class QuadTree {
         }
     }
 
+
+    /**
+     * Return a list of all entities inside of the specified region
+     * @param x1 X of the first point
+     * @param y1 Y of the first point
+     * @param x2 X of the second point
+     * @param y2 Y of the second point
+     * @return a list of all entities inside the region (a rectangle whose corners are the 2 points
+     */
     public ArrayList<Entity> getEntitiesInRegion(double x1, double y1, double x2, double y2) {
         ArrayList<Entity> result = new ArrayList<>();
 
-        // Si c'est une feuille (depth == 0), on vérifie directement les entités
+
         if (depth == 0) {
             for (Entity entity : entities) {
                 if (isEntityInRegion(entity, x1, y1, x2, y2)) {
@@ -79,24 +101,24 @@ public class QuadTree {
             return result;
         }
 
-        // Sinon, on vérifie chaque branche si elle intersecte avec la zone de recherche
-        if (isRegionIntersecting(x1, y1, x2, y2, xOffset, yOffset, xOffset + length, yOffset + width)) {
+
+        if (isRegionIntersecting(x1, y1, x2, y2, xOffset, yOffset, xOffset + length, yOffset + height)) {
             result.addAll(NWTree.getEntitiesInRegion(x1, y1, x2, y2));
         }
-        if (isRegionIntersecting(x1, y1, x2, y2, xOffset + length / 2, yOffset, xOffset + length, yOffset + width)) {
+        if (isRegionIntersecting(x1, y1, x2, y2, xOffset + length / 2, yOffset, xOffset + length, yOffset + height)) {
             result.addAll(NETree.getEntitiesInRegion(x1, y1, x2, y2));
         }
-        if (isRegionIntersecting(x1, y1, x2, y2, xOffset, yOffset + width / 2, xOffset + length, yOffset + width)) {
+        if (isRegionIntersecting(x1, y1, x2, y2, xOffset, yOffset + height / 2, xOffset + length, yOffset + height)) {
             result.addAll(SWTree.getEntitiesInRegion(x1, y1, x2, y2));
         }
-        if (isRegionIntersecting(x1, y1, x2, y2, xOffset + length / 2, yOffset + width / 2, xOffset + length, yOffset + width)) {
+        if (isRegionIntersecting(x1, y1, x2, y2, xOffset + length / 2, yOffset + height / 2, xOffset + length, yOffset + height)) {
             result.addAll(SETree.getEntitiesInRegion(x1, y1, x2, y2));
         }
 
         return result;
     }
 
-    // Vérifie si la région de recherche intersecte la région de l'arbre (branche)
+
     private boolean isRegionIntersecting(double x1, double y1, double x2, double y2, double regionX1, double regionY1, double regionX2, double regionY2) {
         return !(x1 > regionX2 || x2 < regionX1 || y1 > regionY2 || y2 < regionY1);
     }
@@ -105,6 +127,10 @@ public class QuadTree {
         return (entity.getX() >= x1 && entity.getX() <= x2 && entity.getY() >= y1 && entity.getY() <= y2);
     }
 
+    /**
+     *
+     * @return  GEt the number of pellets inside of the quadtree
+     */
     public int getPelletsNumber() {
         int count = 0;
         if (depth != 0) {
@@ -122,19 +148,18 @@ public class QuadTree {
         return count;
     }
 
-    public double getWidth() {
-        return this.width;
+    public double getHeight() {
+        return this.height;
     }
 
     public double getLength() {
         return this.length;
     }
 
-    // Méthode pour obtenir les coordonnées de la région d'un arbre (branche)
-    public String getRegion() {
-        return String.format("x: %.2f to %.2f, y: %.2f to %.2f", xOffset, xOffset + length, yOffset, yOffset + width);
-    }
-
+    /**
+     *
+     * @return A list of all the players in the quadtree
+     */
     public ArrayList<Player> getAllPlayers() {
         ArrayList<Player> result = new ArrayList<>();
 
@@ -161,6 +186,11 @@ public class QuadTree {
         return result;
     }
 
+    /**
+     *
+     * @param player the player you want to check's stuff around
+     * @return A list of all entites around the player
+     */
     public ArrayList<Entity> getEntitiesAroundPlayer(Player player) {
         ArrayList<Entity> result = new ArrayList<>();
         double playerX = player.getX();
@@ -178,8 +208,11 @@ public class QuadTree {
         return result;
     }
 
+    /**
+     * Remove an entity from the quadtree
+     * @param entity the entity to remove
+     */
     public void remove(Entity entity) {
-        // Si on est dans une feuille (profondeur 0), on peut directement supprimer l'entité
         if (depth == 0) {
             System.out.println(entities.size());
             entities.remove(entity);
@@ -188,9 +221,8 @@ public class QuadTree {
         }
 
         double halfLength = length / 2;
-        double halfWidth = width / 2;
+        double halfWidth = height / 2;
 
-        // Vérifier où l'entité doit aller
         if (entity.getX() < xOffset + halfLength && entity.getY() < yOffset + halfWidth) {
             // NW
             if (NWTree != null) {

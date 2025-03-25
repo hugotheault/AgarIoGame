@@ -55,6 +55,9 @@ public class Game {
 
     }
 
+    /**
+     * The method called every time the game is updated
+     */
     private void updateGame() {
         updatePlayers();
 
@@ -66,6 +69,9 @@ public class Game {
         render();
     }
 
+    /**
+     * Render all the Entities on the pane
+     */
     private void render() {
         // Exécute les opérations sur le thread de JavaFX
         Platform.runLater(() -> {
@@ -88,6 +94,12 @@ public class Game {
         });
     }
 
+    /**
+     * Draw an entity on the pane
+     * @param centerX The x axis center of the entity
+     * @param centerY The y axis center of the entity
+     * @param entity The entity
+     */
     private void drawEntity(double centerX, double centerY, Entity entity) {
         double entityX = (entity.getX() - camera.getX() + centerX);
         double entityY = (entity.getY() - camera.getY() + centerY);
@@ -113,7 +125,7 @@ public class Game {
                 Random random = new Random();
                 int nbToAdd = this.maxPelletNb - quadTree.getPelletsNumber();
                 while (nbToAdd > 0){
-                    Pellet pellet = new Pellet(generator.NextID(), random.nextDouble(quadTree.getLength()), random.nextDouble(quadTree.getWidth()), pelletSize);
+                    Pellet pellet = new Pellet(generator.NextID(), random.nextDouble(quadTree.getLength()), random.nextDouble(quadTree.getHeight()), pelletSize);
                     quadTree.insert(pellet);
                     nbToAdd--;
                 }
@@ -124,6 +136,9 @@ public class Game {
         }
     }
 
+    /**
+     *Update the position of all the players, and wheter they can eat or get eaten
+     */
     private void updatePlayers() {
 
         //Update position du joueur principal
@@ -150,7 +165,6 @@ public class Game {
                 }
             }
         }
-
     }
 
 
