@@ -15,10 +15,12 @@ public class AIChaser implements AIStrategy{
         ArrayList<Entity> potentialTargets = quad.getEntitiesInRegion(x*100, x*-100, y*100, y*-100);
         Double lenghtBetweenEntites= 100000000.0;
         for(Entity e : potentialTargets){
-            if(!e.isPellet()){
-                //si la taille est inférieur à length between entites
-                coordinates.put("x", e.getX());
-                coordinates.put("y", e.getY());
+            if(!e.isPellet()) {
+                if (Math.sqrt(Math.pow((e.getX() - x), 2) + Math.pow((e.getY() - y), 2)) < lenghtBetweenEntites) {
+                    coordinates.put("x", e.getX());
+                    coordinates.put("y", e.getY());
+                    lenghtBetweenEntites = Math.sqrt(Math.pow((e.getX() - x), 2) + Math.pow((e.getY() - y), 2));
+                }
             }
         }
         return coordinates;
