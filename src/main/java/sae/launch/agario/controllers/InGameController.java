@@ -22,8 +22,7 @@ public class InGameController implements Initializable {
 
     @Override
     public void initialize(URL u, ResourceBundle r){
-        Stage stage = (Stage) circleUser.getScene().getWindow();
-        Scene scene = stage.getScene();
+
     }
 
     @FXML
