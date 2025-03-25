@@ -1,3 +1,5 @@
+package sae.launch.agario.models;
+
 public abstract class Entity {
     private final int ID;
     private double x;
