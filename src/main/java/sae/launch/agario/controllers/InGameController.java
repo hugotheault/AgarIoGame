@@ -34,9 +34,11 @@ public class InGameController implements Initializable {
         Parent root = loader.load();
 
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        System.out.println(((Node) event.getSource()).getScene().getWindow().getHeight());
         stage.setScene(new Scene(root));
 
         stage.show();
+
     }
 
 }
