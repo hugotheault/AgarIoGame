@@ -16,6 +16,7 @@ public class HelloController {
     @FXML
     private Label welcomeText;
 
+
     @FXML
     protected void onLocalButtonClick(ActionEvent event) throws IOException {
         welcomeText.setText("Lancement du jeu en Solo!");
