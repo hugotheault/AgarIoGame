@@ -1,9 +1,6 @@
 package sae.launch.agario;
 
-import sae.launch.agario.models.AI;
-import sae.launch.agario.models.Entity;
-import sae.launch.agario.models.Pellet;
-import sae.launch.agario.models.Player;
+import sae.launch.agario.models.*;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -83,12 +80,12 @@ public class QuadTree {
 
     /**
      *
-     * @param player Player to analyze
+     * @param obj Player to analyze
      * @return List of entities in certain range around the player
      */
-    public ArrayList<Entity> getEntitiesAroundPlayer(Player player) {
-        double radius = 2 * player.getRadius();
-        Boundary searchArea = new Boundary(player.getX() - radius, player.getY() - radius,
+    public ArrayList<Entity> getEntitiesAroundMovableObject(MovableObject obj) {
+        double radius = 2 * obj.getRadius();
+        Boundary searchArea = new Boundary(obj.getX() - radius, obj.getY() - radius,
                 2 * radius, 2 * radius);
         return getEntitiesInRegion(searchArea);
     }

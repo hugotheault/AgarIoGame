@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 import java.util.ResourceBundle;
 
@@ -71,12 +72,14 @@ public class SoloInGameController implements Initializable {
         players.add(new Player(idBase, 50, 50, initialSize));
 
         this.ais = new ArrayList<>();
-        ais.add( new AI(IDGenerator.getGenerator().NextID(),1 + (rand.nextDouble() % 100) ,1 + (rand.nextDouble() % 100),initialSize,quadTree,new AIRandom()));
+        //ais.add( new AI(IDGenerator.getGenerator().NextID(),1 + (rand.nextDouble() % 100) ,1 + (rand.nextDouble() % 100),initialSize,quadTree,new AIRandom()));
         /*for( int i = 0; i < nbAis; i++){
             ais.add( new AI(IDGenerator.getGenerator().NextID(),1 + (rand.nextDouble() % 100) ,1 + (rand.nextDouble() % 100),initialSize));
         }*/
-
+        int idAi = IDGenerator.getGenerator().NextID();
+        ais.add( new AI(idAi,1 + 40 ,40,initialSize,quadTree,new AIRandom()));
         this.gameRenderer = new GameRenderer(pane);
+        quadTree.insert(new AI(idAi,1 + 40 ,40,initialSize,quadTree,new AIRandom()));
 
         pane.setOnMouseMoved(event ->{
             setPlayerXPercent(event.getX() / pane.getWidth());
@@ -99,6 +102,7 @@ public class SoloInGameController implements Initializable {
         updatePlayers();
 
         pelletController.generatePellets();
+        updateAI();
         gameRenderer.updateVisuals(quadTree, players);
 
     }
@@ -135,9 +139,6 @@ public class SoloInGameController implements Initializable {
                 directionX /= magnitude;
                 directionY /= magnitude;
             }
-            System.out.println("x      " + directionX);
-            System.out.println("y      " + directionY);
-            //System.out.println(magnitude);
             double deltaX = directionX * player.getSpeed(mouseXCursor, mouseYCursor,pane.getWidth() / 2,pane.getHeight() / 2);
             double deltaY = directionY * player.getSpeed(mouseXCursor, mouseYCursor,pane.getWidth() / 2,pane.getHeight() / 2);
             player.setX(player.getX() + deltaX);
@@ -149,7 +150,7 @@ public class SoloInGameController implements Initializable {
         //todo update la position des joueurs IA
 
         for(Player joueur: quadTree.getAllPlayers()){
-            for(Entity cible: quadTree.getEntitiesAroundPlayer((Player) joueur)){
+            for(Entity cible: quadTree.getEntitiesAroundMovableObject(joueur)){
                 if(cible.equals(joueur)) continue;
                 if(joueur.canEat(cible)){
                     joueur.Absorb(cible);
@@ -159,12 +160,50 @@ public class SoloInGameController implements Initializable {
         }
     }
 
-    /*private void updateAI(){
-        for(AI ia : quadTree.getAI()){
-            double deltaX = ia.get * ia.getSpeed(mouseXCursor, mouseYCursor,pane.getWidth() / 2,pane.getHeight() / 2);
-            double deltaY = directionY * ia.getSpeed(mouseXCursor, mouseYCursor,pane.getWidth() / 2,pane.getHeight() / 2);
+    private void updateAI(){
+        for(AI ai : quadTree.getAI()){
+            System.out.println(ai.getX() + " " + ai.getY());
+
+            ai.setTree(quadTree);
+            HashMap<String,Double> strategyObjective = ai.getCoordStrategy();
+
+            /*double distanceX = ai.getX() -strategyObjective.get("x");
+            double distanceY = ai.getY() - strategyObjective.get("y");*/
+            double distanceX = 300 - ai.getX();
+            double distanceY = 300 - ai.getY() ;
+            System.out.println("distanceX" + distanceX);
+            System.out.println("distanceY" + distanceY);
+            if(distanceX > ai.getSpeed() && distanceX > 0){
+                ai.setX(ai.getX() + ai.getSpeed());
+            } else if ( distanceX >= 0 && distanceX < ai.getSpeed()){
+                ai.setX(ai.getX() + distanceX);
+            } else if ( distanceX > -ai.getSpeed() && distanceX < 0){
+                ai.setX(ai.getX() - ai.getSpeed());
+            }else{
+                ai.setX(ai.getX() -distanceX);
+            }
+
+            if(distanceY > ai.getSpeed() && distanceY > 0){
+                ai.setY(ai.getY() + ai.getSpeed());
+            } else if ( distanceY >= 0 && distanceY < ai.getSpeed()){
+                ai.setY(ai.getY() + distanceY);
+            } else if ( distanceY > -ai.getSpeed() && distanceY < 0){
+                ai.setY(ai.getY() - ai.getSpeed());
+            }else{
+                ai.setY(ai.getY()-distanceY);
+            }
         }
-    }*/
+
+        for(AI ai: quadTree.getAllAi()){
+            for(Entity cible: quadTree.getEntitiesAroundMovableObject( ai)){
+                if(cible.equals(ai)) continue;
+                if(ai.canEat(cible)){
+                    ai.Absorb(cible);
+                    quadTree.remove(cible);
+                }
+            }
+        }
+    }
 
 
     /*

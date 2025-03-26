@@ -50,6 +50,7 @@ public class GameRenderer {
             for(Entity entity: entites){
                 drawEntity(centerX, centerY, entity, players);
             }
+
         });
     }
 
@@ -68,9 +69,12 @@ public class GameRenderer {
 
         if (entity instanceof Player) {
             circle.setFill(Color.BLUE);
+        } else if (entity instanceof AI) {
+            circle.setFill(Color.RED);
         } else {
             circle.setFill(((Pellet) entity).getColor());
         }
+
 
         pane.getChildren().add(circle);
     }

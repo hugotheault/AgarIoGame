@@ -10,8 +10,8 @@ public class AIRandom implements AIStrategy{
     public HashMap<String,Double> execStrategy(Double x, Double y, QuadTree quadtree) {
         Random rand = new Random();
         HashMap<String, Double> coordinates = new HashMap<>();
-        coordinates.put("x", rand.nextDouble());
-        coordinates.put("y", rand.nextDouble());
+        coordinates.put("x", rand.nextDouble()%100);
+        coordinates.put("y", rand.nextDouble()%100);
         return coordinates;
     }
 

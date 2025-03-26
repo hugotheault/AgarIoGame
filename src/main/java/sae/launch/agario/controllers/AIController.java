@@ -10,14 +10,14 @@ public class AIController {
 
     private AI ai;
     @FXML
-    private Circle AICircle;
+    private Circle aiCircle;
 
     public AIController(AI ai, double width, double height){
         this.ai = ai;
         Random rand =new Random();
-        AICircle.setCenterX(rand.nextDouble(width));
-        AICircle.setCenterY(rand.nextDouble(height));
-        AICircle.setRadius(this.ai.getRadius());
+        aiCircle.setCenterX(rand.nextDouble(width));
+        aiCircle.setCenterY(rand.nextDouble(height));
+        aiCircle.setRadius(this.ai.getRadius());
     }
 
 }

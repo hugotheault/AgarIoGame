@@ -12,10 +12,11 @@ public class AIPellet implements AIStrategy {
 
         HashMap<String, Double> coordinates = new HashMap<>();
         ArrayList<Entity> potentialTargets = quadtree.getEntitiesInRegion(x * 100, x * -100, y * 100, y * -100);
-        Double lenghtBetweenEntites = 100000000.0;
+        Double lenghtBetweenEntites = 100000000.0; //arbitrary max value start
+        System.out.println(potentialTargets.size());
         for (Entity e : potentialTargets) {
             if (e.isPellet()) {
-                if (Math.sqrt(Math.pow((e.getX() - x), 2) + Math.pow((e.getY() - y), 2)) < lenghtBetweenEntites) {
+                if (Math.sqrt(Math.pow((e.getX() - x), 2) + Math.pow((e.getY() - y), 2)) < lenghtBetweenEntites) { // check distance between both
                     coordinates.put("x", e.getX());
                     coordinates.put("y", e.getY());
                     lenghtBetweenEntites = Math.sqrt(Math.pow((e.getX() - x), 2) + Math.pow((e.getY() - y), 2));
