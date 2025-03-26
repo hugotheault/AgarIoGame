@@ -197,7 +197,7 @@ public class SoloInGameController implements Initializable {
                     quadTree.remove(cible);
                     Platform.runLater(()->{
                         scoreLabel.setText(""+(joueur.getMass()-baseMass));
-                        this.classement.updateClassement(leaderboard, quadTree.getAllPlayers());
+                        this.classement.updateClassement(leaderboard, quadTree.getAllPlayers(), joueur);
                     });
                 }
             }
