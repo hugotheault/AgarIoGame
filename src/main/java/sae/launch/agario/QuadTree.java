@@ -1,6 +1,8 @@
 package sae.launch.agario;
 
 import sae.launch.agario.models.Entity;
+import sae.launch.agario.models.Pellet;
+import sae.launch.agario.models.Player;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -12,29 +14,47 @@ public class QuadTree {
     private QuadTree SETree;
     private final int depth;
     private final double length;
-    private final double width;
+    private final double height;
+    private final double xOffset;
+    private final double yOffset;
 
     private HashSet<Entity> entities;
 
-    public QuadTree(double length, double width, int depth){
+    /**
+     *
+     * @param length
+     * @param height
+     * @param depth
+     * @param xOffset X offset of the quadtree
+     * @param yOffset Y offset of the quadtree
+     */
+    public QuadTree(double length, double height, int depth, double xOffset, double yOffset) {
         this.depth = depth;
         this.length = length;
-        this.width = width;
+        this.height = height;
+        this.xOffset = xOffset;
+        this.yOffset = yOffset;
 
-        if(depth > 0){
-            this.NWTree = new QuadTree(length/2, width/2, depth-1);
-            this.NETree = new QuadTree(length/2, width/2, depth-1);
-            this.SWTree = new QuadTree(length/2, width/2, depth-1);
-            this.SETree = new QuadTree(length/2, width/2, depth-1);
-        } else{
+        if (depth > 0) {
+            double halfLength = length / 2;
+            double halfWidth = height / 2;
+            this.NWTree = new QuadTree(halfLength, halfWidth, depth - 1, xOffset, yOffset);
+            this.NETree = new QuadTree(halfLength, halfWidth, depth - 1, xOffset + halfLength, yOffset);
+            this.SWTree = new QuadTree(halfLength, halfWidth, depth - 1, xOffset, yOffset + halfWidth);
+            this.SETree = new QuadTree(halfLength, halfWidth, depth - 1, xOffset + halfLength, yOffset + halfWidth);
+        } else {
             entities = new HashSet<>();
         }
     }
 
-    public boolean insert(Entity entity){
+    /**
+     * Insert a new entity into the quadtree
+     * @param entity the entity to insert
+     * @return if the insert is a success
+     */
+    public boolean insert(Entity entity) {
         double x = entity.getX();
         double y = entity.getY();
-
 
         if (depth == 0) {
             entities.add(entity);
@@ -42,100 +62,199 @@ public class QuadTree {
         }
 
         double halfLength = length / 2;
-        double halfWidth = width / 2;
+        double halfWidth = height / 2;
 
-        if (x < halfLength && y < halfWidth) {
+        if (x < xOffset + halfLength && y < yOffset + halfWidth) {
             // NW
-            if (NWTree == null) {
-                NWTree = new QuadTree(halfLength, halfWidth, depth - 1);
-            }
             return NWTree.insert(entity);
-        } else if (x >= halfLength && y < halfWidth) {
+        } else if (x >= xOffset + halfLength && y < yOffset + halfWidth) {
             // NE
-            if (NETree == null) {
-                NETree = new QuadTree(halfLength, halfWidth, depth - 1);
-            }
             return NETree.insert(entity);
-        } else if (x < halfLength && y >= halfWidth) {
+        } else if (x < xOffset + halfLength && y >= yOffset + halfWidth) {
             // SW
-            if (SWTree == null) {
-                SWTree = new QuadTree(halfLength, halfWidth, depth - 1);
-            }
             return SWTree.insert(entity);
         } else {
             // SE
-            if (SETree == null) {
-                SETree = new QuadTree(halfLength, halfWidth, depth - 1);
-            }
             return SETree.insert(entity);
         }
     }
 
 
+    public ArrayList<Entity> getEntitiesAroundPlayer(Player player) {
+        double radius = 2 * player.getRadius();
+        Boundary searchArea = new Boundary(player.getX() - radius, player.getY() - radius,
+                2 * radius, 2 * radius);
+        return getEntitiesInRegion(searchArea);
+    }
+
     public ArrayList<Entity> getEntitiesInRegion(double x1, double y1, double x2, double y2) {
+        Boundary region = new Boundary(x1, y1, x2 - x1, y2 - y1);
+        return getEntitiesInRegion(region);
+    }
+
+    public ArrayList<Entity> getEntitiesInRegion(Boundary region) {
         ArrayList<Entity> result = new ArrayList<>();
 
         if (depth == 0) {
             for (Entity entity : entities) {
-                if (isEntityInRegion(entity, x1, y1, x2, y2)) {
+                if (region.contains(entity)) {
                     result.add(entity);
                 }
             }
             return result;
         }
 
-        double halfLength = length / 2;
-        double halfWidth = width / 2;
-
-        //Split bottom and top to avoid going through all quadtrees
-        // Top
-        if (y2 > 0) {
-            if (x2 < halfLength) {
-                if (NWTree != null) {
-                    result.addAll(NWTree.getEntitiesInRegion(x1, y1, x2, y2));
-                }
-            } else if (x1 > halfLength) {
-                if (NETree != null) {
-                    result.addAll(NETree.getEntitiesInRegion(x1, y1, x2, y2));
-                }
-            } else {
-                if (NWTree != null) {
-                    result.addAll(NWTree.getEntitiesInRegion(x1, y1, x2, y2));
-                }
-                if (NETree != null) {
-                    result.addAll(NETree.getEntitiesInRegion(x1, y1, x2, y2));
-                }
-            }
+        if (region.intersects(new Boundary(xOffset, yOffset, length / 2, height / 2))) {
+            result.addAll(NWTree.getEntitiesInRegion(region));
         }
-
-        // Bottom
-        if (y1 < halfWidth) {
-            if (x2 < halfLength) {
-                // Only SW
-                if (SWTree != null) {
-                    result.addAll(SWTree.getEntitiesInRegion(x1, y1, x2, y2));
-                }
-            } else if (x1 > halfLength) {
-                // Only SE
-                if (SETree != null) {
-                    result.addAll(SETree.getEntitiesInRegion(x1, y1, x2, y2));
-                }
-            } else {
-                if (SWTree != null) {
-                    result.addAll(SWTree.getEntitiesInRegion(x1, y1, x2, y2));
-                }
-                if (SETree != null) {
-                    result.addAll(SETree.getEntitiesInRegion(x1, y1, x2, y2));
-                }
-            }
+        if (region.intersects(new Boundary(xOffset + length / 2, yOffset, length / 2, height / 2))) {
+            result.addAll(NETree.getEntitiesInRegion(region));
+        }
+        if (region.intersects(new Boundary(xOffset, yOffset + height / 2, length / 2, height / 2))) {
+            result.addAll(SWTree.getEntitiesInRegion(region));
+        }
+        if (region.intersects(new Boundary(xOffset + length / 2, yOffset + height / 2, length / 2, height / 2))) {
+            result.addAll(SETree.getEntitiesInRegion(region));
         }
 
         return result;
     }
+
+
+    private boolean isRegionIntersecting(double x1, double y1, double x2, double y2, double regionX1, double regionY1, double regionX2, double regionY2) {
+        return !(x1 > regionX2 || x2 < regionX1 || y1 > regionY2 || y2 < regionY1);
+    }
+
     private boolean isEntityInRegion(Entity entity, double x1, double y1, double x2, double y2) {
-        double ex = entity.getX();
-        double ey = entity.getY();
-        return (ex >= x1 && ex <= x2 && ey >= y1 && ey <= y2);
+        return (entity.getX() >= x1 && entity.getX() <= x2 && entity.getY() >= y1 && entity.getY() <= y2);
+    }
+
+    /**
+     *
+     * @return  GEt the number of pellets inside of the quadtree
+     */
+    public int getPelletsNumber() {
+        int count = 0;
+        if (depth != 0) {
+            count += NETree.getPelletsNumber();
+            count += NWTree.getPelletsNumber();
+            count += SETree.getPelletsNumber();
+            count += SWTree.getPelletsNumber();
+        } else {
+            for (Entity entity : entities) {
+                if (entity instanceof Pellet) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+
+    public double getHeight() {
+        return this.height;
+    }
+
+    public double getLength() {
+        return this.length;
+    }
+
+    /**
+     *
+     * @return A list of all the players in the quadtree
+     */
+    public ArrayList<Player> getAllPlayers() {
+        ArrayList<Player> result = new ArrayList<>();
+
+        if (entities != null) {
+            for (Entity entity : entities) {
+                if (entity instanceof Player) {
+                    result.add((Player) entity);
+                }
+            }
+        }
+        if (NWTree != null) {
+            result.addAll(NWTree.getAllPlayers());
+        }
+        if (NETree != null) {
+            result.addAll(NETree.getAllPlayers());
+        }
+        if (SWTree != null) {
+            result.addAll(SWTree.getAllPlayers());
+        }
+        if (SETree != null) {
+            result.addAll(SETree.getAllPlayers());
+        }
+
+        return result;
+    }
+
+    /**
+     * Remove an entity from the quadtree
+     * @param entity the entity to remove
+     */
+    public void remove(Entity entity) {
+        if (depth == 0) {
+            System.out.println(entities.size());
+            entities.remove(entity);
+            System.out.println(entities.size());
+            return;
+        }
+
+        double halfLength = length / 2;
+        double halfWidth = height / 2;
+
+        if (entity.getX() < xOffset + halfLength && entity.getY() < yOffset + halfWidth) {
+            // NW
+            if (NWTree != null) {
+                NWTree.remove(entity);
+            }
+        } else if (entity.getX() >= xOffset + halfLength && entity.getY() < yOffset + halfWidth) {
+            // NE
+            if (NETree != null) {
+                NETree.remove(entity);
+            }
+        } else if (entity.getX() < xOffset + halfLength && entity.getY() >= yOffset + halfWidth) {
+            // SW
+            if (SWTree != null) {
+                SWTree.remove(entity);
+            }
+        } else {
+            // SE
+            if (SETree != null) {
+                SETree.remove(entity);
+            }
+        }
+    }
+
+    public void clear() {
+        if (depth == 0) {
+            entities.clear();
+        } else {
+            NWTree.clear();
+            NETree.clear();
+            SWTree.clear();
+            SETree.clear();
+        }
+    }
+
+    public ArrayList<Player> getPlayersByIds(ArrayList<Integer> playerIDs) {
+        ArrayList<Player> players = new ArrayList<>();
+
+        if (depth == 0) {
+            for (Entity entity : entities) {
+                if (entity instanceof Player && playerIDs.contains(entity.getID())) {
+                    players.add((Player) entity);
+                }
+            }
+            return players;
+        }
+
+        if (NWTree != null) players.addAll(NWTree.getPlayersByIds(playerIDs));
+        if (NETree != null) players.addAll(NETree.getPlayersByIds(playerIDs));
+        if (SWTree != null) players.addAll(SWTree.getPlayersByIds(playerIDs));
+        if (SETree != null) players.addAll(SETree.getPlayersByIds(playerIDs));
+
+        return players;
     }
 
 }

@@ -40,4 +40,29 @@ public abstract class Entity {
     public double getMass() {
         return mass;
     }
+
+    public boolean isPellet(){return this.getClass()==Pellet.class;}
+
+    public double getRadius() {
+        return Math.sqrt(mass);
+    }
+
+    public boolean canEat(Entity pellet) {
+        if (pellet != null) {
+            double dx = this.getX() - pellet.getX();
+            double dy = this.getY() - pellet.getY();
+            double distance = Math.sqrt(dx * dx + dy * dy);
+
+            // Vérifie si l'entité actuelle recouvre la pellet
+            boolean overlaps = distance <= (this.getRadius());
+
+            // Vérifie si le rayon de la pellet est inférieur au rayon de l'entité actuelle
+            boolean canEat = pellet.getRadius() < this.getRadius();
+
+            return overlaps && canEat;
+        }
+        return false;
+    }
+
+
 }

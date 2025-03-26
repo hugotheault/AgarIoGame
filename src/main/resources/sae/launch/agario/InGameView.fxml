@@ -1,51 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.shape.*?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
 
-<BorderPane fx:id="borderPane"
-            prefHeight="600.0"
-            prefWidth="800.0"
+<BorderPane fx:id="borderPane" prefHeight="600.0" prefWidth="800.0"
             style="-fx-background-color: linear-gradient(to bottom, #1E3C72, #2A5298);"
             xmlns="http://javafx.com/javafx/8"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="sae.launch.agario.controllers.InGameController">
 
-   <!-- Barre supérieure avec boutons -->
+   <!-- Barre supérieure avec boutons et score à droite -->
    <top>
       <ToolBar style="-fx-background-color: rgba(255, 255, 255, 0.2); -fx-padding: 10px;" BorderPane.alignment="CENTER">
          <items>
-            <Button text="Menu Principal" onAction="#onMenuButton"
-                    style="-fx-background-color: #ffcc00; -fx-text-fill: black; -fx-font-weight: bold; -fx-background-radius: 15px;"/>
-            <Button text="Quitter" onAction="#onQuitButton"
-                    style="-fx-background-color: #ff4444; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 15px;"/>
+            <Button onAction="#onMenuButton"
+                    style="-fx-background-color: #ffcc00; -fx-text-fill: black; -fx-font-weight: bold; -fx-background-radius: 15px;"
+                    text="Menu Principal" />
+            <Button onAction="#onQuitButton"
+                    style="-fx-background-color: #ff4444; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 15px;"
+                    text="Quitter" />
+
+            <!-- Espace flexible pour pousser le score à droite -->
+            <Region fx:id="spacer" HBox.hgrow="ALWAYS" />
+
+            <!-- Score aligné à droite -->
+            <Label text="Score :"
+                   style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" />
+            <Label fx:id="scoreLabel"
+                   text="0"
+                   style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" />
          </items>
       </ToolBar>
    </top>
 
    <!-- Zone de jeu -->
    <center>
-      <Pane fx:id="pane" prefHeight="500.0" prefWidth="800.0" BorderPane.alignment="CENTER">
-         <children>
-            <!-- Barre de score -->
-            <Label text="Score :" layoutX="20.0" layoutY="20.0"
-                   style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"/>
-            <Label fx:id="scoreLabel" layoutX="80.0" layoutY="20.0"
-                   style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"/>
-         </children>
-      </Pane>
+      <Pane fx:id="pane" prefHeight="500.0" prefWidth="800.0" BorderPane.alignment="CENTER" />
    </center>
 
    <!-- Classement des meilleurs joueurs -->
    <right>
-      <VBox prefHeight="200.0" prefWidth="150.0" spacing="10" alignment="CENTER"
+      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="150.0" spacing="10"
             style="-fx-background-color: rgba(255, 255, 255, 0.2); -fx-background-radius: 10px; -fx-padding: 10px;">
          <children>
-            <Label text="Classement" style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;"/>
-            <Label fx:id="first" text="1. Joueur 1 - 500" style="-fx-text-fill: gold; -fx-font-size: 14px;"/>
-            <Label fx:id="second" text="2. Joueur 2 - 450" style="-fx-text-fill: silver; -fx-font-size: 14px;"/>
-            <Label fx:id="third" text="3. Joueur 3 - 400" style="-fx-text-fill: #cd7f32; -fx-font-size: 14px;"/>
+            <Label style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;" text="Classement" />
+            <Label fx:id="first" style="-fx-text-fill: gold; -fx-font-size: 14px;" text="1. Joueur 1 - 500" />
+            <Label fx:id="second" style="-fx-text-fill: silver; -fx-font-size: 14px;" text="2. Joueur 2 - 450" />
+            <Label fx:id="third" style="-fx-text-fill: #cd7f32; -fx-font-size: 14px;" text="3. Joueur 3 - 400" />
          </children>
       </VBox>
    </right>

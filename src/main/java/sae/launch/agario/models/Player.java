@@ -32,4 +32,5 @@ public class Player extends MovableObject {
             return false;
         }
     }
+
 }
