@@ -1,26 +1,20 @@
 package sae.launch.agario.models;
 
-import javafx.scene.canvas.GraphicsContext;
+public interface PlayerComponant {
+    void updatePosition(double deltaX, double deltaY);
+    double getMass();
+    double getX();
+    double getY();
+    void setX(double x);
+    void setY(double y);
 
-public abstract class PlayerComponant extends MovableObject{
+    int getID();
 
-    private double x, y;
-    private double speed;
+    double getRay();
 
-    public PlayerComponant(int ID, double x, double y, double mass) {
-        super(ID, x, y, mass);
-    }
+    void setMass(double v);
 
-    public abstract void updatePosition();
+    double getSpeed(double xCursor, double yCursor, double paneCenterX,double paneCenterY);
 
-    public abstract double split();
-
-    public double getX() {return x;}
-    public double getY() {return y;}
-    public double getSpeed() {return speed;}
-
-    public void setX(double x) {this.x = x;}
-    public void setY(double y) {this.y = y;}
-    public void setSpeed(double speed) {this.speed = speed;}
-
+    boolean canEat(Entity cible);
 }

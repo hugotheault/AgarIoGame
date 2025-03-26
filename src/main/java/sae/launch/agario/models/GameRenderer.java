@@ -6,13 +6,14 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import sae.launch.agario.QuadTree;
 
+
 import java.util.ArrayList;
 
 public class GameRenderer {
     private Pane pane;
     private Camera camera;
 
-    // Default constructor
+    //Default constructor
     public GameRenderer(Pane pane){
         this.pane = pane;
         this.camera = new Camera();
@@ -23,26 +24,8 @@ public class GameRenderer {
      * The method called every time the game is updated
      */
     public void updateVisuals(QuadTree quadTree, ArrayList<PlayerComponant> players) {
-        updatePlayers(players);
         camera.updatePosition(quadTree);
         render(quadTree, players);
-    }
-
-    /**
-     * Met à jour la position des joueurs avant l'affichage.
-     */
-    private void updatePlayers(ArrayList<PlayerComponant> players) {
-        for (PlayerComponant player : players) {
-            if (player instanceof PlayerLeaf) {
-                ((PlayerLeaf) player).updatePosition();
-            } else if (player instanceof PlayerComposite) {
-                for (PlayerComponant subPlayer : ((PlayerComposite) player).getAllPlayer()) {
-                    if (subPlayer instanceof PlayerLeaf) {
-                        ((PlayerLeaf) subPlayer).updatePosition();
-                    }
-                }
-            }
-        }
     }
 
     /**
@@ -56,39 +39,27 @@ public class GameRenderer {
             double centerX = pane.getWidth() / 2;
             double centerY = pane.getHeight() / 2;
 
-            // Récupère toutes les entités visibles
             for (Entity entity: quadTree.getEntitiesInRegion(
                     camera.getX() - centerX,
                     camera.getY() - centerY,
                     camera.getX() + centerX,
                     camera.getY() + centerY)) {
-                drawEntity(centerX, centerY, entity);
+                drawEntity(centerX, centerY, entity, players);
             }
-
-            // Dessine tous les joueurs (humains et IA)
-            for (PlayerComponant player : players) {
-                drawPlayer(centerX, centerY, player);
+            ArrayList<PlayerComponant> entites = quadTree.getAllPlayers();
+            for(PlayerComponant entity: entites){
+                drawEntity(centerX, centerY, (Entity) entity, players);
             }
         });
     }
 
     /**
-     * Dessine un joueur (PlayerLeaf ou PlayerGroup)
+     * Draw an entity on the pane
+     * @param centerX The x axis center of the entity
+     * @param centerY The y axis center of the entity
+     * @param entity The entity
      */
-    private void drawPlayer(double centerX, double centerY, PlayerComponant player) {
-        if (player instanceof PlayerLeaf) {
-            drawEntity(centerX, centerY, (PlayerLeaf) player);
-        } else if (player instanceof PlayerComposite) {
-            for (PlayerComponant subPlayer : ((PlayerComposite) player).getAllPlayer()) {
-                drawPlayer(centerX, centerY, subPlayer);
-            }
-        }
-    }
-
-    /**
-     * Dessine une entité (pellets, joueurs individuels)
-     */
-    private void drawEntity(double centerX, double centerY, Entity entity) {
+    private void drawEntity(double centerX, double centerY, Entity entity, ArrayList<PlayerComponant> players) {
         double entityX = (entity.getX() - camera.getX() + centerX);
         double entityY = (entity.getY() - camera.getY() + centerY);
         double entityRadius = entity.getRadius();
@@ -96,11 +67,12 @@ public class GameRenderer {
         Circle circle = new Circle(entityX, entityY, entityRadius);
 
         if (entity instanceof PlayerLeaf) {
-            circle.setFill(((PlayerLeaf) entity).isAI() ? Color.RED : Color.BLUE);
+            circle.setFill(Color.BLUE);
         } else {
             circle.setFill(((Pellet) entity).getColor());
         }
 
         pane.getChildren().add(circle);
     }
+
 }

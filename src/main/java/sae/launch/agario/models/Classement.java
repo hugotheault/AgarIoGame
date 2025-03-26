@@ -22,7 +22,7 @@ public class Classement {
         leaderboard.getChildren().clear();
         classement.clear();
         System.out.println("Affichage classement");
-        for(MovableObject obj : classement){
+        for(PlayerComponant obj : classement){
             System.out.println(obj);
         }
         for( PlayerComponant player : players ){

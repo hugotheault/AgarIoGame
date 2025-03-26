@@ -66,30 +66,21 @@ public class SoloInGameController implements Initializable {
         quadTree = new QuadTree(mapSize, mapSize, 6, 0, 0);
 
         int idBase = IDGenerator.getGenerator().NextID();
-        quadTree.insert(new PlayerLeaf(idBase, 100, 100, initialSize, false));
+        quadTree.insert(new PlayerLeaf(idBase, 100, 100, initialSize));
 
         this.pelletController = new PelletController(quadTree, maxPelletNb, pelletSize);
         pelletController.generatePellets();
 
         this.players = new ArrayList<>();
-        PlayerComponant player1 = new PlayerLeaf(idBase, 50, 50, initialSize, false);
+        PlayerComponant player1 = new PlayerLeaf(idBase, 50, 50, initialSize);
         players.add(player1);
         baseMass = player1.getMass();
 
         this.gameRenderer = new GameRenderer(pane);
 
         pane.setOnMouseMoved(event ->{
-            double targetX = event.getX() / pane.getWidth();
-            double targetY = event.getY() / pane.getHeight();
-
-            for (PlayerComponant player : players) {
-                if (player instanceof PlayerLeaf) {
-                    ((PlayerLeaf) player).setTarget(targetX, targetY);
-                }
-            }
-
-            setPlayerXPercent(targetX);
-            setPlayerYPercent(targetY);
+            setPlayerXPercent(event.getX() / pane.getWidth());
+            setPlayerYPercent(event.getY() / pane.getHeight());
             setMouseXCursor(event.getX());
             setMouseYCursor(event.getY());
         });
@@ -152,7 +143,7 @@ public class SoloInGameController implements Initializable {
         System.out.println(player.getMass()+" : "+sizeToDivide);
         System.out.println(player.getRay());
         if(player.getMass() >= sizeToDivide) {
-            PlayerLeaf p = new PlayerLeaf(player.getID(), player.getX()+player.getRay()/10, player.getY()+player.getRay()/10, player.getMass()/2, false);
+            PlayerLeaf p = new PlayerLeaf(player.getID(), player.getX()+player.getRay()/10, player.getY()+player.getRay()/10, player.getMass()/2);
             player.setMass(player.getMass()/2);
             quadTree.insert(p);
             updateGame();
