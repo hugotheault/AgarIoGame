@@ -18,6 +18,8 @@ public class Server {
 		try {
 			threadWorld.start();
 			askConnexion.start();
+
+			//reads the properties file
 			FileInputStream input = new FileInputStream("application.properties");
 			Properties properties  = new Properties();
 			properties.load(input);
