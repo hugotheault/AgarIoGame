@@ -43,7 +43,6 @@ public class ClientHandler extends Thread {
 				this.server.deleteClient(this, printWriter);
 				break;
 			}
-			
 		}
 	}
 

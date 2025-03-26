@@ -23,6 +23,7 @@ import java.util.ResourceBundle;
 
 import sae.launch.agario.QuadTree;
 import sae.launch.agario.models.*;
+import sae.launch.agario.models.serverFiles.ClientDataReader;
 import sae.launch.agario.models.serverFiles.Server;
 
 public class OnlineInGameController implements Initializable {
@@ -42,7 +43,7 @@ public class OnlineInGameController implements Initializable {
     private ThreadWorld threadWorld;
     private QuadTree quadTree;
     private PelletController pelletController;
-
+    ClientDataReader ecouteur;
     private ArrayList<Player> players;
 
     private GameRenderer gameRenderer;
@@ -113,8 +114,8 @@ public class OnlineInGameController implements Initializable {
         sizeScaleToEat = Double.parseDouble(properties.getProperty("sizeScaleToEat"));
 
         this.isHost = false;
-        Socket socket = new Socket(ip, port);
-        clientPrintWriter = new PrintWriter(socket.getOutputStream(), true);
+        clientSocker = new Socket(ip, port);
+        clientPrintWriter = new PrintWriter(clientSocker.getOutputStream(), true);
         clientPrintWriter.write("Je me connecte");
 
         while(this.ID == 0) {
@@ -125,36 +126,29 @@ public class OnlineInGameController implements Initializable {
                 bytesRead = this.clientSocker.getInputStream().read(buffer);
                 if (bytesRead != -1) {
                     String messageRecu = new String(buffer, 0, bytesRead);
-                    System.out.println(messageRecu);
-                    this.ID= Integer.parseInt(messageRecu.substring(3));
+                    if (messageRecu.contains("id:")) {
+                        int idIndex = messageRecu.indexOf("id:") + 3;
+
+                        String idString = messageRecu.substring(idIndex).trim();
+                        try {
+                            int id = Integer.parseInt(idString);
+                            this.ID = id;
+                            System.out.println("ID reçu : " + this.ID);
+                        } catch (NumberFormatException e) {
+
+                        }
+                    }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
                 break;
             }
         }
-        Runnable task = new Runnable() {
-            @Override
-            public void run() {
-                while(true){
-                    try {
-                        byte[] buffer = new byte[1024];
-                        int bytesRead;
-                        bytesRead = clientSocker.getInputStream().read(buffer);
-                        if (bytesRead != -1) {
-                            String messageRecu = new String(buffer, 0, bytesRead);
-                            System.out.println(messageRecu);
+        System.out.println("Je suis hors de la boucle");
 
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        break;
-                    }
-                }
-            }
-        };
-        Thread ecouteThread = new Thread(task);
-        ecouteThread.start();
+
+        ecouteur = new ClientDataReader(this);
+
 
 
     }
@@ -173,7 +167,9 @@ public class OnlineInGameController implements Initializable {
             gameRenderer.setPane(pane);
             threadWorld.start();
         }
-
+        else{
+            ecouteur.start();
+        }
     }
 
     private void updateGame() {
@@ -304,5 +300,9 @@ public class OnlineInGameController implements Initializable {
     }
     public ArrayList<Player> getPlayers(){return this.players;}
     public QuadTree getQuadTree(){return quadTree;}
+
+    public Socket getClientSocker(){return clientSocker;}
+
+    public Pane getPane(){return this.pane;}
 
 }
