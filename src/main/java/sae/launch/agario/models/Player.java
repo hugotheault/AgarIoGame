@@ -7,7 +7,7 @@ public class Player extends MovableObject {
 
     @Override
     public double getSpeed() {
-        return 0;
+        throw new IllegalCallerException(" Player ne peux pas appeler cette méthode");
     }
 
     @Override
@@ -15,8 +15,8 @@ public class Player extends MovableObject {
         if(isInSlowCircle(xCursor,yCursor,paneCenterX,paneCenterY)){
             double slowRateX = Math.abs((paneCenterX - xCursor)/this.getSlowRangeRay());
             double slowRateY = Math.abs((paneCenterY - yCursor)/this.getSlowRangeRay());
-            System.out.println(this.getBaseMouvementSpeed() Math.log(this.getMass())/this.getMass());
-            return this.getBaseMouvementSpeed() * Math.max(slowRateX,slowRateY) ;/// this.getMass();
+            double speed = (this.getBaseMouvementSpeed() - (0.08 * Math.log(1 + this.getMass()))) * Math.max(slowRateX,slowRateY);
+            return Math.max(speed,0.5) ;
         } else{
             return this.getBaseMouvementSpeed();
         }
