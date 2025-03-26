@@ -1,9 +1,12 @@
 package sae.launch.agario.models.serverFiles;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Properties;
 
 public class Server {
 	private Thread askConnexion = new Thread(new ServerSocketRunnerConnections(this));
@@ -12,8 +15,16 @@ public class Server {
 	private ArrayList<PrintWriter> printWriterList = new ArrayList<PrintWriter>();
 	
 	public Server() {
-		threadWorld.start();
-		askConnexion.start();
+		try {
+			threadWorld.start();
+			askConnexion.start();
+			FileInputStream input = new FileInputStream("application.properties");
+			Properties properties  = new Properties();
+			properties.load(input);
+
+		}catch(Exception exception){
+			System.out.println(exception.getMessage());
+		}
 	}
 	
 	
