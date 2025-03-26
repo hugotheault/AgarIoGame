@@ -52,15 +52,18 @@ public class Server {
 		try {
 			clientHandler = new ClientHandler(socket.getInputStream(), socket.getOutputStream(), this);
 			//Le "false" indique que l'écriture dans l'outputStream  ne se fera qu'à l'appel de la fonction flush
-			this.getPrintWriterList().add(new PrintWriter(clientHandler.getOutputStream(), false));
-			
-			PrintWriter lastPrintWriter = this.getPrintWriterList().get(this.getPrintWriterList().size()-1);
-			clientHandler.setPrintWriter(lastPrintWriter);
-			clientHandler.start();
-			this.getClientConnexionList().add(clientHandler);
-			this.getPrintWriterList().get(this.getPrintWriterList().size()-1).write("Bonjour");
-			this.getPrintWriterList().get(this.getPrintWriterList().size()-1).flush();
-			
+
+			synchronized (this.getPrintWriterList()) {
+				this.getPrintWriterList().add(new PrintWriter(clientHandler.getOutputStream(), false));
+				PrintWriter lastPrintWriter = this.getPrintWriterList().get(this.getPrintWriterList().size()-1);
+
+				clientHandler.setPrintWriter(lastPrintWriter);
+				clientHandler.start();
+				this.getClientConnexionList().add(clientHandler);
+
+				this.getPrintWriterList().get(this.getPrintWriterList().size() - 1).write("Bonjour");
+				this.getPrintWriterList().get(this.getPrintWriterList().size() - 1).flush();
+			}
 			
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -68,9 +71,12 @@ public class Server {
 	}
 
 	public void deleteClient(ClientHandler ch, PrintWriter printWriter) {
-		
-		this.getClientConnexionList().remove(ch);
-		PrintWriter nouveauPt = new PrintWriter(ch.getOutputStream(), false);
-		this.getPrintWriterList().remove(printWriter);
+
+		synchronized (this.getClientConnexionList()) {
+			this.getClientConnexionList().remove(ch);
+		}
+		synchronized (this.getPrintWriterList()) {
+			this.getPrintWriterList().remove(printWriter);
+		}
 	}
 }
