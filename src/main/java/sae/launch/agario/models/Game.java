@@ -5,6 +5,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import sae.launch.agario.QuadTree;
+import sae.launch.agario.controllers.PelletController;
 
 
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ public class Game {
     private Pane pane;
     private Camera camera;
 
-
+    private PelletController pelletController;
 
     private double playerXPercent;
     private double playerYPercent;
@@ -41,6 +42,9 @@ public class Game {
         this.sizeToDivide = 50;
         this.pelletSize = 10;
         this.quadTree = new QuadTree(mapSize, mapSize, 6, 0, 0);
+
+        this.pelletController = new PelletController(this.quadTree, maxPelletNb, pelletSize);
+        pelletController.generatePellets();
 
         int idBase = IDGenerator.getGenerator().NextID();
         this.quadTree.insert(new Player(idBase, 100, 100, initialSize));
@@ -66,7 +70,7 @@ public class Game {
     private void updateGame() {
         updatePlayers();
 
-        updatePelletsNumber();
+        pelletController.generatePellets();
 
         camera.updatePosition(quadTree, playerIDs);
 
@@ -114,7 +118,7 @@ public class Game {
         if (playerIDs.contains(entity.getID())) {
             circle.setFill(Color.BLUE);
         } else {
-            circle.setFill(Color.WHITE);
+            circle.setFill(((Pellet) entity).getColor());
         }
 
         pane.getChildren().add(circle);
