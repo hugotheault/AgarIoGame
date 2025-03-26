@@ -83,7 +83,7 @@ public class QuadTree {
      * @param player Player to analyze
      * @return List of entities in certain range around the player
      */
-    public ArrayList<Entity> getEntitiesAroundPlayer(PlayerLeaf player) {
+    public ArrayList<Entity> getEntitiesAroundPlayer(PlayerComposite player) {
         double radius = 2 * player.getRadius();
         Boundary searchArea = new Boundary(player.getX() - radius, player.getY() - radius,
                 2 * radius, 2 * radius);
@@ -208,13 +208,13 @@ public class QuadTree {
      *
      * @return A list of all the players in the quadtree
      */
-    public ArrayList<PlayerComponant> getAllPlayers() {
-        ArrayList<PlayerComponant> result = new ArrayList<>();
+    public ArrayList<PlayerComposite> getAllPlayers() {
+        ArrayList<PlayerComposite> result = new ArrayList<>();
 
         if (entities != null) {
             for (Entity entity : entities) {
                 if (entity instanceof PlayerLeaf) {
-                    result.add((PlayerLeaf) entity);
+                    result.add((PlayerComposite) entity);
                 }
             }
         }
@@ -290,13 +290,13 @@ public class QuadTree {
      *
      * @return List of entity Player in the first quadtree's child
      */
-    public ArrayList<PlayerComponant> getPlayers() {
-        ArrayList<PlayerComponant> players = new ArrayList<>();
+    public ArrayList<PlayerComposite> getPlayers() {
+        ArrayList<PlayerComposite> players = new ArrayList<>();
 
         if (depth == 0) {
             for (Entity entity : entities) {
                 if (entity instanceof PlayerLeaf) {
-                    players.add((PlayerLeaf) entity);
+                    players.add((PlayerComposite) entity);
                 }
             }
             return players;

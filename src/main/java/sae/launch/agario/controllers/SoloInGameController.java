@@ -32,7 +32,7 @@ public class SoloInGameController implements Initializable {
     private QuadTree quadTree;
     private PelletController pelletController;
 
-    private ArrayList<PlayerComponant> players;
+    private ArrayList<PlayerComposite> players = new ArrayList<PlayerComposite>();
 
     private GameRenderer gameRenderer;
 
@@ -64,17 +64,18 @@ public class SoloInGameController implements Initializable {
         this.pelletSize = 10;
 
         quadTree = new QuadTree(mapSize, mapSize, 6, 0, 0);
-
+        PlayerLeaf playerLeaf = new PlayerLeaf(IDGenerator.getGenerator().NextID(), 100, 100, initialSize);
+        PlayerComposite player = new PlayerComposite(IDGenerator.getGenerator().NextID(), 100, 100, initialSize);
         int idBase = IDGenerator.getGenerator().NextID();
-        quadTree.insert(new PlayerLeaf(idBase, 100, 100, initialSize));
+        quadTree.insert(player);
 
         this.pelletController = new PelletController(quadTree, maxPelletNb, pelletSize);
         pelletController.generatePellets();
 
-        this.players = new ArrayList<>();
-        PlayerComponant player1 = new PlayerLeaf(idBase, 50, 50, initialSize);
-        players.add(player1);
-        baseMass = player1.getMass();
+
+        player.addPlayer(playerLeaf);
+        players.add(player);
+        baseMass = 50;
 
         this.gameRenderer = new GameRenderer(pane);
 
@@ -103,7 +104,7 @@ public class SoloInGameController implements Initializable {
         });
 
         this.classement = new Classement(baseMass);
-        classement.addPlayer(player1);
+        classement.addPlayer(player);
         System.out.println("Classement mis à jour : ");
 
         pane.setOnKeyPressed(event -> {
@@ -197,7 +198,7 @@ public class SoloInGameController implements Initializable {
      */
     private void updatePlayers() {
 
-        for(PlayerComponant player: quadTree.getPlayers()){
+        for(PlayerComposite player: quadTree.getPlayers()){
             //Update position du joueur principal
             double directionX = playerXPercent - 0.5;
             double directionY = playerYPercent - 0.5;
@@ -208,16 +209,17 @@ public class SoloInGameController implements Initializable {
             }
             double deltaX = directionX * player.getSpeed(mouseXCursor, mouseYCursor,pane.getWidth() / 2,pane.getHeight() / 2);
             double deltaY = directionY * player.getSpeed(mouseXCursor, mouseYCursor,pane.getWidth() / 2,pane.getHeight() / 2);
-            player.setX(player.getX() + deltaX);
-            player.setY(player.getY() + deltaY);
+            //player.setX(player.getX() + deltaX);
+            //player.setY(player.getY() + deltaY);
+            player.move(deltaX, deltaY);
         }
 
 
 
         //todo update la position des joueurs IA
 
-        for(PlayerComponant joueur: quadTree.getAllPlayers()){
-            for(Entity cible: quadTree.getEntitiesAroundPlayer((PlayerLeaf) joueur)){
+        for(PlayerComposite joueur: quadTree.getAllPlayers()){
+            for(Entity cible: quadTree.getEntitiesAroundPlayer((PlayerComposite) joueur)){
                 if(cible.equals(joueur)) continue;
                 if(joueur.canEat(cible)){
                     joueur.setMass(joueur.getMass()+cible.getMass());

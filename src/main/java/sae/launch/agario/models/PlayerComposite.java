@@ -4,18 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PlayerComposite extends MovableObject implements PlayerComponant {
-    private ArrayList<PlayerComponant> players;
+    private ArrayList<PlayerLeaf> players;
 
     // Constructor
     public PlayerComposite(int ID, double x, double y, double mass) {
         super(ID, x, y, mass);
-        this.players = new ArrayList<>();
+        this.players = new ArrayList<PlayerLeaf>();
     }
 
     @Override
     public void updatePosition(double deltaX, double deltaY) {
         // Mettre à jour la position de tous les joueurs dans le groupe
-        for (PlayerComponant player : players) {
+        for (PlayerLeaf player : players) {
             player.updatePosition(deltaX, deltaY);
         }
     }
@@ -23,7 +23,7 @@ public class PlayerComposite extends MovableObject implements PlayerComponant {
     @Override
     public double getMass() {
         double totalMass = 0;
-        for (PlayerComponant player : players) {
+        for (PlayerLeaf player : players) {
             totalMass += player.getMass();
         }
         return totalMass; // Masse totale du groupe
@@ -56,10 +56,16 @@ public class PlayerComposite extends MovableObject implements PlayerComponant {
 
     // Déplacer tout le groupe de joueurs
     public void move(double deltaX, double deltaY) {
-        this.updatePosition(deltaX, deltaY);
+        for (PlayerLeaf cell : this.getAllPlayer()) {
+            cell.updatePosition(deltaX, deltaY);
+        }
     }
 
-    public void addPlayer(PlayerComponant player) {
+    public ArrayList<PlayerLeaf> getAllPlayer() {
+        return players;
+    }
+
+    public void addPlayer(PlayerLeaf player) {
         this.players.add(player);
     }
 

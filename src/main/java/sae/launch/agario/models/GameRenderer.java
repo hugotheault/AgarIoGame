@@ -23,7 +23,7 @@ public class GameRenderer {
     /**
      * The method called every time the game is updated
      */
-    public void updateVisuals(QuadTree quadTree, ArrayList<PlayerComponant> players) {
+    public void updateVisuals(QuadTree quadTree, ArrayList<PlayerComposite> players) {
         camera.updatePosition(quadTree);
         render(quadTree, players);
     }
@@ -31,7 +31,7 @@ public class GameRenderer {
     /**
      * Render all the Entities on the pane
      */
-    private void render(QuadTree quadTree, ArrayList<PlayerComponant> players) {
+    private void render(QuadTree quadTree, ArrayList<PlayerComposite> players) {
         // Exécute les opérations sur le thread de JavaFX
         Platform.runLater(() -> {
             pane.getChildren().clear();
@@ -46,8 +46,8 @@ public class GameRenderer {
                     camera.getY() + centerY)) {
                 drawEntity(centerX, centerY, entity, players);
             }
-            ArrayList<PlayerComponant> entites = quadTree.getAllPlayers();
-            for(PlayerComponant entity: entites){
+            ArrayList<PlayerComposite> entites = quadTree.getAllPlayers();
+            for(PlayerComposite entity: entites){
                 drawEntity(centerX, centerY, (Entity) entity, players);
             }
         });
@@ -59,14 +59,14 @@ public class GameRenderer {
      * @param centerY The y axis center of the entity
      * @param entity The entity
      */
-    private void drawEntity(double centerX, double centerY, Entity entity, ArrayList<PlayerComponant> players) {
+    private void drawEntity(double centerX, double centerY, Entity entity, ArrayList<PlayerComposite> players) {
         double entityX = (entity.getX() - camera.getX() + centerX);
         double entityY = (entity.getY() - camera.getY() + centerY);
         double entityRadius = entity.getRadius();
 
         Circle circle = new Circle(entityX, entityY, entityRadius);
 
-        if (entity instanceof PlayerLeaf) {
+        if (entity instanceof PlayerComposite) {
             circle.setFill(Color.BLUE);
         } else {
             circle.setFill(((Pellet) entity).getColor());

@@ -9,7 +9,7 @@ import java.util.Comparator;
 
 public class Classement {
 
-    private ArrayList<PlayerComponant> classement;
+    private ArrayList<PlayerComposite> classement;
 
     private double baseWeight;
 
@@ -18,14 +18,14 @@ public class Classement {
         this.classement = new ArrayList<>();
     }
 
-    public void updateClassement(VBox leaderboard, ArrayList<PlayerComponant> players) {
+    public void updateClassement(VBox leaderboard, ArrayList<PlayerComposite> players) {
         leaderboard.getChildren().clear();
         classement.clear();
         System.out.println("Affichage classement");
-        for(PlayerComponant obj : classement){
+        for(PlayerComposite obj : classement){
             System.out.println(obj);
         }
-        for( PlayerComponant player : players ){
+        for( PlayerComposite player : players ){
             classement.add(player);
         }
         Collections.sort(classement, (p1, p2) -> Double.compare(p2.getMass(), p1.getMass()));
@@ -38,20 +38,20 @@ public class Classement {
         }
     }
 
-    public void addPlayer(PlayerComponant p) {
+    public void addPlayer(PlayerComposite p) {
         classement.add(p);
     }
 
-    public void removePlayer(PlayerComponant p) {
+    public void removePlayer(PlayerComposite p) {
         classement.remove(p);
     }
 
-    public PlayerComponant getPlayer(Integer indice, VBox leaderboard, ArrayList<PlayerComponant> players) {
+    public PlayerComposite getPlayer(Integer indice, VBox leaderboard, ArrayList<PlayerComposite> players) {
         updateClassement(leaderboard, players);
         return classement.get(indice);
     }
 
-    public ArrayList<PlayerComponant> getClassement() {
+    public ArrayList<PlayerComposite> getClassement() {
         return this.classement;
     }
 }

@@ -30,7 +30,7 @@ public class Camera {
      * Met à jour la position de la caméra en centrant sur les joueurs suivis.
      */
     public void updatePosition(QuadTree quadtree) {
-        ArrayList<PlayerComponant> players = quadtree.getPlayers();
+        ArrayList<PlayerComposite> players = quadtree.getPlayers();
 
         if (players.isEmpty()) return;
 
