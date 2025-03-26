@@ -43,6 +43,8 @@ public class SoloInGameController implements Initializable {
     private double sizeToDivide;
     private double pelletSize;
 
+    private double mouseXCursor;
+    private double mouseYCursor;
 
     @Override
     public void initialize(URL u, ResourceBundle r){
@@ -69,8 +71,8 @@ public class SoloInGameController implements Initializable {
         pane.setOnMouseMoved(event ->{
             setPlayerXPercent(event.getX() / pane.getWidth());
             setPlayerYPercent(event.getY() / pane.getHeight());
-            setCoX(event.getX());
-            setCoY(event.getY());
+            setMouseXCursor(event.getX());
+            setMouseYCursor(event.getY());
         });
 
         this.threadWorld = new ThreadWorld (gameRenderer, new Runnable() {
@@ -123,8 +125,8 @@ public class SoloInGameController implements Initializable {
                 directionX /= magnitude;
                 directionY /= magnitude;
             }
-            double deltaX = directionX * player.getSpeed(coX, coY);
-            double deltaY = directionY * player.getSpeed(coX, coY);
+            double deltaX = directionX * player.getSpeed(mouseXCursor, mouseYCursor,pane.getWidth() / 2,pane.getHeight() / 2);
+            double deltaY = directionY * player.getSpeed(mouseXCursor, mouseYCursor,pane.getWidth() / 2,pane.getHeight() / 2);
             player.setX(player.getX() + deltaX);
             player.setY(player.getY() + deltaY);
         }
@@ -201,6 +203,14 @@ public class SoloInGameController implements Initializable {
     }
     public void setCoY(double y) {
         this.coY = y;
+    }
+
+    public void setMouseXCursor(double mouseXCursor) {
+        this.mouseXCursor = mouseXCursor;
+    }
+
+    public void setMouseYCursor(double mouseYCursor) {
+        this.mouseYCursor = mouseYCursor;
     }
 
 }

@@ -5,7 +5,7 @@ import static java.lang.Math.round;
 public abstract class MovableObject extends Entity {
 
     private final int rangeHorizonModifier = 100;
-    private final double baseMouvementSpeed = 30;
+    private final double baseMouvementSpeed = 10;
 
     private final double slowRangeRay;
     public MovableObject(int ID, double x, double y, double mass) {
@@ -24,7 +24,8 @@ public abstract class MovableObject extends Entity {
         return (int)round(this.getMass()) + rangeHorizonModifier;
     }
     public abstract double getSpeed();
-    public abstract double getSpeed(double xCursor,double yCursor);
+
+    public abstract double getSpeed(double xCursor,double yCursor,double paneCenterX,double paneCenterY);
 
     public double getBaseMouvementSpeed() {
         return baseMouvementSpeed;

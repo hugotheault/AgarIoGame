@@ -5,6 +5,13 @@ import sae.launch.agario.models.Entity;
 public class Boundary {
     double x, y, width, height;
 
+    /**
+     *
+     * @param x
+     * @param y
+     * @param width
+     * @param height
+     */
     public Boundary(double x, double y, double width, double height) {
         this.x = x;
         this.y = y;
