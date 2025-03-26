@@ -124,26 +124,6 @@ public class Game {
         pane.getChildren().add(circle);
     }
 
-    //On utilise un compteur a 30 pour éviter de réactualiser le nombre de pellet a chaque actualisation (peu utile et couteux)
-    private int compteur;
-    private void updatePelletsNumber() {
-        if(compteur <= 0) {
-            if (quadTree.getPelletsNumber() < this.maxPelletNb) {
-                IDGenerator generator = IDGenerator.getGenerator();
-                Random random = new Random();
-                int nbToAdd = this.maxPelletNb - quadTree.getPelletsNumber();
-                while (nbToAdd > 0){
-                    Pellet pellet = new Pellet(generator.NextID(), random.nextDouble(quadTree.getLength()), random.nextDouble(quadTree.getHeight()), pelletSize);
-                    quadTree.insert(pellet);
-                    nbToAdd--;
-                }
-            }
-            compteur = 30;
-        } else{
-            compteur--;
-        }
-    }
-
     /**
      *Update the position of all the players, and wheter they can eat or get eaten
      */
