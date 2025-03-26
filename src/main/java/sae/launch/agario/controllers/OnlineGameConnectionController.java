@@ -35,9 +35,6 @@ public class OnlineGameConnectionController implements Initializable {
             loader.setController(new OnlineInGameController(inputIPCo.getText(), Integer.parseInt(inputPortCo.getText())));
             Parent root = loader.load();
 
-            InetAddress ip = InetAddress.getLocalHost();
-            System.out.println(ip.getHostAddress());
-
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();

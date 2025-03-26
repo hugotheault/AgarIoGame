@@ -113,8 +113,8 @@ public class OnlineInGameController implements Initializable {
         sizeScaleToEat = Double.parseDouble(properties.getProperty("sizeScaleToEat"));
 
         this.isHost = false;
-        Socket socket = new Socket(ip, port);
-        clientPrintWriter = new PrintWriter(socket.getOutputStream(), true);
+        clientSocker = new Socket(ip, port);
+        clientPrintWriter = new PrintWriter(clientSocker.getOutputStream(), true);
         clientPrintWriter.write("Je me connecte");
 
         while(this.ID == 0) {
