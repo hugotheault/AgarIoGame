@@ -33,6 +33,8 @@ public class InGameController implements Initializable {
         pane.setOnMouseMoved(event ->{
             game.setPlayerXPercent(event.getX() / pane.getWidth());
             game.setPlayerYPercent(event.getY() / pane.getHeight());
+            game.setMouseXCursor(event.getX());
+            game.setMouseYCursor(event.getY());
 
         });
 

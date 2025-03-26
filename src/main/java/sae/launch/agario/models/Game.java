@@ -29,6 +29,9 @@ public class Game {
     private double playerXPercent;
     private double playerYPercent;
 
+    private double mouseXCursor;
+    private double mouseYCursor;
+
 
     //Default constructor with default values
     public Game(Pane pane){
@@ -149,8 +152,8 @@ public class Game {
             directionX /= magnitude;
             directionY /= magnitude;
         }
-        double deltaX = directionX * player.getSpeed(playerXPercent, playerYPercent);
-        double deltaY = directionY * player.getSpeed(playerXPercent, playerYPercent);
+        double deltaX = directionX * player.getSpeed(mouseXCursor, mouseYCursor,pane.getWidth() / 2,pane.getHeight() / 2);
+        double deltaY = directionY * player.getSpeed(mouseXCursor, mouseYCursor,pane.getWidth() / 2,pane.getHeight() / 2);
         player.setX(player.getX() + deltaX);
         player.setY(player.getY() + deltaY);
 
@@ -220,5 +223,13 @@ public class Game {
 
     public void setPlayerYPercent(double playerYPercent) {
         this.playerYPercent = playerYPercent;
+    }
+
+    public void setMouseXCursor(double mouseXCursor) {
+        this.mouseXCursor = mouseXCursor;
+    }
+
+    public void setMouseYCursor(double mouseYCursor) {
+        this.mouseYCursor = mouseYCursor;
     }
 }

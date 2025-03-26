@@ -16,7 +16,7 @@ public class PlayerController {
 
     public void update(Player player){
         this.player = player;
-        playerCircle.setRadius(10*Math.sqrt(this.player.getMass()));
+        playerCircle.setRadius(player.getRadius());
         playerCircle.setCenterY(this.player.getY());
         playerCircle.setCenterX(this.player.getX());
     }
