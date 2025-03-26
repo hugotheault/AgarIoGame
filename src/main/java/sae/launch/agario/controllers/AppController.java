@@ -20,7 +20,9 @@ public class AppController {
     protected void onLocalButtonClick(ActionEvent event) throws IOException {
         welcomeText.setText("Lancement du jeu en Solo!");
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/sae/launch/agario/InGameView.fxml"));
+        loader.setController(new SoloInGameController());
         Parent root = loader.load();
+
 
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(root));

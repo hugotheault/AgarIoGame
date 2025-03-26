@@ -113,6 +113,7 @@ public class QuadTree {
     public ArrayList<Entity> getEntitiesInRegion(Boundary region) {
         ArrayList<Entity> result = new ArrayList<>();
 
+
         if (depth == 0) {
             for (Entity entity : entities) {
                 if (region.contains(entity)) {
@@ -292,24 +293,32 @@ public class QuadTree {
      * @param playerIDs List of all the player's ID
      * @return List of entity Player in the first quadtree's child
      */
-    public ArrayList<Player> getPlayersByIds(ArrayList<Integer> playerIDs) {
+    public ArrayList<Player> getPlayers() {
         ArrayList<Player> players = new ArrayList<>();
 
         if (depth == 0) {
             for (Entity entity : entities) {
-                if (entity instanceof Player && playerIDs.contains(entity.getID())) {
+                if (entity instanceof Player) {
                     players.add((Player) entity);
                 }
             }
             return players;
         }
-
-        if (NWTree != null) players.addAll(NWTree.getPlayersByIds(playerIDs));
-        if (NETree != null) players.addAll(NETree.getPlayersByIds(playerIDs));
-        if (SWTree != null) players.addAll(SWTree.getPlayersByIds(playerIDs));
-        if (SETree != null) players.addAll(SETree.getPlayersByIds(playerIDs));
+        if (NWTree != null) {
+            players.addAll(NWTree.getAllPlayers());
+        }
+        if (NETree != null) {
+            players.addAll(NETree.getAllPlayers());
+        }
+        if (SWTree != null) {
+            players.addAll(SWTree.getAllPlayers());
+        }
+        if (SETree != null) {
+            players.addAll(SETree.getAllPlayers());
+        }
 
         return players;
+
     }
 
 }
