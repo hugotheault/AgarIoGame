@@ -15,11 +15,6 @@
            fx:controller="sae.launch.agario.controllers.AppController">
 
     <children>
-        <!-- Rectangle semi-transparent pour améliorer la lisibilité -->
-        <Rectangle width="800" height="600"
-                   arcHeight="20" arcWidth="20"
-                   fill="rgba(0, 0, 0, 0.5)" />
-
         <!-- VBox interne pour aligner les éléments -->
         <VBox alignment="CENTER" spacing="20">
             <!-- Titre -->

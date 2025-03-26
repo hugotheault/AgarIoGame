@@ -3,10 +3,8 @@ package sae.launch.agario.controllers;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.Pane;
@@ -19,10 +17,11 @@ import javafx.scene.control.ButtonType;
 import java.util.Optional;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.image.Image;
+import static sae.launch.agario.models.App.loadFXML;
 
 public class InGameController implements Initializable {
     private @FXML Pane pane;
-
+    private static Scene scene;
     private Game game;
     @Override
     public void initialize(URL u, ResourceBundle r){
@@ -98,12 +97,11 @@ public class InGameController implements Initializable {
 
         if (result.isPresent() && result.get() == ButtonType.OK) {
             // Return to home menu
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/sae/launch/agario/AppView.fxml"));
-            Parent root = loader.load();
-
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            System.out.println(((Node) event.getSource()).getScene().getWindow().getHeight());
-            stage.setScene(new Scene(root));
+            scene = new Scene(loadFXML("AppView"), 600, 400);
+            stage.setScene(scene);
+            stage.show();
+            stage.getIcons().add(new Image("icon.png"));
 
             stage.show();
         }
