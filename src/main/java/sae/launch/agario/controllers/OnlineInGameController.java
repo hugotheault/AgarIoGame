@@ -29,6 +29,7 @@ public class OnlineInGameController implements Initializable {
 
     private int ID;
 
+    private boolean isHost;
     private Server server;
     private PrintWriter clientPrintWriter;
     private Socket clientSocker;
@@ -61,7 +62,10 @@ public class OnlineInGameController implements Initializable {
     private double pelletSize;
 
     public OnlineInGameController() {
+        this.isHost = true;
         server = new Server(this);
+        quadTree = new QuadTree(mapSize, mapSize, 6, 0, 0);
+        this.gameRenderer = new GameRenderer();
 
         this.pelletController = new PelletController(quadTree, maxPelletNb, pelletSize);
         pelletController.generatePellets();
@@ -74,9 +78,9 @@ public class OnlineInGameController implements Initializable {
                 updateGame();
             }
         });
-        threadWorld.start();
     }
     public OnlineInGameController(String ip, int port) throws IOException {
+        this.isHost = false;
         Socket socket = new Socket(ip, port);
         clientPrintWriter = new PrintWriter(socket.getOutputStream(), true);
         clientPrintWriter.write("Je me connecte");
@@ -108,7 +112,7 @@ public class OnlineInGameController implements Initializable {
                         if (bytesRead != -1) {
                             String messageRecu = new String(buffer, 0, bytesRead);
                             System.out.println(messageRecu);
-                            
+
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -137,16 +141,16 @@ public class OnlineInGameController implements Initializable {
             throw new RuntimeException(e);
         }
 
-        quadTree = new QuadTree(mapSize, mapSize, 6, 0, 0);
-
-        this.gameRenderer = new GameRenderer(pane);
-
         pane.setOnMouseMoved(event ->{
             setPlayerXPercent(event.getX() / pane.getWidth());
             setPlayerYPercent(event.getY() / pane.getHeight());
             setCoX(event.getX());
             setCoY(event.getY());
         });
+        if(isHost){
+            gameRenderer.setPane(pane);
+            threadWorld.start();
+        }
 
     }
 
