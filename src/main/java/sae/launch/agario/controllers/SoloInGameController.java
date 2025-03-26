@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.ResourceBundle;
 
 import sae.launch.agario.QuadTree;
@@ -27,9 +28,11 @@ public class SoloInGameController implements Initializable {
 
     private ArrayList<Player> players;
 
+    private ArrayList<AI> ais;
+
     private GameRenderer gameRenderer;
 
-
+    private final int nbAis = 5;
     private double playerXPercent;
     private double playerYPercent;
     private double coX;
@@ -54,6 +57,7 @@ public class SoloInGameController implements Initializable {
         this.maxPelletNb = 500;
         this.sizeToDivide = 50;
         this.pelletSize = 10;
+        Random rand = new Random();
 
         quadTree = new QuadTree(mapSize, mapSize, 6, 0, 0);
 
@@ -65,6 +69,12 @@ public class SoloInGameController implements Initializable {
 
         this.players = new ArrayList<>();
         players.add(new Player(idBase, 50, 50, initialSize));
+
+        this.ais = new ArrayList<>();
+        ais.add( new AI(IDGenerator.getGenerator().NextID(),1 + (rand.nextDouble() % 100) ,1 + (rand.nextDouble() % 100),initialSize,quadTree,new AIRandom()));
+        /*for( int i = 0; i < nbAis; i++){
+            ais.add( new AI(IDGenerator.getGenerator().NextID(),1 + (rand.nextDouble() % 100) ,1 + (rand.nextDouble() % 100),initialSize));
+        }*/
 
         this.gameRenderer = new GameRenderer(pane);
 
@@ -125,6 +135,9 @@ public class SoloInGameController implements Initializable {
                 directionX /= magnitude;
                 directionY /= magnitude;
             }
+            System.out.println("x      " + directionX);
+            System.out.println("y      " + directionY);
+            //System.out.println(magnitude);
             double deltaX = directionX * player.getSpeed(mouseXCursor, mouseYCursor,pane.getWidth() / 2,pane.getHeight() / 2);
             double deltaY = directionY * player.getSpeed(mouseXCursor, mouseYCursor,pane.getWidth() / 2,pane.getHeight() / 2);
             player.setX(player.getX() + deltaX);
@@ -139,12 +152,19 @@ public class SoloInGameController implements Initializable {
             for(Entity cible: quadTree.getEntitiesAroundPlayer((Player) joueur)){
                 if(cible.equals(joueur)) continue;
                 if(joueur.canEat(cible)){
-                    joueur.setMass(joueur.getMass()+cible.getMass());
+                    joueur.Absorb(cible);
                     quadTree.remove(cible);
                 }
             }
         }
     }
+
+    /*private void updateAI(){
+        for(AI ia : quadTree.getAI()){
+            double deltaX = ia.get * ia.getSpeed(mouseXCursor, mouseYCursor,pane.getWidth() / 2,pane.getHeight() / 2);
+            double deltaY = directionY * ia.getSpeed(mouseXCursor, mouseYCursor,pane.getWidth() / 2,pane.getHeight() / 2);
+        }
+    }*/
 
 
     /*

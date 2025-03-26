@@ -17,7 +17,7 @@ public class AIController {
         Random rand =new Random();
         AICircle.setCenterX(rand.nextDouble(width));
         AICircle.setCenterY(rand.nextDouble(height));
-        AICircle.setRadius(10*Math.sqrt(ai.getMass()));
+        AICircle.setRadius(this.ai.getRadius());
     }
 
 }

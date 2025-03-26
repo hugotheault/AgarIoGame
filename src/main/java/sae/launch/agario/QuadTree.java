@@ -1,5 +1,6 @@
 package sae.launch.agario;
 
+import sae.launch.agario.models.AI;
 import sae.launch.agario.models.Entity;
 import sae.launch.agario.models.Pellet;
 import sae.launch.agario.models.Player;
@@ -236,6 +237,32 @@ public class QuadTree {
         return result;
     }
 
+    public ArrayList<AI> getAllAi() {
+        ArrayList<AI> result = new ArrayList<>();
+
+        if (entities != null) {
+            for (Entity entity : entities) {
+                if (entity instanceof AI) {
+                    result.add((AI) entity);
+                }
+            }
+        }
+        if (NWTree != null) {
+            result.addAll(NWTree.getAllAi());
+        }
+        if (NETree != null) {
+            result.addAll(NETree.getAllAi());
+        }
+        if (SWTree != null) {
+            result.addAll(SWTree.getAllAi());
+        }
+        if (SETree != null) {
+            result.addAll(SETree.getAllAi());
+        }
+
+        return result;
+    }
+
     /**
      * Remove an entity from the quadtree
      * @param entity the entity to remove
@@ -318,6 +345,34 @@ public class QuadTree {
         }
 
         return players;
+
+    }
+
+    public ArrayList<AI> getAI() {
+        ArrayList<AI> ai = new ArrayList<>();
+
+        if (depth == 0) {
+            for (Entity entity : entities) {
+                if (entity instanceof AI) {
+                    ai.add((AI) entity);
+                }
+            }
+            return ai;
+        }
+        if (NWTree != null) {
+            ai.addAll(NWTree.getAllAi());
+        }
+        if (NETree != null) {
+            ai.addAll(NETree.getAllAi());
+        }
+        if (SWTree != null) {
+            ai.addAll(SWTree.getAllAi());
+        }
+        if (SETree != null) {
+            ai.addAll(SETree.getAllAi());
+        }
+
+        return ai;
 
     }
 

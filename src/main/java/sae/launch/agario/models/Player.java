@@ -2,7 +2,6 @@ package sae.launch.agario.models;
 
 public class Player extends MovableObject {
 
-    private final static double speedSlowMultiplier = 0.5;
     public Player(int ID, double x, double y, double mass) {
         super(ID, x, y, mass);
     }
@@ -17,10 +16,10 @@ public class Player extends MovableObject {
         if(isInSlowCircle(xCursor,yCursor,paneCenterX,paneCenterY)){
             double slowRateX = Math.abs((paneCenterX - xCursor)/this.getSlowRangeRay());
             double slowRateY = Math.abs((paneCenterY - yCursor)/this.getSlowRangeRay());
-            double speed = (this.getBaseMouvementSpeed() - (speedSlowMultiplier * Math.log(1 + this.getMass()))) * Math.max(slowRateX,slowRateY);
+            double speed = (this.getBaseMouvementSpeed() - (this.getspeedSlowMultiplier() * Math.log(1 + this.getMass()))) * Math.max(slowRateX,slowRateY);
             return Math.max(speed,0) ;
         } else{
-            double speed = (this.getBaseMouvementSpeed() - (speedSlowMultiplier * Math.log(1 + this.getMass())));
+            double speed = (this.getBaseMouvementSpeed() - (this.getspeedSlowMultiplier() * Math.log(1 + this.getMass())));
             return Math.max(speed,0) ;
         }
     }
