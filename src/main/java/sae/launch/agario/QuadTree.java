@@ -80,39 +80,41 @@ public class QuadTree {
     }
 
 
-    /**
-     * Return a list of all entities inside of the specified region
-     * @param x1 X of the first point
-     * @param y1 Y of the first point
-     * @param x2 X of the second point
-     * @param y2 Y of the second point
-     * @return a list of all entities inside the region (a rectangle whose corners are the 2 points
-     */
-    public ArrayList<Entity> getEntitiesInRegion(double x1, double y1, double x2, double y2) {
-        ArrayList<Entity> result = new ArrayList<>();
+    public ArrayList<Entity> getEntitiesAroundPlayer(Player player) {
+        double radius = 2 * player.getRadius();
+        Boundary searchArea = new Boundary(player.getX() - radius, player.getY() - radius,
+                2 * radius, 2 * radius);
+        return getEntitiesInRegion(searchArea);
+    }
 
+    public ArrayList<Entity> getEntitiesInRegion(double x1, double y1, double x2, double y2) {
+        Boundary region = new Boundary(x1, y1, x2 - x1, y2 - y1);
+        return getEntitiesInRegion(region);
+    }
+
+    public ArrayList<Entity> getEntitiesInRegion(Boundary region) {
+        ArrayList<Entity> result = new ArrayList<>();
 
         if (depth == 0) {
             for (Entity entity : entities) {
-                if (isEntityInRegion(entity, x1, y1, x2, y2)) {
+                if (region.contains(entity)) {
                     result.add(entity);
                 }
             }
             return result;
         }
 
-
-        if (isRegionIntersecting(x1, y1, x2, y2, xOffset, yOffset, xOffset + length, yOffset + height)) {
-            result.addAll(NWTree.getEntitiesInRegion(x1, y1, x2, y2));
+        if (region.intersects(new Boundary(xOffset, yOffset, length / 2, height / 2))) {
+            result.addAll(NWTree.getEntitiesInRegion(region));
         }
-        if (isRegionIntersecting(x1, y1, x2, y2, xOffset + length / 2, yOffset, xOffset + length, yOffset + height)) {
-            result.addAll(NETree.getEntitiesInRegion(x1, y1, x2, y2));
+        if (region.intersects(new Boundary(xOffset + length / 2, yOffset, length / 2, height / 2))) {
+            result.addAll(NETree.getEntitiesInRegion(region));
         }
-        if (isRegionIntersecting(x1, y1, x2, y2, xOffset, yOffset + height / 2, xOffset + length, yOffset + height)) {
-            result.addAll(SWTree.getEntitiesInRegion(x1, y1, x2, y2));
+        if (region.intersects(new Boundary(xOffset, yOffset + height / 2, length / 2, height / 2))) {
+            result.addAll(SWTree.getEntitiesInRegion(region));
         }
-        if (isRegionIntersecting(x1, y1, x2, y2, xOffset + length / 2, yOffset + height / 2, xOffset + length, yOffset + height)) {
-            result.addAll(SETree.getEntitiesInRegion(x1, y1, x2, y2));
+        if (region.intersects(new Boundary(xOffset + length / 2, yOffset + height / 2, length / 2, height / 2))) {
+            result.addAll(SETree.getEntitiesInRegion(region));
         }
 
         return result;
@@ -187,28 +189,6 @@ public class QuadTree {
     }
 
     /**
-     *
-     * @param player the player you want to check's stuff around
-     * @return A list of all entites around the player
-     */
-    public ArrayList<Entity> getEntitiesAroundPlayer(Player player) {
-        ArrayList<Entity> result = new ArrayList<>();
-        double playerX = player.getX();
-        double playerY = player.getY();
-        double playerRadius = player.getRadius();
-        double radius = 2 * playerRadius;
-
-        double x1 = playerX - radius;
-        double y1 = playerY - radius;
-        double x2 = playerX + radius;
-        double y2 = playerY + radius;
-
-        result.addAll(getEntitiesInRegion(x1, y1, x2, y2));
-
-        return result;
-    }
-
-    /**
      * Remove an entity from the quadtree
      * @param entity the entity to remove
      */
@@ -246,7 +226,18 @@ public class QuadTree {
         }
     }
 
-    public ArrayList<Player> getPlayersByIds(ArrayList<Integer> playerIDs){
+    public void clear() {
+        if (depth == 0) {
+            entities.clear();
+        } else {
+            NWTree.clear();
+            NETree.clear();
+            SWTree.clear();
+            SETree.clear();
+        }
+    }
+
+    public ArrayList<Player> getPlayersByIds(ArrayList<Integer> playerIDs) {
         ArrayList<Player> players = new ArrayList<>();
 
         if (depth == 0) {
@@ -257,22 +248,13 @@ public class QuadTree {
             }
             return players;
         }
-        if (NWTree != null) {
-            players.addAll(NWTree.getAllPlayers());
-        }
-        if (NETree != null) {
-            players.addAll(NETree.getAllPlayers());
-        }
-        if (SWTree != null) {
-            players.addAll(SWTree.getAllPlayers());
-        }
-        if (SETree != null) {
-            players.addAll(SETree.getAllPlayers());
-        }
+
+        if (NWTree != null) players.addAll(NWTree.getPlayersByIds(playerIDs));
+        if (NETree != null) players.addAll(NETree.getPlayersByIds(playerIDs));
+        if (SWTree != null) players.addAll(SWTree.getPlayersByIds(playerIDs));
+        if (SETree != null) players.addAll(SETree.getPlayersByIds(playerIDs));
 
         return players;
-
-
-
     }
+
 }

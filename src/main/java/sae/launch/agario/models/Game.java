@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import sae.launch.agario.Boundary;
 import sae.launch.agario.QuadTree;
 import sae.launch.agario.controllers.PelletController;
 
@@ -52,6 +53,9 @@ public class Game {
         playerIDs.add(idBase);
         this.pane = pane;
         this.camera = new Camera();
+        Boundary visibleRegion = camera.getVisibleRegion(mapSize, mapSize);
+        ArrayList<Entity> visibleEntities = quadTree.getEntitiesInRegion(visibleRegion);
+
         camera.setZoomFactor(0.1);
 
         this.threadWorld = new ThreadWorld(this, new Runnable() {
@@ -87,7 +91,6 @@ public class Game {
 
             double centerX = pane.getWidth() / 2;
             double centerY = pane.getHeight() / 2;
-
             for (Entity entity: quadTree.getEntitiesInRegion(
                     camera.getX() - centerX,
                     camera.getY() - centerY,
