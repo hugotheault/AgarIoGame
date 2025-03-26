@@ -27,7 +27,7 @@ public class InGameController implements Initializable {
     private Game game;
     @Override
     public void initialize(URL u, ResourceBundle r){
-        Game game = new Game(pane);
+        this.game = new Game(pane);
 
         pane.setOnMouseMoved(event ->{
             game.setPlayerXPercent(event.getX() / pane.getWidth());

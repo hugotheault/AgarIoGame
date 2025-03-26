@@ -2,29 +2,40 @@ package sae.launch.agario.controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.shape.Circle;
+import sae.launch.agario.QuadTree;
+import sae.launch.agario.models.IDGenerator;
 import sae.launch.agario.models.Pellet;
 
 import java.util.Random;
 
 public class PelletController {
 
-    private Pellet pellet;
+    private QuadTree quadTree;
+    private IDGenerator generator;
+    private int maxPellets;
+    private double pelletSize;
 
-    @FXML
-    private Circle pelletCircle;
+    public PelletController(QuadTree quadTree, int maxPellets, double pelletSize) {
+        this.quadTree = quadTree;
+        this.maxPellets = maxPellets;
+        this.pelletSize = pelletSize;
+        this.generator = IDGenerator.getGenerator();
+    }
 
-    /**
-     *
-     * @param pellet Pellet
-     * @param width width of the game field
-     * @param height height of the game field
-     */
-    public PelletController(Pellet pellet, double width, double height) {
-        Random random = new Random();
-        this.pellet = pellet;
-        pelletCircle.setCenterX(random.nextDouble(width));
-        pelletCircle.setCenterY(random.nextDouble(height));
-        pelletCircle.setRadius(10*Math.sqrt(pellet.getMass()));
+    public void generatePellets() {
+        if (quadTree.getPelletsNumber() < maxPellets) {
+            Random random = new Random();
+            int pelletsToAdd = maxPellets - quadTree.getPelletsNumber();
+            while (pelletsToAdd > 0) {
+                Pellet pellet = new Pellet(generator.NextID(), random.nextDouble(quadTree.getLength()), random.nextDouble(quadTree.getHeight()), pelletSize);
+                quadTree.insert(pellet);
+                pelletsToAdd--;
+            }
+        }
+    }
+
+    public void removePellet(Pellet pellet) {
+        quadTree.remove(pellet);
     }
 
 }
