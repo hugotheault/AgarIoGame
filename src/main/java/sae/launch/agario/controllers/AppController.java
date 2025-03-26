@@ -28,7 +28,14 @@ public class AppController {
     }
 
     @FXML
-    protected void onMultiButtonClick(){
-        welcomeText.setText("Lancement du jeu en Multijoueur!");
+    protected void onMultiButtonClick(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sae/launch/agario/OnlineGameConnectionView.fxml"));
+        Parent root = loader.load();
+
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        System.out.println(((Node) event.getSource()).getScene().getWindow().getHeight());
+        stage.setScene(new Scene(root));
+
+        stage.show();
     }
 }
