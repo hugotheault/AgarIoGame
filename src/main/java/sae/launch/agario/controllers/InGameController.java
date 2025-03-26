@@ -27,6 +27,8 @@ public class InGameController implements Initializable {
     private @FXML Circle circleUser;
     private @FXML Pane pane;
 
+    private Game game;
+
     @Override
     public void initialize(URL u, ResourceBundle r){
         // Create a new game
