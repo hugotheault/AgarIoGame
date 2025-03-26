@@ -23,15 +23,15 @@ public class GameRenderer {
     /**
      * The method called every time the game is updated
      */
-    public void updateVisuals(QuadTree quadTree, ArrayList<Integer> playerIDs) {
-        camera.updatePosition(quadTree, playerIDs);
-        render(quadTree, playerIDs);
+    public void updateVisuals(QuadTree quadTree, ArrayList<Player> players) {
+        camera.updatePosition(quadTree);
+        render(quadTree, players);
     }
 
     /**
      * Render all the Entities on the pane
      */
-    private void render(QuadTree quadTree, ArrayList<Integer> playersIDs) {
+    private void render(QuadTree quadTree, ArrayList<Player> players) {
         // Exécute les opérations sur le thread de JavaFX
         Platform.runLater(() -> {
             pane.getChildren().clear();
@@ -44,11 +44,11 @@ public class GameRenderer {
                     camera.getY() - centerY,
                     camera.getX() + centerX,
                     camera.getY() + centerY)) {
-                drawEntity(centerX, centerY, entity, playersIDs);
+                drawEntity(centerX, centerY, entity, players);
             }
             ArrayList<Player> entites = quadTree.getAllPlayers();
             for(Entity entity: entites){
-                drawEntity(centerX, centerY, entity, playersIDs);
+                drawEntity(centerX, centerY, entity, players);
             }
         });
     }
@@ -59,14 +59,14 @@ public class GameRenderer {
      * @param centerY The y axis center of the entity
      * @param entity The entity
      */
-    private void drawEntity(double centerX, double centerY, Entity entity, ArrayList<Integer> playerIDs) {
+    private void drawEntity(double centerX, double centerY, Entity entity, ArrayList<Player> players) {
         double entityX = (entity.getX() - camera.getX() + centerX);
         double entityY = (entity.getY() - camera.getY() + centerY);
         double entityRadius = entity.getRadius();
 
         Circle circle = new Circle(entityX, entityY, entityRadius);
 
-        if (playerIDs.contains(entity.getID())) {
+        if (entity instanceof Player) {
             circle.setFill(Color.BLUE);
         } else {
             circle.setFill(((Pellet) entity).getColor());

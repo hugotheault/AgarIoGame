@@ -25,7 +25,7 @@ public class SoloInGameController implements Initializable {
     private QuadTree quadTree;
     private PelletController pelletController;
 
-    private ArrayList<Integer> playerIDs;
+    private ArrayList<Player> players;
 
     private GameRenderer gameRenderer;
 
@@ -61,8 +61,8 @@ public class SoloInGameController implements Initializable {
         this.pelletController = new PelletController(quadTree, maxPelletNb, pelletSize);
         pelletController.generatePellets();
 
-        this.playerIDs = new ArrayList<>();
-        playerIDs.add(idBase);
+        this.players = new ArrayList<>();
+        players.add(new Player(idBase, 50, 50, initialSize));
 
         this.gameRenderer = new GameRenderer(pane);
 
@@ -87,7 +87,7 @@ public class SoloInGameController implements Initializable {
         updatePlayers();
 
         pelletController.generatePellets();
-        gameRenderer.updateVisuals(quadTree, playerIDs);
+        gameRenderer.updateVisuals(quadTree, players);
 
     }
 
@@ -114,7 +114,7 @@ public class SoloInGameController implements Initializable {
      */
     private void updatePlayers() {
 
-        for(Player player: quadTree.getPlayersByIds(playerIDs)){
+        for(Player player: quadTree.getPlayers()){
             //Update position du joueur principal
             double directionX = playerXPercent - 0.5;
             double directionY = playerYPercent - 0.5;

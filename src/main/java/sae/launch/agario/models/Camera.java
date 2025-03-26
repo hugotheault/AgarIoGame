@@ -27,8 +27,8 @@ public class Camera {
     public void setZoomFactor(double zoomFactor) {this.zoomFactor = zoomFactor;}
     public double getZoomFactor() {return zoomFactor;}
 
-    public void updatePosition(QuadTree quadtree, ArrayList<Integer> playerIDs) {
-        ArrayList<Player> players = quadtree.getPlayersByIds(playerIDs);
+    public void updatePosition(QuadTree quadtree) {
+        ArrayList<Player> players = quadtree.getPlayers();
         if(players.size()==1){
             setX(players.get(0).getX());
             setY(players.get(0).getY());

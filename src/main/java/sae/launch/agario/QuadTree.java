@@ -246,12 +246,12 @@ public class QuadTree {
         }
     }
 
-    public ArrayList<Player> getPlayersByIds(ArrayList<Integer> playerIDs){
+    public ArrayList<Player> getPlayers() {
         ArrayList<Player> players = new ArrayList<>();
 
         if (depth == 0) {
             for (Entity entity : entities) {
-                if (entity instanceof Player && playerIDs.contains(entity.getID())) {
+                if (entity instanceof Player) {
                     players.add((Player) entity);
                 }
             }
@@ -271,8 +271,6 @@ public class QuadTree {
         }
 
         return players;
-
-
 
     }
 }
