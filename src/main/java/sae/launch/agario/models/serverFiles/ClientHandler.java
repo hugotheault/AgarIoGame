@@ -11,11 +11,13 @@ public class ClientHandler extends Thread {
 	private OutputStream outputStream;
 	private PrintWriter printWriter;
 	private Server server;
-	
+	private String lastMessage;
+
 	public ClientHandler(InputStream inputStream, OutputStream outputStream, Server serv) {
 		this.inputStream = inputStream;
 		this.outputStream = outputStream;
 		this.server = serv;
+		lastMessage="";
 	}
 
 	public InputStream getInputStream() {
@@ -37,17 +39,22 @@ public class ClientHandler extends Thread {
 				if (bytesRead != -1) {
 				    String messageRecu = new String(buffer, 0, bytesRead);
 				    System.out.println("Message du client : " + messageRecu);
+					lastMessage=messageRecu;
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
 				this.server.deleteClient(this, printWriter);
 				break;
 			}
+			
 		}
 	}
 
 	public void setPrintWriter(PrintWriter printWriter) {
 		this.printWriter = printWriter;
 	}
-	
+	public String getLastMessage(){
+		return lastMessage;
+	}
+
 }

@@ -15,6 +15,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.Array;
 import java.net.Socket;
 import java.net.URL;
 import java.util.ArrayList;
@@ -156,7 +157,7 @@ public class OnlineInGameController implements Initializable {
 
     @Override
     public void initialize(URL u, ResourceBundle r) {
-
+        System.out.println("Initialize");
         pane.setOnMouseMoved(event ->{
             setPlayerXPercent(event.getX() / pane.getWidth());
             setPlayerYPercent(event.getY() / pane.getHeight());
@@ -178,12 +179,29 @@ public class OnlineInGameController implements Initializable {
         pelletController.generatePellets();
         gameRenderer.updateVisuals(quadTree, players, this.ID);
 
-        writeQuadTree();
+        writeQuadTree(players);
+
     }
 
-    private void writeQuadTree() {
-        for(PrintWriter p: server.getPrintWriterList()){
-            p.print(quadTree);
+    private void writeQuadTree(ArrayList<Player> players) {
+        for(int i = 0; i < players.size(); i++){
+            Player p = players.get(i);
+            ArrayList<Entity> entities = quadTree.getEntitiesInRegion(p.getX()-100, p.getY()-100, p.getX()+100, p.getY()+100);
+            StringBuilder s = new StringBuilder();
+            for(Entity e: entities){
+                s.append(e.toString());
+            }
+
+            System.out.println("msg: " + server.getClientConnexionList().get(i).getLastMessage());
+            if(!server.getClientConnexionList().get(i).getLastMessage().equals("")){
+                System.out.println("Un messahge different!!!");
+
+                s.deleteCharAt(s.length() - 1);
+                System.out.println(s);
+                System.out.println("J'envoie le message...");
+                server.getPrintWriterList().get(i).write(s.toString());
+                server.getPrintWriterList().get(i).flush();
+            }
         }
     }
 
