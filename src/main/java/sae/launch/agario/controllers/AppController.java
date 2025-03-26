@@ -12,7 +12,7 @@ import javafx.scene.Node;
 
 import java.io.IOException;
 
-public class HelloController {
+public class AppController {
     @FXML
     private Label welcomeText;
 
