@@ -79,6 +79,8 @@ public class Server {
 
 				Random random = new Random();
 				int ID = IDGenerator.getGenerator().NextID();
+				System.out.println("Longueur : " + this.onlineInGameController.getQuadTree().getLength());
+				System.out.println("Largeur : " + this.onlineInGameController.getQuadTree().getHeight());
 				this.onlineInGameController.getPlayers().add(new Player(ID,
 						random.nextDouble(this.onlineInGameController.getQuadTree().getLength()),
 						random.nextDouble(this.onlineInGameController.getQuadTree().getHeight()),

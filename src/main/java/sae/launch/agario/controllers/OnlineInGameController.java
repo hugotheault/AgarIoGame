@@ -62,6 +62,22 @@ public class OnlineInGameController implements Initializable {
     private double pelletSize;
 
     public OnlineInGameController() {
+        //reads the properties file
+        FileInputStream input = null;
+        Properties properties  = new Properties();
+        try {
+            input = new FileInputStream("application.properties");
+            properties.load(input);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        mapSize = Double.parseDouble(properties.getProperty("mapSize"));
+        initialSize = Double.parseDouble(properties.getProperty("initialSize"));
+        maxPelletNb = Integer.parseInt(properties.getProperty("maxPelletNb"));
+        sizeToDivide = Double.parseDouble(properties.getProperty("sizeToDivide"));
+        pelletSize = Double.parseDouble(properties.getProperty("pelletSize"));
+        sizeScaleToEat = Double.parseDouble(properties.getProperty("sizeScaleToEat"));
+
         this.isHost = true;
         server = new Server(this);
         quadTree = new QuadTree(mapSize, mapSize, 6, 0, 0);
@@ -80,6 +96,22 @@ public class OnlineInGameController implements Initializable {
         });
     }
     public OnlineInGameController(String ip, int port) throws IOException {
+        //reads the properties file
+        FileInputStream input = null;
+        Properties properties  = new Properties();
+        try {
+            input = new FileInputStream("application.properties");
+            properties.load(input);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        mapSize = Double.parseDouble(properties.getProperty("mapSize"));
+        initialSize = Double.parseDouble(properties.getProperty("initialSize"));
+        maxPelletNb = Integer.parseInt(properties.getProperty("maxPelletNb"));
+        sizeToDivide = Double.parseDouble(properties.getProperty("sizeToDivide"));
+        pelletSize = Double.parseDouble(properties.getProperty("pelletSize"));
+        sizeScaleToEat = Double.parseDouble(properties.getProperty("sizeScaleToEat"));
+
         this.isHost = false;
         Socket socket = new Socket(ip, port);
         clientPrintWriter = new PrintWriter(socket.getOutputStream(), true);
@@ -130,16 +162,6 @@ public class OnlineInGameController implements Initializable {
 
     @Override
     public void initialize(URL u, ResourceBundle r) {
-
-        //reads the properties file
-        FileInputStream input = null;
-        Properties properties  = new Properties();
-        try {
-            input = new FileInputStream("application.properties");
-            properties.load(input);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
 
         pane.setOnMouseMoved(event ->{
             setPlayerXPercent(event.getX() / pane.getWidth());
@@ -281,6 +303,6 @@ public class OnlineInGameController implements Initializable {
         this.coY = y;
     }
     public ArrayList<Player> getPlayers(){return this.players;}
-    public QuadTree getQuadTree(){return this.getQuadTree();}
+    public QuadTree getQuadTree(){return quadTree;}
 
 }
