@@ -24,13 +24,6 @@ public class App extends Application {
         stage.setScene(scene);
         stage.show();
         stage.getIcons().add(new Image("icon.png"));
-
-        Classement classement = new Classement();
-        classement.addPlayer(new Player(0,0,0,10));
-        classement.addPlayer(new Player(1,0,0,50));
-        classement.addPlayer(new Player(2,0,0,500));
-        classement.addPlayer(new Player(3,0,0,2));
-        classement.updateClassement();
     }
 
     public static Parent loadFXML(String fxml) throws IOException {

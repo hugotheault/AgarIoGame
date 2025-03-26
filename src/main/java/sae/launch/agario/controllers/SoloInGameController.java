@@ -12,6 +12,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.scene.control.Label;
 import java.io.IOException;
@@ -24,6 +25,7 @@ import sae.launch.agario.QuadTree;
 import sae.launch.agario.models.*;
 
 public class SoloInGameController implements Initializable {
+    private @FXML VBox leaderboard;
     private @FXML Pane pane;
     private @FXML Label scoreLabel;
     private ThreadWorld threadWorld;
@@ -47,6 +49,7 @@ public class SoloInGameController implements Initializable {
     private int maxPelletNb;
     private double sizeToDivide;
     private double pelletSize;
+    private Classement classement;
 
 
     @Override
@@ -95,6 +98,14 @@ public class SoloInGameController implements Initializable {
                 showExitConfirmation();
             });
         });
+
+        this.classement = new Classement(baseMass);
+        classement.addPlayer(new Player(11,0,0,10));
+        classement.addPlayer(new Player(12,0,0,50));
+        classement.addPlayer(new Player(13,0,0,500));
+        classement.addPlayer(new Player(14,0,0,2));
+        classement.addPlayer(player);
+        System.out.println("Classement mis à jour : ");
     }
 
     private void showExitConfirmation() {
@@ -118,10 +129,8 @@ public class SoloInGameController implements Initializable {
 
     private void updateGame() {
         updatePlayers();
-
         pelletController.generatePellets();
         gameRenderer.updateVisuals(quadTree, players);
-
     }
 
     @FXML
@@ -198,6 +207,7 @@ public class SoloInGameController implements Initializable {
                     quadTree.remove(cible);
                     Platform.runLater(()->{
                         scoreLabel.setText(""+(joueur.getMass()-baseMass));
+                        this.classement.updateClassement(leaderboard, quadTree.getAllPlayers());
                     });
                 }
             }
