@@ -27,6 +27,7 @@ public class PelletController {
             Random random = new Random();
             int pelletsToAdd = maxPellets - quadTree.getPelletsNumber();
             while (pelletsToAdd > 0) {
+                System.out.println("Ajout pellet");
                 Pellet pellet = new Pellet(generator.NextID(), random.nextDouble(quadTree.getLength()), random.nextDouble(quadTree.getHeight()), pelletSize);
                 quadTree.insert(pellet);
                 pelletsToAdd--;
