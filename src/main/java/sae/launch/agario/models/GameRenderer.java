@@ -23,8 +23,8 @@ public class GameRenderer {
     /**
      * The method called every time the game is updated
      */
-    public void updateVisuals(QuadTree quadTree, ArrayList<Player> players) {
-        camera.updatePosition(quadTree);
+    public void updateVisuals(QuadTree quadTree, ArrayList<Player> players, int IDPlayer) {
+        camera.updatePosition(quadTree, IDPlayer);
         render(quadTree, players);
     }
 

@@ -55,14 +55,14 @@ public class SoloInGameController implements Initializable {
 
         quadTree = new QuadTree(mapSize, mapSize, 6, 0, 0);
 
-        int idBase = IDGenerator.getGenerator().NextID();
-        quadTree.insert(new Player(idBase, 100, 100, initialSize));
+        Player player = new Player(1, 100, 100, initialSize);
+        quadTree.insert(player);
 
         this.pelletController = new PelletController(quadTree, maxPelletNb, pelletSize);
         pelletController.generatePellets();
 
         this.players = new ArrayList<>();
-        players.add(new Player(idBase, 50, 50, initialSize));
+        players.add(player);
 
         this.gameRenderer = new GameRenderer(pane);
 
@@ -87,7 +87,7 @@ public class SoloInGameController implements Initializable {
         updatePlayers();
 
         pelletController.generatePellets();
-        gameRenderer.updateVisuals(quadTree, players);
+        gameRenderer.updateVisuals(quadTree, players, 1);
 
     }
 

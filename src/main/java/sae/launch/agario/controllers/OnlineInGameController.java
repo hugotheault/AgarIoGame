@@ -31,6 +31,7 @@ public class OnlineInGameController implements Initializable {
 
     private Server server;
     private PrintWriter clientPrintWriter;
+    private Socket clientSocker;
 
 
 
@@ -60,7 +61,7 @@ public class OnlineInGameController implements Initializable {
     private double pelletSize;
 
     public OnlineInGameController() {
-        server = new Server();
+        server = new Server(this);
 
         this.pelletController = new PelletController(quadTree, maxPelletNb, pelletSize);
         pelletController.generatePellets();
@@ -79,6 +80,47 @@ public class OnlineInGameController implements Initializable {
         Socket socket = new Socket(ip, port);
         clientPrintWriter = new PrintWriter(socket.getOutputStream(), true);
         clientPrintWriter.write("Je me connecte");
+
+        while(this.ID == 0) {
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+
+            try {
+                bytesRead = this.clientSocker.getInputStream().read(buffer);
+                if (bytesRead != -1) {
+                    String messageRecu = new String(buffer, 0, bytesRead);
+                    System.out.println(messageRecu);
+                    this.ID= Integer.parseInt(messageRecu.substring(3));
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                break;
+            }
+        }
+        Runnable task = new Runnable() {
+            @Override
+            public void run() {
+                while(true){
+                    try {
+                        byte[] buffer = new byte[1024];
+                        int bytesRead;
+                        bytesRead = clientSocker.getInputStream().read(buffer);
+                        if (bytesRead != -1) {
+                            String messageRecu = new String(buffer, 0, bytesRead);
+                            System.out.println(messageRecu);
+                            
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        break;
+                    }
+                }
+            }
+        };
+        Thread ecouteThread = new Thread(task);
+        ecouteThread.start();
+
+
     }
 
 
@@ -112,8 +154,15 @@ public class OnlineInGameController implements Initializable {
         updatePlayers();
 
         pelletController.generatePellets();
-        gameRenderer.updateVisuals(quadTree, players);
+        gameRenderer.updateVisuals(quadTree, players, this.ID);
 
+        writeQuadTree();
+    }
+
+    private void writeQuadTree() {
+        for(PrintWriter p: server.getPrintWriterList()){
+            p.print(quadTree);
+        }
     }
 
     @FXML
@@ -227,4 +276,7 @@ public class OnlineInGameController implements Initializable {
     public void setCoY(double y) {
         this.coY = y;
     }
+    public ArrayList<Player> getPlayers(){return this.players;}
+    public QuadTree getQuadTree(){return this.getQuadTree();}
+
 }
