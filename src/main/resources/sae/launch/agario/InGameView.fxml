@@ -28,16 +28,6 @@
    <center>
       <Pane fx:id="pane" prefHeight="500.0" prefWidth="800.0" BorderPane.alignment="CENTER">
          <children>
-            <!-- Cercle du joueur -->
-            <Circle id="circleUser" fx:id="circleUser"
-                    fill="DODGERBLUE" radius="42.0" stroke="BLACK" strokeType="INSIDE"
-                    style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 10, 0, 0, 5);"/>
-
-            <!-- Autres cercles représentant les objets du jeu -->
-            <Circle fill="#ff5555" layoutX="100.0" layoutY="100.0" radius="10.0" stroke="BLACK"/>
-            <Circle fill="#55ff55" layoutX="300.0" layoutY="200.0" radius="15.0" stroke="BLACK"/>
-            <Circle fill="#5555ff" layoutX="500.0" layoutY="300.0" radius="12.0" stroke="BLACK"/>
-
             <!-- Barre de score -->
             <Label text="Score :" layoutX="20.0" layoutY="20.0"
                    style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"/>
