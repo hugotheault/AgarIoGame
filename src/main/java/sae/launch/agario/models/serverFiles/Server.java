@@ -18,13 +18,8 @@ public class Server {
 		try {
 			threadWorld.start();
 			askConnexion.start();
-
-			//reads the properties file
-			FileInputStream input = new FileInputStream("application.properties");
-			Properties properties  = new Properties();
-			properties.load(input);
 			//Create an instance of Game
-			//Must give parameters quadtree,idbase,playersIDs, pane, camera, threadWorld
+
 		}catch(Exception exception){
 			System.out.println(exception.getMessage());
 		}

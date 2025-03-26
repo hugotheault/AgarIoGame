@@ -110,7 +110,7 @@ public class SoloInGameController implements Initializable {
 
 
     /**
-     *Update the position of all the players, and wheter they can eat or get eaten
+     *Update the position of all the players, and whether they can eat or get eaten
      */
     private void updatePlayers() {
 
