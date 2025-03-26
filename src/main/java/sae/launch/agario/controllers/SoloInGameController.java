@@ -60,7 +60,7 @@ public class SoloInGameController implements Initializable {
         this.initialSize = 50;
         this.sizeScaleToEat = 1.15;
         this.maxPelletNb = 500;
-        this.sizeToDivide = 50;
+        this.sizeToDivide = this.initialSize * 2;
         this.pelletSize = 10;
 
         quadTree = new QuadTree(mapSize, mapSize, 6, 0, 0);
@@ -99,6 +99,7 @@ public class SoloInGameController implements Initializable {
                 event.consume();
                 showExitConfirmation();
             });
+            pane.requestFocus();
         });
 
         this.classement = new Classement(baseMass);
@@ -108,6 +109,13 @@ public class SoloInGameController implements Initializable {
         classement.addPlayer(new Player(14,0,0,2));
         classement.addPlayer(player);
         System.out.println("Classement mis à jour : ");
+
+        pane.setOnKeyPressed(event -> {
+            if (event.getCode().toString().equals("SPACE")) {
+                dividePlayer(quadTree.getAllPlayers().getLast());
+            }
+        });
+
     }
 
     private void showExitConfirmation() {
@@ -133,6 +141,17 @@ public class SoloInGameController implements Initializable {
         updatePlayers();
         pelletController.generatePellets();
         gameRenderer.updateVisuals(quadTree, players);
+    }
+
+    private void dividePlayer(Player player) {
+        System.out.println(player.getMass()+" : "+sizeToDivide);
+        System.out.println(player.getRay());
+        if(player.getMass() >= sizeToDivide) {
+            Player p = new Player(player.getID(), player.getX()+player.getRay()/10, player.getY()+player.getRay()/10, player.getMass()/2);
+            player.setMass(player.getMass()/2);
+            quadTree.insert(p);
+            updateGame();
+        }
     }
 
     @FXML
