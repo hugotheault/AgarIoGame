@@ -8,19 +8,26 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
+import javafx.scene.control.Label;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import sae.launch.agario.QuadTree;
 import sae.launch.agario.models.*;
 
 public class SoloInGameController implements Initializable {
+    private @FXML VBox leaderboard;
     private @FXML Pane pane;
+    private @FXML Label scoreLabel;
     private ThreadWorld threadWorld;
     private QuadTree quadTree;
     private PelletController pelletController;
@@ -35,13 +42,14 @@ public class SoloInGameController implements Initializable {
     private double coX;
     private double coY;
 
-
+    private double baseMass;
     private double mapSize;
     private double initialSize;
     private double sizeScaleToEat; //Ex: 1.33 -> You need 33% more mass to eat someone else
     private int maxPelletNb;
     private double sizeToDivide;
     private double pelletSize;
+    private Classement classement;
 
     private double mouseXCursor;
     private double mouseYCursor;
@@ -64,7 +72,9 @@ public class SoloInGameController implements Initializable {
         pelletController.generatePellets();
 
         this.players = new ArrayList<>();
-        players.add(new Player(idBase, 50, 50, initialSize));
+        Player player = new Player(idBase, 50, 50, initialSize);
+        players.add(player);
+        baseMass = player.getMass();
 
         this.gameRenderer = new GameRenderer(pane);
 
@@ -83,31 +93,87 @@ public class SoloInGameController implements Initializable {
         });
         threadWorld.start();
 
+        Platform.runLater(() -> {
+            Stage stage = (Stage) pane.getScene().getWindow();
+            stage.setOnCloseRequest(event -> {
+                event.consume();
+                showExitConfirmation();
+            });
+        });
+
+        this.classement = new Classement(baseMass);
+        classement.addPlayer(new Player(11,0,0,10));
+        classement.addPlayer(new Player(12,0,0,50));
+        classement.addPlayer(new Player(13,0,0,500));
+        classement.addPlayer(new Player(14,0,0,2));
+        classement.addPlayer(player);
+        System.out.println("Classement mis à jour : ");
+    }
+
+    private void showExitConfirmation() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Quitter l'application");
+        alert.setHeaderText("Êtes-vous sûr de vouloir quitter ?");
+        alert.setContentText("Cliquez sur Oui pour quitter, ou Non pour annuler.");
+
+        // Customize buttons
+        ButtonType yesButton = new ButtonType("Oui", ButtonBar.ButtonData.OK_DONE);
+        ButtonType noButton = new ButtonType("Non", ButtonBar.ButtonData.CANCEL_CLOSE);
+        alert.getButtonTypes().setAll(yesButton, noButton);
+
+        // Close the application
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == yesButton) {
+            Platform.exit();
+            System.exit(0);
+        }
     }
 
     private void updateGame() {
         updatePlayers();
-
         pelletController.generatePellets();
         gameRenderer.updateVisuals(quadTree, players);
-
     }
 
     @FXML
     protected void onQuitButton() {
-        Platform.exit();
+        // create the alert
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation de sortie");
+        alert.setHeaderText("Voulez-vous vraiment quitter ?");
+        alert.setContentText("Cliquez sur OK pour quitter ou Annuler pour rester.");
+
+        // Show dialog box and wait to the user
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            // Close the application
+            Platform.exit();
+            System.exit(0);
+        }
     }
 
     @FXML
     protected void onMenuButton(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sae/launch/agario/AppView.fxml"));
-        Parent root = loader.load();
+        // create the alert
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation de sortie");
+        alert.setHeaderText("Voulez-vous vraiment Retourner au menu principal ?");
+        alert.setContentText("Cliquez sur OK pour quitter ou Annuler pour rester.");
 
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        System.out.println(((Node) event.getSource()).getScene().getWindow().getHeight());
-        stage.setScene(new Scene(root));
+        // Show dialog box and wait to the user
+        Optional<ButtonType> result = alert.showAndWait();
 
-        stage.show();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            // Return to home menu
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/sae/launch/agario/AppView.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            System.out.println(((Node) event.getSource()).getScene().getWindow().getHeight());
+            stage.setScene(new Scene(root));
+
+            stage.show();
+        }
     }
 
 
@@ -141,6 +207,10 @@ public class SoloInGameController implements Initializable {
                 if(joueur.canEat(cible)){
                     joueur.setMass(joueur.getMass()+cible.getMass());
                     quadTree.remove(cible);
+                    Platform.runLater(()->{
+                        scoreLabel.setText(""+(joueur.getMass()-baseMass));
+                        this.classement.updateClassement(leaderboard, quadTree.getAllPlayers());
+                    });
                 }
             }
         }

@@ -20,13 +20,13 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("AppView"), 720, 480);
+        scene = new Scene(loadFXML("AppView"), 600, 400);
         stage.setScene(scene);
         stage.show();
         stage.getIcons().add(new Image("icon.png"));
     }
 
-    private static Parent loadFXML(String fxml) throws IOException {
+    public static Parent loadFXML(String fxml) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("/sae/launch/agario/" + fxml + ".fxml"));
         return fxmlLoader.load();
     }
