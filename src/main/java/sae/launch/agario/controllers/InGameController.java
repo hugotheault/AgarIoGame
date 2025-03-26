@@ -22,7 +22,6 @@ import javafx.util.Duration;
 import sae.launch.agario.models.Game;
 
 public class InGameController implements Initializable {
-    private @FXML Circle circleUser;
     private @FXML Pane pane;
 
     private Game game;
@@ -33,7 +32,8 @@ public class InGameController implements Initializable {
         pane.setOnMouseMoved(event ->{
             game.setPlayerXPercent(event.getX() / pane.getWidth());
             game.setPlayerYPercent(event.getY() / pane.getHeight());
-
+            game.setCoX(event.getX());
+            game.setCoY(event.getY());
         });
 
 

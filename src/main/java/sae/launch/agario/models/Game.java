@@ -19,7 +19,7 @@ public class Game {
     private double pelletSize;
 
     private QuadTree quadTree;
-    private Player player;
+    private ArrayList<Integer> playerIDs;
     private ThreadWorld threadWorld;
     private Pane pane;
     private Camera camera;
@@ -28,6 +28,8 @@ public class Game {
 
     private double playerXPercent;
     private double playerYPercent;
+    private double coX;
+    private double coY;
 
 
     //Default constructor with default values
@@ -39,8 +41,11 @@ public class Game {
         this.sizeToDivide = 50;
         this.pelletSize = 10;
         this.quadTree = new QuadTree(mapSize, mapSize, 6, 0, 0);
-        this.player = new Player(10, 600, 600, initialSize);
-        quadTree.insert(player);
+
+        int idBase = IDGenerator.getGenerator().NextID();
+        this.quadTree.insert(new Player(idBase, 100, 100, initialSize));
+        this.playerIDs = new ArrayList<>();
+        playerIDs.add(idBase);
         this.pane = pane;
         this.camera = new Camera();
         camera.setZoomFactor(0.1);
@@ -63,8 +68,7 @@ public class Game {
 
         updatePelletsNumber();
 
-        camera.setX(player.getX());
-        camera.setY(player.getY());
+        camera.updatePosition(quadTree, playerIDs);
 
         render();
     }
@@ -107,10 +111,10 @@ public class Game {
 
         Circle circle = new Circle(entityX, entityY, entityRadius);
 
-        if (entity.equals(player)) {
+        if (playerIDs.contains(entity.getID())) {
             circle.setFill(Color.BLUE);
         } else {
-            circle.setFill(Color.GREEN);
+            circle.setFill(Color.WHITE);
         }
 
         pane.getChildren().add(circle);
@@ -141,18 +145,22 @@ public class Game {
      */
     private void updatePlayers() {
 
-        //Update position du joueur principal
-        double directionX = playerXPercent - 0.5;
-        double directionY = playerYPercent - 0.5;
-        double magnitude = Math.sqrt(directionX * directionX + directionY * directionY);
-        if (magnitude != 0) {
-            directionX /= magnitude;
-            directionY /= magnitude;
+        for(Player player: quadTree.getPlayersByIds(playerIDs)){
+            //Update position du joueur principal
+            double directionX = playerXPercent - 0.5;
+            double directionY = playerYPercent - 0.5;
+            double magnitude = Math.sqrt(directionX * directionX + directionY * directionY);
+            if (magnitude != 0) {
+                directionX /= magnitude;
+                directionY /= magnitude;
+            }
+            double deltaX = directionX * player.getSpeed(coX, coY);
+            double deltaY = directionY * player.getSpeed(coX, coY);
+            player.setX(player.getX() + deltaX);
+            player.setY(player.getY() + deltaY);
         }
-        double deltaX = directionX * player.getSpeed(playerXPercent, playerYPercent);
-        double deltaY = directionY * player.getSpeed(playerXPercent, playerYPercent);
-        player.setX(player.getX() + deltaX);
-        player.setY(player.getY() + deltaY);
+
+
 
         //todo update la position des joueurs IA
 
@@ -212,13 +220,18 @@ public class Game {
         this.sizeToDivide = sizeToDivide;
     }
 
-    public Player getPlayer(){return  this.player;}
-
     public void setPlayerXPercent(double playerXPercent) {
         this.playerXPercent = playerXPercent;
     }
 
     public void setPlayerYPercent(double playerYPercent) {
         this.playerYPercent = playerYPercent;
+    }
+
+    public void setCoX(double x) {
+        this.coX = x;
+    }
+    public void setCoY(double y) {
+        this.coY = y;
     }
 }

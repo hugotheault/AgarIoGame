@@ -246,4 +246,33 @@ public class QuadTree {
         }
     }
 
+    public ArrayList<Player> getPlayersByIds(ArrayList<Integer> playerIDs){
+        ArrayList<Player> players = new ArrayList<>();
+
+        if (depth == 0) {
+            for (Entity entity : entities) {
+                if (entity instanceof Player && playerIDs.contains(entity.getID())) {
+                    players.add((Player) entity);
+                }
+            }
+            return players;
+        }
+        if (NWTree != null) {
+            players.addAll(NWTree.getAllPlayers());
+        }
+        if (NETree != null) {
+            players.addAll(NETree.getAllPlayers());
+        }
+        if (SWTree != null) {
+            players.addAll(SWTree.getAllPlayers());
+        }
+        if (SETree != null) {
+            players.addAll(SETree.getAllPlayers());
+        }
+
+        return players;
+
+
+
+    }
 }
