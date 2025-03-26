@@ -1,31 +1,34 @@
-package sae.launch.agario.models;
+package sae.launch.agario.controllers;
 
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import sae.launch.agario.QuadTree;
-import sae.launch.agario.controllers.PelletController;
+import javafx.stage.Stage;
 
-
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
-import java.util.Random;
+import java.util.ResourceBundle;
 
-public class Game {
-    private double mapSize;
-    private double initialSize;
-    private double sizeScaleToEat; //Ex: 1.33 -> You need 33% more mass to eat someone else
-    private int maxPelletNb;
-    private double sizeToDivide;
-    private double pelletSize;
+import sae.launch.agario.QuadTree;
+import sae.launch.agario.models.*;
 
-    private QuadTree quadTree;
-    private ArrayList<Integer> playerIDs;
+public class SoloInGameController implements Initializable {
+    private @FXML Pane pane;
     private ThreadWorld threadWorld;
-    private Pane pane;
-    private Camera camera;
-
+    private QuadTree quadTree;
     private PelletController pelletController;
+
+    private ArrayList<Player> players;
+
+    private GameRenderer gameRenderer;
+
 
     private double playerXPercent;
     private double playerYPercent;
@@ -33,28 +36,44 @@ public class Game {
     private double coY;
 
 
-    //Default constructor with default values
-    public Game(Pane pane){
+    private double mapSize;
+    private double initialSize;
+    private double sizeScaleToEat; //Ex: 1.33 -> You need 33% more mass to eat someone else
+    private int maxPelletNb;
+    private double sizeToDivide;
+    private double pelletSize;
+
+
+    @Override
+    public void initialize(URL u, ResourceBundle r){
         this.mapSize = 2000;
         this.initialSize = 50;
         this.sizeScaleToEat = 1.15;
         this.maxPelletNb = 500;
         this.sizeToDivide = 50;
         this.pelletSize = 10;
-        this.quadTree = new QuadTree(mapSize, mapSize, 6, 0, 0);
 
-        this.pelletController = new PelletController(this.quadTree, maxPelletNb, pelletSize);
-        pelletController.generatePellets();
+        quadTree = new QuadTree(mapSize, mapSize, 6, 0, 0);
 
         int idBase = IDGenerator.getGenerator().NextID();
-        this.quadTree.insert(new Player(idBase, 100, 100, initialSize));
-        this.playerIDs = new ArrayList<>();
-        playerIDs.add(idBase);
-        this.pane = pane;
-        this.camera = new Camera();
-        camera.setZoomFactor(0.1);
+        quadTree.insert(new Player(idBase, 100, 100, initialSize));
 
-        this.threadWorld = new ThreadWorld(this, new Runnable() {
+        this.pelletController = new PelletController(quadTree, maxPelletNb, pelletSize);
+        pelletController.generatePellets();
+
+        this.players = new ArrayList<>();
+        players.add(new Player(idBase, 50, 50, initialSize));
+
+        this.gameRenderer = new GameRenderer(pane);
+
+        pane.setOnMouseMoved(event ->{
+            setPlayerXPercent(event.getX() / pane.getWidth());
+            setPlayerYPercent(event.getY() / pane.getHeight());
+            setCoX(event.getX());
+            setCoY(event.getY());
+        });
+
+        this.threadWorld = new ThreadWorld (gameRenderer, new Runnable() {
             @Override
             public void run() {
                 updateGame();
@@ -64,72 +83,38 @@ public class Game {
 
     }
 
-    /**
-     * The method called every time the game is updated
-     */
     private void updateGame() {
         updatePlayers();
 
         pelletController.generatePellets();
+        gameRenderer.updateVisuals(quadTree, players);
 
-        camera.updatePosition(quadTree, playerIDs);
-
-        render();
     }
 
-    /**
-     * Render all the Entities on the pane
-     */
-    private void render() {
-        // Exécute les opérations sur le thread de JavaFX
-        Platform.runLater(() -> {
-            pane.getChildren().clear();
-
-            double centerX = pane.getWidth() / 2;
-            double centerY = pane.getHeight() / 2;
-
-            for (Entity entity: quadTree.getEntitiesInRegion(
-                    camera.getX() - centerX,
-                    camera.getY() - centerY,
-                    camera.getX() + centerX,
-                    camera.getY() + centerY)) {
-                drawEntity(centerX, centerY, entity);
-            }
-            ArrayList<Player> entites = quadTree.getAllPlayers();
-            for(Entity entity: entites){
-                drawEntity(centerX, centerY, entity);
-            }
-        });
+    @FXML
+    protected void onQuitButton() {
+        Platform.exit();
     }
 
-    /**
-     * Draw an entity on the pane
-     * @param centerX The x axis center of the entity
-     * @param centerY The y axis center of the entity
-     * @param entity The entity
-     */
-    private void drawEntity(double centerX, double centerY, Entity entity) {
-        double entityX = (entity.getX() - camera.getX() + centerX);
-        double entityY = (entity.getY() - camera.getY() + centerY);
-        double entityRadius = entity.getRadius();
+    @FXML
+    protected void onMenuButton(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sae/launch/agario/AppView.fxml"));
+        Parent root = loader.load();
 
-        Circle circle = new Circle(entityX, entityY, entityRadius);
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        System.out.println(((Node) event.getSource()).getScene().getWindow().getHeight());
+        stage.setScene(new Scene(root));
 
-        if (playerIDs.contains(entity.getID())) {
-            circle.setFill(Color.BLUE);
-        } else {
-            circle.setFill(((Pellet) entity).getColor());
-        }
-
-        pane.getChildren().add(circle);
+        stage.show();
     }
+
 
     /**
      *Update the position of all the players, and wheter they can eat or get eaten
      */
     private void updatePlayers() {
 
-        for(Player player: quadTree.getPlayersByIds(playerIDs)){
+        for(Player player: quadTree.getPlayers()){
             //Update position du joueur principal
             double directionX = playerXPercent - 0.5;
             double directionY = playerYPercent - 0.5;
@@ -158,7 +143,6 @@ public class Game {
             }
         }
     }
-
 
 
     /*
@@ -218,4 +202,5 @@ public class Game {
     public void setCoY(double y) {
         this.coY = y;
     }
+
 }

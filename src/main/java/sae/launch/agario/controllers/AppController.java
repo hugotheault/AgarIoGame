@@ -27,7 +27,6 @@ public class AppController {
         scene = new Scene(loadFXML("InGameView"), 600, 400);
         stage.setScene(scene);
         stage.show();
-        stage.getIcons().add(new Image("icon.png"));
     }
 
     @FXML

@@ -22,9 +22,9 @@ public class QuadTree {
 
     /**
      *
-     * @param length
-     * @param height
-     * @param depth
+     * @param length Length of the quadtree
+     * @param height Height of the quadtree
+     * @param depth Depth of the entire quadtree
      * @param xOffset X offset of the quadtree
      * @param yOffset Y offset of the quadtree
      */
@@ -81,55 +81,97 @@ public class QuadTree {
 
 
     /**
-     * Return a list of all entities inside of the specified region
-     * @param x1 X of the first point
-     * @param y1 Y of the first point
-     * @param x2 X of the second point
-     * @param y2 Y of the second point
-     * @return a list of all entities inside the region (a rectangle whose corners are the 2 points
+     *
+     * @param player Player to analyze
+     * @return List of entities in certain range around the player
+     */
+    public ArrayList<Entity> getEntitiesAroundPlayer(Player player) {
+        double radius = 2 * player.getRadius();
+        Boundary searchArea = new Boundary(player.getX() - radius, player.getY() - radius,
+                2 * radius, 2 * radius);
+        return getEntitiesInRegion(searchArea);
+    }
+
+    /**
+     * Get the entities contained in a region (overload)
+     * @param x1 First point of the X-axis line of the area
+     * @param y1 First point of the Y-axis line of the area
+     * @param x2 Second point of the X-axis line of the area
+     * @param y2 Second point of the Y-axis line of the area
+     * @return List of entity contained in a region
      */
     public ArrayList<Entity> getEntitiesInRegion(double x1, double y1, double x2, double y2) {
+        Boundary region = new Boundary(x1, y1, x2 - x1, y2 - y1);
+        return getEntitiesInRegion(region);
+    }
+
+    /**
+     * Get the entities contained in a region
+     * @param region Region to analyze
+     * @return List of entity contained in a region
+     */
+    public ArrayList<Entity> getEntitiesInRegion(Boundary region) {
         ArrayList<Entity> result = new ArrayList<>();
 
 
         if (depth == 0) {
             for (Entity entity : entities) {
-                if (isEntityInRegion(entity, x1, y1, x2, y2)) {
+                if (region.contains(entity)) {
                     result.add(entity);
                 }
             }
             return result;
         }
 
-
-        if (isRegionIntersecting(x1, y1, x2, y2, xOffset, yOffset, xOffset + length, yOffset + height)) {
-            result.addAll(NWTree.getEntitiesInRegion(x1, y1, x2, y2));
+        if (region.intersects(new Boundary(xOffset, yOffset, length / 2, height / 2))) {
+            result.addAll(NWTree.getEntitiesInRegion(region));
         }
-        if (isRegionIntersecting(x1, y1, x2, y2, xOffset + length / 2, yOffset, xOffset + length, yOffset + height)) {
-            result.addAll(NETree.getEntitiesInRegion(x1, y1, x2, y2));
+        if (region.intersects(new Boundary(xOffset + length / 2, yOffset, length / 2, height / 2))) {
+            result.addAll(NETree.getEntitiesInRegion(region));
         }
-        if (isRegionIntersecting(x1, y1, x2, y2, xOffset, yOffset + height / 2, xOffset + length, yOffset + height)) {
-            result.addAll(SWTree.getEntitiesInRegion(x1, y1, x2, y2));
+        if (region.intersects(new Boundary(xOffset, yOffset + height / 2, length / 2, height / 2))) {
+            result.addAll(SWTree.getEntitiesInRegion(region));
         }
-        if (isRegionIntersecting(x1, y1, x2, y2, xOffset + length / 2, yOffset + height / 2, xOffset + length, yOffset + height)) {
-            result.addAll(SETree.getEntitiesInRegion(x1, y1, x2, y2));
+        if (region.intersects(new Boundary(xOffset + length / 2, yOffset + height / 2, length / 2, height / 2))) {
+            result.addAll(SETree.getEntitiesInRegion(region));
         }
 
         return result;
     }
 
 
+    /**
+     * Verify if an area is intersecting with a region
+     * @param x1 First point of the X-axis line of the area
+     * @param y1 First point of the Y-axis line of the area
+     * @param x2 Second point of the X-axis line of the area
+     * @param y2 Second point of the Y-axis line of the area
+     * @param regionX1 First point of the X-axis line of the region
+     * @param regionY1 First point of the Y-axis line of the region
+     * @param regionX2 Second point of the X-axis line of the region
+     * @param regionY2 Second point of the Y-axis line of the region
+     * @return
+     */
     private boolean isRegionIntersecting(double x1, double y1, double x2, double y2, double regionX1, double regionY1, double regionX2, double regionY2) {
         return !(x1 > regionX2 || x2 < regionX1 || y1 > regionY2 || y2 < regionY1);
     }
 
+    /**
+     * Verify if the entity is in a certain area
+     * @param entity Entity
+     * @param x1 First point of the X-axis line of the area
+     * @param y1 First point of the Y-axis line of the area
+     * @param x2 Second point of the X-axis line of the area
+     * @param y2 Second point of the Y-axis line of the area
+     * @return
+     */
     private boolean isEntityInRegion(Entity entity, double x1, double y1, double x2, double y2) {
         return (entity.getX() >= x1 && entity.getX() <= x2 && entity.getY() >= y1 && entity.getY() <= y2);
     }
 
     /**
      *
-     * @return  GEt the number of pellets inside of the quadtree
+     * @return  Get the number of pellets inside the quadtree
      */
     public int getPelletsNumber() {
         int count = 0;
@@ -148,10 +190,18 @@ public class QuadTree {
         return count;
     }
 
+    /**
+     *
+     * @return The height of the actual quadtree
+     */
     public double getHeight() {
         return this.height;
     }
 
+    /**
+     *
+     * @return The length of the actual quadtree
+     */
     public double getLength() {
         return this.length;
     }
@@ -182,28 +232,6 @@ public class QuadTree {
         if (SETree != null) {
             result.addAll(SETree.getAllPlayers());
         }
-
-        return result;
-    }
-
-    /**
-     *
-     * @param player the player you want to check's stuff around
-     * @return A list of all entites around the player
-     */
-    public ArrayList<Entity> getEntitiesAroundPlayer(Player player) {
-        ArrayList<Entity> result = new ArrayList<>();
-        double playerX = player.getX();
-        double playerY = player.getY();
-        double playerRadius = player.getRadius();
-        double radius = 2 * playerRadius;
-
-        double x1 = playerX - radius;
-        double y1 = playerY - radius;
-        double x2 = playerX + radius;
-        double y2 = playerY + radius;
-
-        result.addAll(getEntitiesInRegion(x1, y1, x2, y2));
 
         return result;
     }
@@ -246,12 +274,31 @@ public class QuadTree {
         }
     }
 
-    public ArrayList<Player> getPlayersByIds(ArrayList<Integer> playerIDs){
+    /**
+     * Clear the quadtree in order to avoid reallocation
+     */
+    public void clear() {
+        if (depth == 0) {
+            entities.clear();
+        } else {
+            NWTree.clear();
+            NETree.clear();
+            SWTree.clear();
+            SETree.clear();
+        }
+    }
+
+    /**
+     *
+     * @param playerIDs List of all the player's ID
+     * @return List of entity Player in the first quadtree's child
+     */
+    public ArrayList<Player> getPlayers() {
         ArrayList<Player> players = new ArrayList<>();
 
         if (depth == 0) {
             for (Entity entity : entities) {
-                if (entity instanceof Player && playerIDs.contains(entity.getID())) {
+                if (entity instanceof Player) {
                     players.add((Player) entity);
                 }
             }
@@ -272,7 +319,6 @@ public class QuadTree {
 
         return players;
 
-
-
     }
+
 }

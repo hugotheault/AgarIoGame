@@ -1,12 +1,12 @@
 package sae.launch.agario.models;
 
 public class ThreadWorld extends Thread {
-    private Game game;
+    private GameRenderer gameRenderer;
     private Runnable task;
 
-    public ThreadWorld(Game game, Runnable runnable) {
+    public ThreadWorld(GameRenderer gameRenderer, Runnable runnable) {
         super();
-        this.game = game;
+        this.gameRenderer = gameRenderer;
         this.task = runnable;
     }
 
