@@ -15,9 +15,7 @@ public class Camera {
         this.zoomFactor = zoomFactor;
     }
 
-    public Camera() {
-
-    }
+    public Camera() {}
 
     public double getX() { return x; }
     public void setX(double x) { this.x = x; }
@@ -32,20 +30,26 @@ public class Camera {
      * Met à jour la position de la caméra en centrant sur les joueurs suivis.
      */
     public void updatePosition(QuadTree quadtree) {
-        ArrayList<Player> players = quadtree.getPlayers();
+        ArrayList<PlayerComponant> players = quadtree.getPlayers();
 
         if (players.isEmpty()) return;
 
         // Calcul du barycentre des joueurs suivis
         double sumX = 0, sumY = 0;
-        for (Player player : players) {
-            sumX += player.getX();
-            sumY += player.getY();
+        int count = 0;
+        for (PlayerComponant player : players) {
+            if (player instanceof PlayerLeaf) {
+                PlayerLeaf leaf = (PlayerLeaf) player;
+                sumX += leaf.getX();
+                sumY += leaf.getY();
+                count++;
+            }
         }
 
-        // Nouvelle position centrée sur la moyenne des positions des joueurs
-        this.x = sumX / players.size();
-        this.y = sumY / players.size();
+        if (count > 0) {
+            this.x = sumX / count;
+            this.y = sumY / count;
+        }
     }
 
     /**

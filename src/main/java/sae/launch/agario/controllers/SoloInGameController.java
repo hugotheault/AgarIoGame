@@ -32,7 +32,7 @@ public class SoloInGameController implements Initializable {
     private QuadTree quadTree;
     private PelletController pelletController;
 
-    private ArrayList<Player> players;
+    private ArrayList<PlayerComponant> players;
 
     private GameRenderer gameRenderer;
 
@@ -66,21 +66,30 @@ public class SoloInGameController implements Initializable {
         quadTree = new QuadTree(mapSize, mapSize, 6, 0, 0);
 
         int idBase = IDGenerator.getGenerator().NextID();
-        quadTree.insert(new Player(idBase, 100, 100, initialSize));
+        quadTree.insert(new PlayerLeaf(idBase, 100, 100, initialSize, false));
 
         this.pelletController = new PelletController(quadTree, maxPelletNb, pelletSize);
         pelletController.generatePellets();
 
         this.players = new ArrayList<>();
-        Player player = new Player(idBase, 50, 50, initialSize);
-        players.add(player);
-        baseMass = player.getMass();
+        PlayerComponant player1 = new PlayerLeaf(idBase, 50, 50, initialSize, false);
+        players.add(player1);
+        baseMass = player1.getMass();
 
         this.gameRenderer = new GameRenderer(pane);
 
         pane.setOnMouseMoved(event ->{
-            setPlayerXPercent(event.getX() / pane.getWidth());
-            setPlayerYPercent(event.getY() / pane.getHeight());
+            double targetX = event.getX() / pane.getWidth();
+            double targetY = event.getY() / pane.getHeight();
+
+            for (PlayerComponant player : players) {
+                if (player instanceof PlayerLeaf) {
+                    ((PlayerLeaf) player).setTarget(targetX, targetY);
+                }
+            }
+
+            setPlayerXPercent(targetX);
+            setPlayerYPercent(targetY);
             setMouseXCursor(event.getX());
             setMouseYCursor(event.getY());
         });
@@ -103,11 +112,7 @@ public class SoloInGameController implements Initializable {
         });
 
         this.classement = new Classement(baseMass);
-        classement.addPlayer(new Player(11,0,0,10));
-        classement.addPlayer(new Player(12,0,0,50));
-        classement.addPlayer(new Player(13,0,0,500));
-        classement.addPlayer(new Player(14,0,0,2));
-        classement.addPlayer(player);
+        classement.addPlayer(player1);
         System.out.println("Classement mis à jour : ");
 
         pane.setOnKeyPressed(event -> {
@@ -143,11 +148,11 @@ public class SoloInGameController implements Initializable {
         gameRenderer.updateVisuals(quadTree, players);
     }
 
-    private void dividePlayer(Player player) {
+    private void dividePlayer(PlayerComponant player) {
         System.out.println(player.getMass()+" : "+sizeToDivide);
         System.out.println(player.getRay());
         if(player.getMass() >= sizeToDivide) {
-            Player p = new Player(player.getID(), player.getX()+player.getRay()/10, player.getY()+player.getRay()/10, player.getMass()/2);
+            PlayerLeaf p = new PlayerLeaf(player.getID(), player.getX()+player.getRay()/10, player.getY()+player.getRay()/10, player.getMass()/2, false);
             player.setMass(player.getMass()/2);
             quadTree.insert(p);
             updateGame();
@@ -201,7 +206,7 @@ public class SoloInGameController implements Initializable {
      */
     private void updatePlayers() {
 
-        for(Player player: quadTree.getPlayers()){
+        for(PlayerComponant player: quadTree.getPlayers()){
             //Update position du joueur principal
             double directionX = playerXPercent - 0.5;
             double directionY = playerYPercent - 0.5;
@@ -220,8 +225,8 @@ public class SoloInGameController implements Initializable {
 
         //todo update la position des joueurs IA
 
-        for(Player joueur: quadTree.getAllPlayers()){
-            for(Entity cible: quadTree.getEntitiesAroundPlayer((Player) joueur)){
+        for(PlayerComponant joueur: quadTree.getAllPlayers()){
+            for(Entity cible: quadTree.getEntitiesAroundPlayer((PlayerLeaf) joueur)){
                 if(cible.equals(joueur)) continue;
                 if(joueur.canEat(cible)){
                     joueur.setMass(joueur.getMass()+cible.getMass());

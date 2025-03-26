@@ -1,8 +1,6 @@
 package sae.launch.agario;
 
-import sae.launch.agario.models.Entity;
-import sae.launch.agario.models.Pellet;
-import sae.launch.agario.models.Player;
+import sae.launch.agario.models.*;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -85,7 +83,7 @@ public class QuadTree {
      * @param player Player to analyze
      * @return List of entities in certain range around the player
      */
-    public ArrayList<Entity> getEntitiesAroundPlayer(Player player) {
+    public ArrayList<Entity> getEntitiesAroundPlayer(PlayerLeaf player) {
         double radius = 2 * player.getRadius();
         Boundary searchArea = new Boundary(player.getX() - radius, player.getY() - radius,
                 2 * radius, 2 * radius);
@@ -210,13 +208,13 @@ public class QuadTree {
      *
      * @return A list of all the players in the quadtree
      */
-    public ArrayList<Player> getAllPlayers() {
-        ArrayList<Player> result = new ArrayList<>();
+    public ArrayList<PlayerComponant> getAllPlayers() {
+        ArrayList<PlayerComponant> result = new ArrayList<>();
 
         if (entities != null) {
             for (Entity entity : entities) {
-                if (entity instanceof Player) {
-                    result.add((Player) entity);
+                if (entity instanceof PlayerLeaf) {
+                    result.add((PlayerLeaf) entity);
                 }
             }
         }
@@ -290,16 +288,15 @@ public class QuadTree {
 
     /**
      *
-     * @param playerIDs List of all the player's ID
      * @return List of entity Player in the first quadtree's child
      */
-    public ArrayList<Player> getPlayers() {
-        ArrayList<Player> players = new ArrayList<>();
+    public ArrayList<PlayerComponant> getPlayers() {
+        ArrayList<PlayerComponant> players = new ArrayList<>();
 
         if (depth == 0) {
             for (Entity entity : entities) {
-                if (entity instanceof Player) {
-                    players.add((Player) entity);
+                if (entity instanceof PlayerLeaf) {
+                    players.add((PlayerLeaf) entity);
                 }
             }
             return players;
