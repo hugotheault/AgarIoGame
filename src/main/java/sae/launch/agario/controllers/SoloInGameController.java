@@ -137,20 +137,7 @@ public class SoloInGameController implements Initializable {
 
     @FXML
     protected void onQuitButton() {
-        // create the alert
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Confirmation de sortie");
-        alert.setHeaderText("Voulez-vous vraiment quitter ?");
-        alert.setContentText("Cliquez sur OK pour quitter ou Annuler pour rester.");
-
-        // Show dialog box and wait to the user
-        Optional<ButtonType> result = alert.showAndWait();
-
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            // Close the application
-            Platform.exit();
-            System.exit(0);
-        }
+        showExitConfirmation();
     }
 
     @FXML
@@ -171,7 +158,8 @@ public class SoloInGameController implements Initializable {
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             System.out.println(((Node) event.getSource()).getScene().getWindow().getHeight());
             stage.setScene(new Scene(root));
-
+            stage.setHeight(400);
+            stage.setWidth(600);
             stage.show();
         }
     }

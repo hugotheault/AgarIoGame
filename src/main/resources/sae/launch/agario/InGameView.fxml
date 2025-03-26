@@ -10,7 +10,7 @@
 
    <!-- Barre supérieure avec boutons et score à droite -->
    <top>
-      <ToolBar style="-fx-background-color: #4d74cd; -fx-padding: 10px;" BorderPane.alignment="CENTER">
+      <ToolBar style="-fx-border-color: black; -fx-padding: 10px;" BorderPane.alignment="CENTER">
          <items>
             <Button onAction="#onMenuButton" style="-fx-background-color: #ffcc00; -fx-text-fill: black; -fx-font-weight: bold; -fx-background-radius: 15px;" text="Menu Principal" />
             <Button onAction="#onQuitButton" style="-fx-background-color: #ff4444; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 15px;" text="Quitter" />
@@ -19,8 +19,8 @@
             <Region fx:id="spacer" HBox.hgrow="ALWAYS" />
 
             <!-- Score aligné à droite -->
-            <Label style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" text="Score :" />
-            <Label fx:id="scoreLabel" style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" text="0" />
+            <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Score :" />
+            <Label fx:id="scoreLabel" style="-fx-font-size: 16px; -fx-font-weight: bold;" text="0" />
          </items>
       </ToolBar>
    </top>
@@ -29,12 +29,17 @@
    <center>
       <Pane fx:id="pane" prefHeight="500.0" prefWidth="800.0" BorderPane.alignment="CENTER" />
    </center>
-
-   <!-- Classement des meilleurs joueurs -->
    <right>
-      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="150.0" spacing="10" style="-fx-background-color: #4d74cd; -fx-padding: 10px;">
+      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="150.0" spacing="10" style="-fx-background-color: rgba(0,0,0,0.6); -fx-padding: 10px;" BorderPane.alignment="CENTER">
          <children>
-            <Label style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;" text="Classement" />
+            <Label text="Classement"
+                   style="-fx-background-color: #FF9800;
+              -fx-text-fill: white;
+              -fx-font-size: 18px;
+              -fx-font-weight: bold;
+              -fx-padding: 8 15;
+              -fx-background-radius: 20;
+              -fx-border-radius: 20;" />
             <VBox fx:id="leaderboard" prefHeight="200.0" prefWidth="100.0" />
          </children>
       </VBox>

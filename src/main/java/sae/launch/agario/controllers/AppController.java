@@ -1,38 +1,77 @@
 package sae.launch.agario.controllers;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.Optional;
+import java.util.ResourceBundle;
 
 import static sae.launch.agario.models.App.loadFXML;
 
-public class AppController {
-    @FXML
-    private Label welcomeText;
+public class AppController implements Initializable {
 
     private static Scene scene;
+    private @FXML StackPane stackPane;
+
+    public void initialize(URL u, ResourceBundle r){
+        Platform.runLater(() -> {
+            Stage stage = (Stage) stackPane.getScene().getWindow();
+            stage.setOnCloseRequest(event -> {
+                event.consume();
+                showExitConfirmation();
+            });
+        });
+    }
+
+    private void showExitConfirmation() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Quitter l'application");
+        alert.setHeaderText("Êtes-vous sûr de vouloir quitter ?");
+        alert.setContentText("Cliquez sur Oui pour quitter, ou Non pour annuler.");
+
+        // Customize buttons
+        ButtonType yesButton = new ButtonType("Oui", ButtonBar.ButtonData.OK_DONE);
+        ButtonType noButton = new ButtonType("Non", ButtonBar.ButtonData.CANCEL_CLOSE);
+        alert.getButtonTypes().setAll(yesButton, noButton);
+
+        // Close the application
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == yesButton) {
+            Platform.exit();
+            System.exit(0);
+        }
+    }
 
     @FXML
     protected void onLocalButtonClick(ActionEvent event) throws IOException {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(loadFXML("InGameView"), 600, 400);
+        scene = new Scene(loadFXML("InGameView"));
         stage.setScene(scene);
         stage.show();
+        stage.setFullScreen(true);
     }
 
     @FXML
     protected void onMultiButtonClick(ActionEvent event) throws IOException {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(loadFXML("InGameView"), 600, 400);
+        scene = new Scene(loadFXML("OnlineGameConnectionView"), 600, 400);
         stage.setScene(scene);
         stage.show();
         stage.getIcons().add(new Image("icon.png"));
