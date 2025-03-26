@@ -13,7 +13,7 @@ import java.util.Random;
 public class Server {
 	private Thread askConnexion = new Thread(new ServerSocketRunnerConnections(this));
 	private Thread threadWorld = new Thread(new ServerSocketRunnerWorld(this));
-	private ArrayList<Thread> clientConnectionList = new ArrayList<Thread>();
+	private ArrayList<ClientHandler> clientConnectionList = new ArrayList<ClientHandler>();
 	private ArrayList<PrintWriter> printWriterList = new ArrayList();
 	private OnlineInGameController onlineInGameController;
 	
@@ -41,7 +41,7 @@ public class Server {
 
 
 
-	public ArrayList<Thread> getClientConnexionList() {
+	public ArrayList<ClientHandler> getClientConnexionList() {
 		return clientConnectionList;
 	}
 
@@ -74,8 +74,7 @@ public class Server {
 				this.getClientConnexionList().add(clientHandler);
 
 
-				this.getPrintWriterList().get(this.getPrintWriterList().size() - 1).write("Vous êtes connecté");
-				this.getPrintWriterList().get(this.getPrintWriterList().size() - 1).flush();
+				this.getPrintWriterList().get(this.getPrintWriterList().size() - 1).write("Vous êtes con");
 
 				Random random = new Random();
 				int ID = IDGenerator.getGenerator().NextID();
@@ -86,6 +85,7 @@ public class Server {
 						random.nextDouble(this.onlineInGameController.getQuadTree().getHeight()),
 						onlineInGameController.getInitialSize()));
 				this.getPrintWriterList().get(this.getPrintWriterList().size() - 1).write("id:"+ID);
+				this.getPrintWriterList().get(this.getPrintWriterList().size()-1).flush();
 			}
 			
 		} catch (IOException e) {
