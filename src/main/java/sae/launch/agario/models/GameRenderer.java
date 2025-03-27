@@ -67,6 +67,8 @@ public class GameRenderer {
         Circle circle = new Circle(entityX, entityY, entityRadius);
 
         if (entity instanceof PlayerComposite) {
+        }
+        if (entity instanceof PlayerComposite) {
             circle.setFill(Color.BLUE);
         } else {
             circle.setFill(((Pellet) entity).getColor());

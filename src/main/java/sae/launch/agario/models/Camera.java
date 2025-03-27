@@ -37,9 +37,9 @@ public class Camera {
         // Calcul du barycentre des joueurs suivis
         double sumX = 0, sumY = 0;
         int count = 0;
-        for (PlayerComponant player : players) {
-            if (player instanceof PlayerLeaf) {
-                PlayerLeaf leaf = (PlayerLeaf) player;
+        for (PlayerComposite player : players) {
+            if (player instanceof PlayerComposite) {
+                PlayerComposite leaf = (PlayerComposite) player;
                 sumX += leaf.getX();
                 sumY += leaf.getY();
                 count++;

@@ -51,14 +51,20 @@ public class PlayerComposite extends MovableObject implements PlayerComponant {
 
     @Override
     public double getSpeed(double mouseXCursor, double mouseYCursor, double v, double v1) {
+        if (players.isEmpty()) return 0;
         return players.get(0).getSpeed(mouseXCursor, mouseYCursor, v, v1);
     }
 
     // Déplacer tout le groupe de joueurs
     public void move(double deltaX, double deltaY) {
+        /*for (PlayerLeaf cell : this.getAllPlayer()) {
+            cell.updatePosition(deltaX, deltaY);
+        }*/
         for (PlayerLeaf cell : this.getAllPlayer()) {
             cell.updatePosition(deltaX, deltaY);
         }
+        this.setX(this.getX() + deltaX);
+        this.setY(this.getY() + deltaY);
     }
 
     public ArrayList<PlayerLeaf> getAllPlayer() {

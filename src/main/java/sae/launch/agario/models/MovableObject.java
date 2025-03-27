@@ -44,6 +44,7 @@ public abstract class MovableObject extends Entity {
         if( absorbedEntity == null){
             throw new IllegalArgumentException("MovableObject : the absorbedEntity is null");
         } else{
+            System.out.println("Masse = "+this.getMass());
             super.setMass(this.getMass() + absorbedEntity.getMass());
         }
     }

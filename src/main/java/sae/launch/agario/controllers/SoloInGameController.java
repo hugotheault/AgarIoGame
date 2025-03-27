@@ -66,8 +66,11 @@ public class SoloInGameController implements Initializable {
         quadTree = new QuadTree(mapSize, mapSize, 6, 0, 0);
         PlayerLeaf playerLeaf = new PlayerLeaf(IDGenerator.getGenerator().NextID(), 100, 100, initialSize);
         PlayerComposite player = new PlayerComposite(IDGenerator.getGenerator().NextID(), 100, 100, initialSize);
+        player.addPlayer(playerLeaf);
         int idBase = IDGenerator.getGenerator().NextID();
         quadTree.insert(player);
+
+        System.out.println(quadTree.getAllPlayers());
 
         this.pelletController = new PelletController(quadTree, maxPelletNb, pelletSize);
         pelletController.generatePellets();
@@ -109,7 +112,7 @@ public class SoloInGameController implements Initializable {
 
         pane.setOnKeyPressed(event -> {
             if (event.getCode().toString().equals("SPACE")) {
-                dividePlayer(quadTree.getAllPlayers().getLast());
+                dividePlayer(quadTree.getAllPlayers().get(-1));
             }
         });
 

@@ -54,7 +54,11 @@ public class QuadTree {
         double x = entity.getX();
         double y = entity.getY();
 
+        System.out.println("Inserting entity at (" + x + ", " + y + ")");
+
         if (depth == 0) {
+            System.out.println("Depth 0, adding entity to set.");
+            System.out.println(entities.toArray());
             entities.add(entity);
             return true;
         }
@@ -213,7 +217,7 @@ public class QuadTree {
 
         if (entities != null) {
             for (Entity entity : entities) {
-                if (entity instanceof PlayerLeaf) {
+                if (entity instanceof PlayerComposite) {
                     result.add((PlayerComposite) entity);
                 }
             }
@@ -295,7 +299,7 @@ public class QuadTree {
 
         if (depth == 0) {
             for (Entity entity : entities) {
-                if (entity instanceof PlayerLeaf) {
+                if (entity instanceof PlayerComposite) {
                     players.add((PlayerComposite) entity);
                 }
             }

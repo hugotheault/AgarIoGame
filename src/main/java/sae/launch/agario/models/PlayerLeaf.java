@@ -39,7 +39,8 @@ public class PlayerLeaf extends MovableObject implements PlayerComponant {
         if(isInSlowCircle(xCursor,yCursor,paneCenterX,paneCenterY)){
             double slowRateX = Math.abs((paneCenterX - xCursor)/this.getSlowRangeRay());
             double slowRateY = Math.abs((paneCenterY - yCursor)/this.getSlowRangeRay());
-            double speed = (this.getBaseMouvementSpeed() - (speedSlowMultiplier * Math.log(1 + this.getMass()))) * Math.max(slowRateX,slowRateY);
+            //double speed = (this.getBaseMouvementSpeed() - (speedSlowMultiplier * Math.log(1 + this.getMass()))) * Math.max(slowRateX,slowRateY);
+            double speed = (this.getBaseMouvementSpeed() - (speedSlowMultiplier * Math.log(1 + this.getMass())));
             return Math.max(speed,0) ;
         } else{
             double speed = (this.getBaseMouvementSpeed() - (speedSlowMultiplier * Math.log(1 + this.getMass())));
