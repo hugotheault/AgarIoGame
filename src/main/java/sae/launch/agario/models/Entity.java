@@ -66,7 +66,7 @@ public abstract class Entity {
 
     @Override
     public String toString(){
-        return this.getX()+"/"+this.getY()+"/"+this.getMass()+"#";
+        return this.getID()+"/"+this.getX()+"/"+this.getY()+"/"+this.getMass()+"#";
     }
 
 }
