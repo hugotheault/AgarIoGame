@@ -16,7 +16,7 @@ public class IDGenerator {
 
     public static IDGenerator getGenerator() {
         if(generator == null){
-            return new IDGenerator();
+            generator = new IDGenerator();
         }
         return generator;
     }

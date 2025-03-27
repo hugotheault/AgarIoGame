@@ -290,7 +290,6 @@ public class QuadTree {
 
     /**
      *
-     * @param playerIDs List of all the player's ID
      * @return List of entity Player in the first quadtree's child
      */
     public ArrayList<Player> getPlayers() {

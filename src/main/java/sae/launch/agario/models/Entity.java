@@ -68,5 +68,8 @@ public abstract class Entity {
     public String toString(){
         return "id:"+this.getID()+"/cox:"+this.getX()+"/coy:"+this.getY()+"/mass:"+this.getRadius()+"#";
     }
+    public String toStringRounded(){
+        return "id:"+this.getID()+"/cox:"+Math.round(this.getX())+"/coy:"+Math.round(this.getY())+"/mass:"+Math.round(this.getRadius())+"#";
+    }
 
 }

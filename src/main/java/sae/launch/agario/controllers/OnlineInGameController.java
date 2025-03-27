@@ -174,45 +174,54 @@ public class OnlineInGameController implements Initializable {
     }
 
     private void updateGame() {
-        updatePlayers();
-
         pelletController.generatePellets();
         gameRenderer.updateVisuals(quadTree, players, this.ID);
 
-        writeQuadTree(players);
+        writeQuadTree();
+
+        updatePlayers();
     }
 
-    private void writeQuadTree(ArrayList<Player> players) {
+    private void writeQuadTree() {
+        System.out.println("Nb players : " + quadTree.getAllPlayers().size());
+
+        //TODO verifier si la méthode est utile
+        for(Player player: players){
+            quadTree.remove(player);
+            quadTree.insert(player);
+        }
+
         for(int i = 0; i < players.size(); i++){
             Player p = players.get(i);
-            ArrayList<Entity> entities = quadTree.getEntitiesInRegion(p.getX()-100, p.getY()-100, p.getX()+100, p.getY()+100);
+            quadTree.remove(p);
+            ArrayList<Entity> entities = quadTree.getEntitiesInRegion(p.getX()-200, p.getY()-200, p.getX()+200, p.getY()+200);
             StringBuilder s = new StringBuilder();
             s.append(p);
             for(Entity e: entities){
-                s.append(e.toString());
+                s.append(e.toStringRounded());
             }
+
             String lastMessage = server.getClientConnexionList().get(i).getLastMessage();
             if(!lastMessage.equals("")){
-            //todo changer la verif du getLastMessage a ok
+
                 s.deleteCharAt(s.length() - 1);
-                System.out.println(s);
-                System.out.println("J'envoie le message...");
+                s.append("/end");
+
                 server.getPrintWriterList().get(i).write(s.toString());
                 server.getPrintWriterList().get(i).flush();
             }
             if(lastMessage.contains("deplacement:")){
                 String message = lastMessage.substring(12, lastMessage.length()-1);
                 String[] deplacements = message.split("/");
-                System.out.println("msg : " + message);
-                System.out.println("deplacement de 0: " + deplacements[0]);
+
 
                 double deplacementX = Double.parseDouble(deplacements[0]);
                 double deplacementY = Double.parseDouble(deplacements[1]);
-                System.out.println("Deplacement x : " + deplacementX);
-                System.out.println("Deplacemenet Y : " + deplacementY);
+
                 p.setX(p.getX()+deplacementX);
                 p.setY(p.getY()+deplacementY);
             }
+            quadTree.insert(p);
         }
     }
 
@@ -238,9 +247,6 @@ public class OnlineInGameController implements Initializable {
      *Update the position of all the players, and whether they can eat or get eaten
      */
     private void updatePlayers() {
-
-
-
         //todo update la position des joueurs IA
 
         for(Player joueur: quadTree.getAllPlayers()){
