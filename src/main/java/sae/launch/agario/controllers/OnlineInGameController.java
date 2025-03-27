@@ -55,7 +55,6 @@ public class OnlineInGameController implements Initializable {
     private double coX;
     private double coY;
 
-
     private double mapSize;
     private double initialSize;
     private double sizeScaleToEat; //Ex: 1.33 -> You need 33% more mass to eat someone else
@@ -163,6 +162,7 @@ public class OnlineInGameController implements Initializable {
             setPlayerYPercent(event.getY() / pane.getHeight());
             setCoX(event.getX());
             setCoY(event.getY());
+
         });
         if(isHost){
             gameRenderer.setPane(pane);
@@ -321,5 +321,21 @@ public class OnlineInGameController implements Initializable {
     public Socket getClientSocker(){return clientSocker;}
 
     public Pane getPane(){return this.pane;}
+
+    public double getPlayerXPercent() {
+        return playerXPercent;
+    }
+
+    public double getPlayerYPercent() {
+        return playerYPercent;
+    }
+
+    public double getCoX() {
+        return coX;
+    }
+
+    public double getCoY() {
+        return coY;
+    }
 
 }
