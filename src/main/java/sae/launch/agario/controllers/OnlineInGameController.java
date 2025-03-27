@@ -185,21 +185,32 @@ public class OnlineInGameController implements Initializable {
     private void writeQuadTree(ArrayList<Player> players) {
         for(int i = 0; i < players.size(); i++){
             Player p = players.get(i);
-            ArrayList<Entity> entities = quadTree.getEntitiesInRegion(p.getX()-100, p.getY()-100, p.getX()+100, p.getY()+100);
+            ArrayList<Entity> entities = quadTree.getEntitiesInRegion(p.getX()-300, p.getY()-300, p.getX()+300, p.getY()+300);
             StringBuilder s = new StringBuilder();
+            s.append(p);
             for(Entity e: entities){
                 s.append(e.toString());
             }
-            s.append(p);
-
             System.out.println("msg: " + server.getClientConnexionList().get(i).getLastMessage());
-            if(!server.getClientConnexionList().get(i).getLastMessage().equals("")){
+            String lastMessage = server.getClientConnexionList().get(i).getLastMessage();
+            if(!lastMessage.equals("")){
             //todo changer la verif du getLastMessage a ok
                 s.deleteCharAt(s.length() - 1);
                 System.out.println(s);
                 System.out.println("J'envoie le message...");
                 server.getPrintWriterList().get(i).write(s.toString());
                 server.getPrintWriterList().get(i).flush();
+            }
+            if(lastMessage.contains("deplacement:")){
+                String message = lastMessage.substring(12, lastMessage.length()-1);
+                String[] deplacements = message.split("/");
+                System.out.println("msg : " + message);
+                System.out.println("deplacement de 0: " + deplacements[0]);
+
+                double deplacementX = Double.parseDouble(deplacements[0]);
+                double deplacementY = Double.parseDouble(deplacements[1]);
+                p.setX(p.getX()+deplacementX);
+                p.setY(p.getY()+deplacementY);
             }
         }
     }
