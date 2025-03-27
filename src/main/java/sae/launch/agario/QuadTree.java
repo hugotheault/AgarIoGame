@@ -97,6 +97,13 @@ public class QuadTree {
         return getEntitiesInRegion(searchArea);
     }
 
+    public ArrayList<Entity> getEntitiesAroundMovableObjectLarger(MovableObject obj,double radius) {
+
+        Boundary searchArea = new Boundary(obj.getX() - radius, obj.getY() - radius,
+                2 * radius, 2 * radius);
+        return getEntitiesInRegion(searchArea);
+    }
+
     /**
      * Get the entities contained in a region (overload)
      * @param x1 First point of the X-axis line of the area

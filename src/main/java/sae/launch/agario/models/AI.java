@@ -11,7 +11,7 @@ public class AI extends MovableObject {
 
     private final AIStrategy strategy;
     private QuadTree tree;
-    private final double aiBaseRatioSpeed = 0.4;
+    private final double aiBaseRatioSpeed = 0.7;
     private Color couleur = red;
 
     public AI(int ID, double x, double y, double mass, QuadTree tree, AIStrategy strategy) {
@@ -31,7 +31,7 @@ public class AI extends MovableObject {
     }
 
     public HashMap<String,Double> execStrategy(){
-        return strategy.execStrategy(this.getX(), this.getY(), tree);
+        return strategy.execStrategy(this.getX(), this.getY(), tree, this);
     }
 
     public void setTree(QuadTree tree) { this.tree = tree; }
