@@ -52,12 +52,12 @@ public class ClientDataReader extends Thread {
                     for(String attribute: playerAttributes){
                         int id=0;
                         double x=0, y=0;
-                        double radius=0;
+                        double mass=0;
                         if(attribute.contains("cox:")) x= Double.parseDouble(attribute.substring(4, attribute.length()));
                         if(attribute.contains("coy:")) y=Double.parseDouble(attribute.substring(4, attribute.length()));
                         if(attribute.contains("id:")) id=Integer.parseInt(attribute.substring(3, attribute.length()));
-                        if(attribute.contains("radius:")) radius=Double.parseDouble(attribute.substring(7, attribute.length()));
-                        player = new Player(id, x, y, Math.pow(radius,2));
+                        if(attribute.contains("mass:")) mass=Double.parseDouble(attribute.substring(5, attribute.length()));
+                        player = new Player(id, x, y, Math.sqrt(mass));
                     }
 
                     for(String element: elements){
@@ -65,7 +65,7 @@ public class ClientDataReader extends Thread {
                             int id ;
                             double x = 0;
                             double y = 0;
-                            double radius = 0;
+                            double mass = 0;
                             Color color;
                             Double red = null;
                             Double green = null;
@@ -77,9 +77,10 @@ public class ClientDataReader extends Thread {
                                 if(attribut.contains("red:")) red=Double.parseDouble(attribut.substring(4, attribut.length()));
                                 if(attribut.contains("green:")) green=Double.parseDouble(attribut.substring(6, attribut.length()));
                                 if(attribut.contains("blue:")) blue=Double.parseDouble(attribut.substring(5, attribut.length()));
-                                if(attribut.contains("radius:")) radius=Double.parseDouble(attribut.substring(7, attribut.length()));
+                                if(attribut.contains("mass:")) mass=Double.parseDouble(attribut.substring(5, attribut.length()));
                             }
-                            Circle circle = new Circle(x, y, radius);
+                            Circle circle = new Circle(x, y, Math.sqrt(mass));
+                            System.out.println(" MASSE: "+mass);
                             if(red!=null && green != null && blue != null) {
                                 circle.setFill(Color.color(red, green, blue));
                             }
@@ -91,19 +92,19 @@ public class ClientDataReader extends Thread {
                         p.getChildren().clear();
                         for (Circle circle : circles) {
                             p.getChildren().add(circle);
+                            System.out.println("Ajout d'un cercle en : " + circle.getCenterX() + " / " + circle.getCenterY() + " / " + circle.getRadius());
                         }
                     });
 
                     double directionX = o.getPlayerXPercent() - 0.5;
                     double directionY = o.getPlayerYPercent() - 0.5;
+                    System.out.println(o.getPlayerXPercent());
                     double magnitude = Math.sqrt(directionX * directionX + directionY * directionY);
                     if (magnitude != 0) {
                         directionX /= magnitude;
                         directionY /= magnitude;
                     }
 
-                    System.out.println("speed : " + player.getSpeed());
-                    System.out.println("dir x : " +directionX);
                     double deltaX = Math.round(directionX * player.getSpeed(o.getCoX(), o.getCoY(), o.getPane().getWidth()/2, o.getPane().getHeight()/2) * 1000.0)/1000.0;
                     double deltaY = Math.round(directionY * player.getSpeed(o.getCoX(), o.getCoY(),o.getPane().getWidth()/2, o.getPane().getHeight()/2) * 1000.0)/1000.0;
                     System.out.println("deltaX: " + deltaX);
