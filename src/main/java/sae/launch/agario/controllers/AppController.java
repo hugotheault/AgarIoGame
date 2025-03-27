@@ -62,10 +62,11 @@ public class AppController implements Initializable {
     @FXML
     protected void onLocalButtonClick(ActionEvent event) throws IOException {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(loadFXML("InGameView"));
+        scene = new Scene(loadFXML("AIChoiceView"));
         stage.setScene(scene);
+        stage.setWidth(600);
+        stage.setHeight(400);
         stage.show();
-        stage.setFullScreen(true);
     }
 
     @FXML

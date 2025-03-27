@@ -297,9 +297,7 @@ public class QuadTree {
      */
     public void remove(Entity entity) {
         if (depth == 0) {
-            System.out.println(entities.size());
             entities.remove(entity);
-            System.out.println(entities.size());
             return;
         }
 

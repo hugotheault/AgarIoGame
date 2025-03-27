@@ -53,9 +53,9 @@ public class SoloInGameController implements Initializable {
     private double mouseXCursor;
     private double mouseYCursor;
 
-    private final double nbRandomsAI = 50;
-    private final double nbPelletAI = 0;
-    private final double nbChaserAI = 0;
+    private int nbRandomsAI = 0;
+    private int nbPelletAI = 0;
+    private int nbChaserAI = 0;
 
     @Override
     public void initialize(URL u, ResourceBundle r){
@@ -78,16 +78,7 @@ public class SoloInGameController implements Initializable {
         this.pelletController = new PelletController(quadTree, maxPelletNb, pelletSize);
         pelletController.generatePellets();
 
-        // test implements IA
 
-        for (int i = 0; i < nbRandomsAI; i++) {
-            Random rand = new Random();
-            int xSpawn = rand.nextInt(2000);
-            int ySpawn = rand.nextInt(2000);
-            AI iaPlayer = new AI(IDGenerator.getGenerator().NextID(), xSpawn, ySpawn, 50, quadTree, new AIRamdom());
-            quadTree.insert(iaPlayer);
-        }
-        //----------
 
         this.gameRenderer = new GameRenderer(pane);
 
@@ -107,12 +98,23 @@ public class SoloInGameController implements Initializable {
         threadWorld.start();
 
         Platform.runLater(() -> {
-            Stage stage = (Stage) pane.getScene().getWindow();
-            stage.setOnCloseRequest(event -> {
-                event.consume();
-                showExitConfirmation();
-            });
+                Stage stage = (Stage) pane.getScene().getWindow();
+                stage.setOnCloseRequest(event -> {
+                    event.consume();
+                    showExitConfirmation();
+                });
+            // test implements IA
+
+            for (int i = 0; i < nbRandomsAI; i++) {
+                Random rand = new Random();
+                int xSpawn = rand.nextInt(2000);
+                int ySpawn = rand.nextInt(2000);
+                AI iaPlayer = new AI(IDGenerator.getGenerator().NextID(), xSpawn, ySpawn, 50, quadTree, new AIRamdom());
+                quadTree.insert(iaPlayer);
+            }
+            //----------
         });
+
 
         this.classement = new Classement(baseMass);
         classement.addMovableObject(new Player(11,0,0,10));
@@ -121,7 +123,6 @@ public class SoloInGameController implements Initializable {
         classement.addMovableObject(new Player(14,0,0,2));
         classement.addMovableObject(player);
         classement.updateClassement(leaderboard, quadTree.getAllMovableObjects(), player);
-        System.out.println("Classement mis à jour : ");
     }
 
     private void showExitConfirmation() {
@@ -171,14 +172,12 @@ public class SoloInGameController implements Initializable {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/sae/launch/agario/AppView.fxml"));
             Parent root = loader.load();
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            System.out.println(((Node) event.getSource()).getScene().getWindow().getHeight());
             stage.setScene(new Scene(root));
             stage.setHeight(400);
             stage.setWidth(600);
             stage.show();
         }
     }
-
 
     /**
      *Update the position of all the players, and wheter they can eat or get eaten
@@ -245,20 +244,11 @@ public class SoloInGameController implements Initializable {
         }
 
         for (AI ai : quadTree.getAllIAs()) {
-            System.out.println(ai.getID());
             for (Entity cible : quadTree.getEntitiesAroundMovableObject(ai)) {
                 if (cible.equals(ai)) continue;
-
-                System.out.println("IA " + ai.getID() + " teste la cible " + cible.getID());
-
                 if (ai.canEat(cible)) {
-
-                    System.out.println("IA " + ai.getID() + " mange " + cible.getID());
-
                     ai.Absorb(cible);
                     quadTree.remove(cible);
-                    System.out.println(quadTree.getAllPlayers());
-                    System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
                     Platform.runLater(()->{
                         this.classement.updateClassement(leaderboard, quadTree.getAllMovableObjects(), this.currentPlayer);
                     });
@@ -334,6 +324,18 @@ public class SoloInGameController implements Initializable {
 
     public void setMouseYCursor(double mouseYCursor) {
         this.mouseYCursor = mouseYCursor;
+    }
+
+    public void setNbRandomsAI(int nbRandomsAI) {
+        this.nbRandomsAI = nbRandomsAI;
+    }
+
+    public void setNbPelletAI(int nbPelletAI) {
+        this.nbPelletAI = nbPelletAI;
+    }
+
+    public void setNbChaserAI(int nbChaserAI) {
+        this.nbChaserAI = nbChaserAI;
     }
 
 }
