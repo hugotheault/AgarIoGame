@@ -49,6 +49,11 @@ public class Camera {
         this.x = sumX / players.size();
         this.y = sumY / players.size();
     }
+    public void updatePosition(Player player) {
+        double sumX = 0, sumY = 0;
+        this.x = player.getX();
+        this.y = player.getY();
+    }
 
     /**
      * Retourne la zone visible en fonction de la position et du zoom de la caméra.

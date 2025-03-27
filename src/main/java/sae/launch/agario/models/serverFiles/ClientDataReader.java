@@ -1,12 +1,12 @@
 package sae.launch.agario.models.serverFiles;
 
 import javafx.application.Platform;
-import javafx.scene.Camera;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import sae.launch.agario.controllers.OnlineInGameController;
+import sae.launch.agario.models.Camera;
 import sae.launch.agario.models.Player;
 
 import java.io.IOException;
@@ -76,7 +76,7 @@ public class ClientDataReader extends Thread {
                         if(attribute.contains("mass:")) mass=Double.parseDouble(attribute.substring(5, attribute.length()));
                         player = new Player(id, x, y, Math.sqrt(mass));
                     }
-
+                    camera.updatePosition(player);
                     for(String element: elements){
                         String[] attributs = element.split("/");
                             int id ;
@@ -96,7 +96,7 @@ public class ClientDataReader extends Thread {
                                 if(attribut.contains("blue:")) blue=Double.parseDouble(attribut.substring(5, attribut.length()));
                                 if(attribut.contains("mass:")) mass=Double.parseDouble(attribut.substring(5, attribut.length()));
                             }
-                            Circle circle = new Circle(x, y, Math.sqrt(mass));
+                            Circle circle = new Circle(x-camera.getX()+o.getPane().getWidth() / 2, y-camera.getY()+o.getPane().getHeight()/2, Math.sqrt(mass));
                             System.out.println(" MASSE: "+mass);
                             if(red!=null && green != null && blue != null) {
                                 circle.setFill(Color.color(red, green, blue));

@@ -23,9 +23,12 @@ public class AppController {
 
     @FXML
     protected void onLocalButtonClick(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sae/launch/agario/InGameView.fxml"));
+        loader.setController(new SoloInGameController());
+        Parent root = loader.load();
+
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(loadFXML("InGameView"), 600, 400);
-        stage.setScene(scene);
+        stage.setScene(new Scene(root));
         stage.show();
     }
 

@@ -203,17 +203,16 @@ public class OnlineInGameController implements Initializable {
 
             String lastMessage = server.getClientConnexionList().get(i).getLastMessage();
             if(!lastMessage.equals("")){
-
                 s.deleteCharAt(s.length() - 1);
                 s.append("/end");
 
                 server.getPrintWriterList().get(i).write(s.toString());
                 server.getPrintWriterList().get(i).flush();
             }
+
             if(lastMessage.contains("deplacement:")){
                 String message = lastMessage.substring(12, lastMessage.length()-1);
                 String[] deplacements = message.split("/");
-
 
                 double deplacementX = Double.parseDouble(deplacements[0]);
                 double deplacementY = Double.parseDouble(deplacements[1]);
@@ -221,6 +220,7 @@ public class OnlineInGameController implements Initializable {
                 p.setX(p.getX()+deplacementX);
                 p.setY(p.getY()+deplacementY);
             }
+
             quadTree.insert(p);
         }
     }
