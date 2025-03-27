@@ -70,7 +70,7 @@ public class SoloInGameController implements Initializable {
 
         int idBase = IDGenerator.getGenerator().NextID();
 
-        Player player = new Player(idBase, 100, 100, initialSize);
+        Player player = new Player(idBase, randomCoordinate(), randomCoordinate(), initialSize);
         currentPlayer = player;
         quadTree.insert(player);
         baseMass = player.getMass();
@@ -105,31 +105,18 @@ public class SoloInGameController implements Initializable {
                 });
             // Implementation AI
                 // Random AI
-
-            System.out.println("IA Random: " + nbRandomsAI);
-            System.out.println("IA Pellet: " + nbPelletAI);
-            System.out.println("IA Chaser: " + nbChaserAI);
             for (int i = 0; i < nbRandomsAI; i++) {
-                Random rand = new Random();
-                int xSpawn = rand.nextInt(2000);
-                int ySpawn = rand.nextInt(2000);
-                AI iaPlayer = new AI(IDGenerator.getGenerator().NextID(), xSpawn, ySpawn, 50, quadTree, new AIRamdom());
+                AI iaPlayer = new AI(IDGenerator.getGenerator().NextID(), randomCoordinate(), randomCoordinate(), baseMass, quadTree, new AIRamdom());
                 quadTree.insert(iaPlayer);
             }
                 // Pellet AI
             for (int i = 0; i < nbPelletAI; i++) {
-                Random rand = new Random();
-                int xSpawn = rand.nextInt(2000);
-                int ySpawn = rand.nextInt(2000);
-                AI iaPlayer = new AI(IDGenerator.getGenerator().NextID(), xSpawn, ySpawn, 50, quadTree, new AIPellet());
+                AI iaPlayer = new AI(IDGenerator.getGenerator().NextID(), randomCoordinate(), randomCoordinate(), baseMass, quadTree, new AIPellet());
                 quadTree.insert(iaPlayer);
             }
                 // Chase AI
             for (int i = 0; i < nbChaserAI; i++) {
-                Random rand = new Random();
-                int xSpawn = rand.nextInt(2000);
-                int ySpawn = rand.nextInt(2000);
-                AI iaPlayer = new AI(IDGenerator.getGenerator().NextID(), xSpawn, ySpawn, 50, quadTree, new AIChaser());
+                AI iaPlayer = new AI(IDGenerator.getGenerator().NextID(), randomCoordinate(), randomCoordinate(), baseMass, quadTree, new AIChaser());
                 quadTree.insert(iaPlayer);
             }
         });
@@ -160,6 +147,11 @@ public class SoloInGameController implements Initializable {
             Platform.exit();
             System.exit(0);
         }
+    }
+
+    private int randomCoordinate(){
+        Random rand = new Random();
+        return rand.nextInt(2000);
     }
 
     private void updateGame() {
@@ -233,12 +225,25 @@ public class SoloInGameController implements Initializable {
                         scoreLabel.setText(""+(joueur.getMass()-baseMass));
                         this.classement.updateClassement(leaderboard, quadTree.getAllMovableObjects(), joueur);
                     });
+                    if(!(cible instanceof Pellet)){
+                        if(((AI)cible).getStrategy() instanceof AIRamdom) {
+                            AI iaPlayer = new AI(IDGenerator.getGenerator().NextID(), randomCoordinate(), randomCoordinate(), baseMass, quadTree, new AIRamdom());
+                            quadTree.insert(iaPlayer);
+                        }else if(((AI)cible).getStrategy() instanceof AIPellet) {
+                            AI iaPlayer = new AI(IDGenerator.getGenerator().NextID(), randomCoordinate(), randomCoordinate(), baseMass, quadTree, new AIPellet());
+                            quadTree.insert(iaPlayer);
+                        }else if(((AI)cible).getStrategy() instanceof AIChaser) {
+                            AI iaPlayer = new AI(IDGenerator.getGenerator().NextID(), randomCoordinate(), randomCoordinate(), baseMass, quadTree, new AIChaser());
+                            quadTree.insert(iaPlayer);
+                        }
+                    }
                 }
             }
         }
     }
 
     private void updateAIs() {
+
         for (AI ai : quadTree.getAllIAs()) {
             ai.setTree(quadTree);
             HashMap<String, Double> strategyObjective = ai.execStrategy();
@@ -275,6 +280,25 @@ public class SoloInGameController implements Initializable {
                     Platform.runLater(()->{
                         this.classement.updateClassement(leaderboard, quadTree.getAllMovableObjects(), this.currentPlayer);
                     });
+                    if(cible == currentPlayer){
+                        Player player = new Player(IDGenerator.getGenerator().NextID(), randomCoordinate(), randomCoordinate(), initialSize);
+                        currentPlayer = player;
+                        quadTree.insert(player);
+                    }else if(!(cible instanceof Player)){
+                        if(cible instanceof AI iaCible) {
+
+                            if(iaCible.getStrategy() instanceof AIRamdom) {
+                                AI iaPlayer = new AI(IDGenerator.getGenerator().NextID(), randomCoordinate(), randomCoordinate(), baseMass, quadTree, new AIRamdom());
+                                quadTree.insert(iaPlayer);
+                            } else if(iaCible.getStrategy() instanceof AIPellet) {
+                                AI iaPlayer = new AI(IDGenerator.getGenerator().NextID(), randomCoordinate(), randomCoordinate(), baseMass, quadTree, new AIPellet());
+                                quadTree.insert(iaPlayer);
+                            } else if(iaCible.getStrategy() instanceof AIChaser){
+                                AI iaPlayer = new AI(IDGenerator.getGenerator().NextID(), randomCoordinate(), randomCoordinate(), baseMass, quadTree, new AIChaser());
+                                quadTree.insert(iaPlayer);
+                            }
+                        }
+                    }
                 }
             }
         }

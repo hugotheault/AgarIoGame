@@ -36,4 +36,6 @@ public class AI extends MovableObject {
 
     public void setTree(QuadTree tree) { this.tree = tree; }
 
+    public AIStrategy getStrategy() { return strategy; }
+
 }
