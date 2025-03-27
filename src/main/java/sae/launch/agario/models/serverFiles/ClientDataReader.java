@@ -25,6 +25,7 @@ public class ClientDataReader extends Thread {
     }
     @Override
     public void run() {
+
         PrintWriter pt = null;
         try {
             pt = new PrintWriter(o.getClientSocker().getOutputStream(), false);
@@ -39,15 +40,31 @@ public class ClientDataReader extends Thread {
                 //TODO : augmenter la taille du buffer si on veut envoyer beaucoup d'éléments
                 int bytesRead;
                 bytesRead = o.getClientSocker().getInputStream().read(buffer);
+                String messageFinal="";
+                String messageRecu = new String(buffer, 0, bytesRead);
 
-                if (bytesRead != -1) {
-                    String messageRecu = new String(buffer, 0, bytesRead);
-                    System.out.println(messageRecu);
+                while(!messageFinal.contains("end")){
+                    messageFinal += messageRecu;
+                    buffer = new byte[100000];
+                    bytesRead = o.getClientSocker().getInputStream().read(buffer);
+                    messageRecu = new String(buffer, 0, bytesRead);
+                    //messageRecu="";
+                }
+                buffer = new byte[100000];
+                bytesRead = o.getClientSocker().getInputStream().read(buffer);
+                messageRecu = new String(buffer, 0, bytesRead);
+                messageFinal += messageRecu;
+                String s[] = messageFinal.split("end");
+                messageFinal = s[0];
+
+
+                    //String messageRecu = new String(buffer, 0, bytesRead);
+                    System.out.println(messageFinal);
                     Pane p = o.getPane();
                     ArrayList<Circle> circles = new ArrayList<>();
                     Player player = null;
 
-                    String[] elements = messageRecu.split("#");
+                    String[] elements = messageFinal.split("#");
                     String[] playerAttributes = elements[0].split("/");
                     for(String attribute: playerAttributes){
                         int id=0;
@@ -113,7 +130,7 @@ public class ClientDataReader extends Thread {
                     String playerDirection = "deplacement:" + deltaX + "/" + deltaY;
                     pt.write(playerDirection);
                     pt.flush();
-                }
+
             } catch (IOException e) {
                 e.printStackTrace();
                 break;
