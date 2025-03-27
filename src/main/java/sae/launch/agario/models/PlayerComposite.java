@@ -63,12 +63,6 @@ public class PlayerComposite extends MovableObject implements PlayerComponant {
 
     // Déplacer tout le groupe de joueurs
     public void move(double deltaX, double deltaY) {
-        /*for (PlayerLeaf cell : this.getAllPlayer()) {
-            cell.updatePosition(deltaX, deltaY);
-        }*/
-        for (PlayerLeaf cell : this.getAllPlayer()) {
-            cell.updatePosition(deltaX, deltaY);
-        }
         this.setX(this.getX() + deltaX);
         this.setY(this.getY() + deltaY);
     }

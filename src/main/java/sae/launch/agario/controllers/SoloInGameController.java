@@ -211,9 +211,21 @@ public class SoloInGameController implements Initializable {
             }
             double deltaX = directionX * player.getSpeed(mouseXCursor, mouseYCursor,pane.getWidth() / 2,pane.getHeight() / 2);
             double deltaY = directionY * player.getSpeed(mouseXCursor, mouseYCursor,pane.getWidth() / 2,pane.getHeight() / 2);
-            //player.setX(player.getX() + deltaX);
-            //player.setY(player.getY() + deltaY);
             player.move(deltaX, deltaY);
+            for(PlayerLeaf playerLeaf : player.getAllPlayer()){
+                double playerXPercentP = player.getX() / playerLeaf.getX();
+                double playerYPercentP = player.getY() / playerLeaf.getY();
+                double directionXP = playerXPercentP - 0.5;
+                double directionYP = playerYPercentP - 0.5;
+                double magnitudeP = Math.sqrt(directionXP * directionXP + directionYP * directionYP);
+                if (magnitudeP != 0) {
+                    directionXP /= magnitudeP;
+                    directionYP /= magnitudeP;
+                }
+                double deltaXP = directionXP * player.getSpeed(mouseXCursor, mouseYCursor,pane.getWidth() / 2,pane.getHeight() / 2);
+                double deltaYP = directionYP * player.getSpeed(mouseXCursor, mouseYCursor,pane.getWidth() / 2,pane.getHeight() / 2);
+                playerLeaf.updatePosition(deltaXP, deltaYP);
+            }
         }
 
 
