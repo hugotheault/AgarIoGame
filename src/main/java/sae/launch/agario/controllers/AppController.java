@@ -32,7 +32,7 @@ public class AppController {
     @FXML
     protected void onMultiButtonClick(ActionEvent event) throws IOException {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(loadFXML("InGameView"), 600, 400);
+        scene = new Scene(loadFXML("OnlineGameConnectionView"), 600, 400);
         stage.setScene(scene);
         stage.show();
         stage.getIcons().add(new Image("icon.png"));

@@ -104,8 +104,8 @@ public class ClientDataReader extends Thread {
 
                     System.out.println("speed : " + player.getSpeed());
                     System.out.println("dir x : " +directionX);
-                    double deltaX = Math.round(directionX * player.getSpeed(o.getCoX(), o.getCoY()) * 1000.0)/1000.0;
-                    double deltaY = Math.round(directionY * player.getSpeed(o.getCoX(), o.getCoY()) * 1000.0)/1000.0;
+                    double deltaX = Math.round(directionX * player.getSpeed(o.getCoX(), o.getCoY(), o.getPane().getWidth()/2, o.getPane().getHeight()/2) * 1000.0)/1000.0;
+                    double deltaY = Math.round(directionY * player.getSpeed(o.getCoX(), o.getCoY(),o.getPane().getWidth()/2, o.getPane().getHeight()/2) * 1000.0)/1000.0;
                     System.out.println("deltaX: " + deltaX);
                     System.out.println("deltaY: " + deltaY);
 

@@ -248,8 +248,8 @@ public class OnlineInGameController implements Initializable {
                 directionX /= magnitude;
                 directionY /= magnitude;
             }
-            double deltaX = directionX * player.getSpeed(coX, coY);
-            double deltaY = directionY * player.getSpeed(coX, coY);
+            double deltaX = directionX * player.getSpeed(coX, coY, pane.getWidth()/2, pane.getHeight()/2);
+            double deltaY = directionY * player.getSpeed(coX, coY, pane.getWidth()/2, pane.getHeight()/2);
             player.setX(player.getX() + deltaX);
             player.setY(player.getY() + deltaY);
         }
