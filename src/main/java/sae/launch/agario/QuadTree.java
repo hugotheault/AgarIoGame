@@ -234,6 +234,32 @@ public class QuadTree {
         return result;
     }
 
+    public ArrayList<MovableObject> getAllMovableObject() {
+        ArrayList<MovableObject> result = new ArrayList<>();
+
+        if (entities != null) {
+            for (Entity entity : entities) {
+                if (entity instanceof MovableObject) {
+                    result.add((MovableObject) entity);
+                }
+            }
+        }
+        if (NWTree != null) {
+            result.addAll(NWTree.getAllMovableObject());
+        }
+        if (NETree != null) {
+            result.addAll(NETree.getAllMovableObject());
+        }
+        if (SWTree != null) {
+            result.addAll(SWTree.getAllMovableObject());
+        }
+        if (SETree != null) {
+            result.addAll(SETree.getAllMovableObject());
+        }
+
+        return result;
+    }
+
     public ArrayList<AI> getAllAi() {
         ArrayList<AI> result = new ArrayList<>();
 

@@ -23,15 +23,15 @@ public class GameRenderer {
     /**
      * The method called every time the game is updated
      */
-    public void updateVisuals(QuadTree quadTree, ArrayList<Player> players) {
+    public void updateVisuals(QuadTree quadTree) {
         camera.updatePosition(quadTree);
-        render(quadTree, players);
+        render(quadTree);
     }
 
     /**
      * Render all the Entities on the pane
      */
-    private void render(QuadTree quadTree, ArrayList<Player> players) {
+    private void render(QuadTree quadTree) {
         // Exécute les opérations sur le thread de JavaFX
         Platform.runLater(() -> {
             pane.getChildren().clear();
@@ -44,12 +44,13 @@ public class GameRenderer {
                     camera.getY() - centerY,
                     camera.getX() + centerX,
                     camera.getY() + centerY)) {
-                drawEntity(centerX, centerY, entity, players);
+                drawEntity(centerX, centerY, entity);
             }
-            ArrayList<Player> entites = quadTree.getAllPlayers();
+            ArrayList<MovableObject> entites = quadTree.getAllMovableObject();
             for(Entity entity: entites){
-                drawEntity(centerX, centerY, entity, players);
+                drawEntity(centerX, centerY, entity);
             }
+
 
         });
     }
@@ -60,7 +61,7 @@ public class GameRenderer {
      * @param centerY The y axis center of the entity
      * @param entity The entity
      */
-    private void drawEntity(double centerX, double centerY, Entity entity, ArrayList<Player> players) {
+    private void drawEntity(double centerX, double centerY, Entity entity) {
         double entityX = (entity.getX() - camera.getX() + centerX);
         double entityY = (entity.getY() - camera.getY() + centerY);
         double entityRadius = entity.getRadius();

@@ -8,7 +8,7 @@ public class AI extends MovableObject {
     private AIStrategy strategy;
     private QuadTree tree;
 
-    private final double aiBaseRatioSpeed = 0.7;
+    private final double aiBaseRatioSpeed = 0.2;
     public AI(int ID, double x, double y, double mass,QuadTree tree,AIStrategy strategy) {
         super(ID, x, y, mass);
         this.tree = tree;

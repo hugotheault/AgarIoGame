@@ -13,10 +13,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Random;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import sae.launch.agario.QuadTree;
 import sae.launch.agario.models.*;
@@ -27,9 +24,7 @@ public class SoloInGameController implements Initializable {
     private QuadTree quadTree;
     private PelletController pelletController;
 
-    private ArrayList<Player> players;
 
-    private ArrayList<AI> ais;
 
     private GameRenderer gameRenderer;
 
@@ -68,18 +63,13 @@ public class SoloInGameController implements Initializable {
         this.pelletController = new PelletController(quadTree, maxPelletNb, pelletSize);
         pelletController.generatePellets();
 
-        this.players = new ArrayList<>();
-        players.add(new Player(idBase, 50, 50, initialSize));
-
-        this.ais = new ArrayList<>();
         //ais.add( new AI(IDGenerator.getGenerator().NextID(),1 + (rand.nextDouble() % 100) ,1 + (rand.nextDouble() % 100),initialSize,quadTree,new AIRandom()));
         /*for( int i = 0; i < nbAis; i++){
             ais.add( new AI(IDGenerator.getGenerator().NextID(),1 + (rand.nextDouble() % 100) ,1 + (rand.nextDouble() % 100),initialSize));
         }*/
         int idAi = IDGenerator.getGenerator().NextID();
-        ais.add( new AI(idAi,1 + 40 ,40,initialSize,quadTree,new AIRandom()));
         this.gameRenderer = new GameRenderer(pane);
-        quadTree.insert(new AI(idAi,1 + 40 ,40,initialSize,quadTree,new AIRandom()));
+        quadTree.insert(new AI(idAi,40 ,40,initialSize,quadTree,new AIRandom()));
 
         pane.setOnMouseMoved(event ->{
             setPlayerXPercent(event.getX() / pane.getWidth());
@@ -103,7 +93,7 @@ public class SoloInGameController implements Initializable {
 
         pelletController.generatePellets();
         updateAI();
-        gameRenderer.updateVisuals(quadTree, players);
+        gameRenderer.updateVisuals(quadTree);
 
     }
 
@@ -162,24 +152,23 @@ public class SoloInGameController implements Initializable {
 
     private void updateAI(){
         for(AI ai : quadTree.getAI()){
-            System.out.println(ai.getX() + " " + ai.getY());
+            //System.out.println(ai.getX() + " " + ai.getY());
 
             ai.setTree(quadTree);
             HashMap<String,Double> strategyObjective = ai.getCoordStrategy();
 
-            /*double distanceX = ai.getX() -strategyObjective.get("x");
-            double distanceY = ai.getY() - strategyObjective.get("y");*/
-            double distanceX = 300 - ai.getX();
-            double distanceY = 300 - ai.getY() ;
-            System.out.println("distanceX" + distanceX);
-            System.out.println("distanceY" + distanceY);
+            double distanceX = strategyObjective.get("x") - ai.getX();
+            double distanceY = strategyObjective.get("y") - ai.getY();
+            quadTree.remove(ai);
             if(distanceX > ai.getSpeed() && distanceX > 0){
                 ai.setX(ai.getX() + ai.getSpeed());
             } else if ( distanceX >= 0 && distanceX < ai.getSpeed()){
                 ai.setX(ai.getX() + distanceX);
-            } else if ( distanceX > -ai.getSpeed() && distanceX < 0){
+            } else if ( distanceX < -ai.getSpeed() && distanceX < 0){
+
                 ai.setX(ai.getX() - ai.getSpeed());
             }else{
+
                 ai.setX(ai.getX() -distanceX);
             }
 
@@ -187,11 +176,12 @@ public class SoloInGameController implements Initializable {
                 ai.setY(ai.getY() + ai.getSpeed());
             } else if ( distanceY >= 0 && distanceY < ai.getSpeed()){
                 ai.setY(ai.getY() + distanceY);
-            } else if ( distanceY > -ai.getSpeed() && distanceY < 0){
+            } else if ( distanceY < -ai.getSpeed() && distanceY < 0){
                 ai.setY(ai.getY() - ai.getSpeed());
             }else{
                 ai.setY(ai.getY()-distanceY);
             }
+            quadTree.insert(ai);
         }
 
         for(AI ai: quadTree.getAllAi()){
