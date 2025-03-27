@@ -36,7 +36,7 @@ public class ClientDataReader extends Thread {
         pt.flush();
         while(true){
             try {
-                byte[] buffer = new byte[100000];
+                byte[] buffer = new byte[200000];
                 //TODO : augmenter la taille du buffer si on veut envoyer beaucoup d'éléments
                 int bytesRead;
                 bytesRead = o.getClientSocker().getInputStream().read(buffer);
@@ -45,12 +45,12 @@ public class ClientDataReader extends Thread {
 
                 while(!messageFinal.contains("end")){
                     messageFinal += messageRecu;
-                    buffer = new byte[100000];
+                    buffer = new byte[200000];
                     bytesRead = o.getClientSocker().getInputStream().read(buffer);
                     messageRecu = new String(buffer, 0, bytesRead);
                     //messageRecu="";
                 }
-                buffer = new byte[100000];
+                buffer = new byte[200000];
                 bytesRead = o.getClientSocker().getInputStream().read(buffer);
                 messageRecu = new String(buffer, 0, bytesRead);
                 messageFinal += messageRecu;
