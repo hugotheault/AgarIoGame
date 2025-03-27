@@ -54,7 +54,9 @@ public class ClientHandler extends Thread {
 		this.printWriter = printWriter;
 	}
 	public String getLastMessage(){
-		return lastMessage;
+		String message = lastMessage;
+		lastMessage = "";
+		return message;
 	}
 
 }

@@ -27,4 +27,9 @@ public class Pellet extends Entity {
     public Color getColor() {
         return color;
     }
+
+    @Override
+    public String toString(){
+        return "id:"+this.getID()+"/cox:"+this.getX()+"/coy:"+this.getY()+"/mass:"+this.getRadius()+"/red:"+this.getColor().getRed()+"/blue:"+this.getColor().getBlue()+"/green:"+this.getColor().getGreen()+"#";
+    }
 }
