@@ -220,12 +220,16 @@ public class QuadTree {
         ArrayList<MovableObject> result = new ArrayList<>();
 
         if (entities != null) {
-            for (Entity entity : entities) {
+            // Créer une copie de entities pour éviter ConcurrentModificationException
+            HashSet<Entity> entitiesCopy = new HashSet<>(entities);
+
+            for (Entity entity : entitiesCopy) {
                 if (entity instanceof MovableObject) {
                     result.add((MovableObject) entity);
                 }
             }
         }
+
         if (NWTree != null) {
             result.addAll(NWTree.getAllMovableObjects());
         }
@@ -241,6 +245,7 @@ public class QuadTree {
 
         return result;
     }
+
 
     /**
      *
@@ -348,10 +353,6 @@ public class QuadTree {
         }
     }
 
-    /**
-     *
-     * @return List of entity Player in the first quadtree's child
-     */
     public ArrayList<Player> getPlayers() {
         ArrayList<Player> players = new ArrayList<>();
 

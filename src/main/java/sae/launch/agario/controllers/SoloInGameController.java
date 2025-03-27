@@ -28,6 +28,8 @@ import java.util.*;
 import sae.launch.agario.QuadTree;
 import sae.launch.agario.models.*;
 
+import static com.almasb.fxgl.dsl.FXGLForKtKt.*;
+
 public class SoloInGameController implements Initializable {
     private @FXML VBox leaderboard;
     private @FXML Pane pane;
@@ -165,7 +167,6 @@ public class SoloInGameController implements Initializable {
 
     private void updateGame() {
         updatePlayers();
-
         pelletController.generatePellets();
         updateAIs();
         gameRenderer.updateVisuals(quadTree, players,1);
@@ -297,6 +298,18 @@ public class SoloInGameController implements Initializable {
                         Player player = new Player(IDGenerator.getGenerator().NextID(), randomCoordinate(), randomCoordinate(), initialSize);
                         currentPlayer = player;
                         quadTree.insert(player);
+
+                        // Réinitialiser la caméra sur le nouveau joueur
+                        if (currentPlayer != null) {
+                            Platform.runLater(() -> {
+                                get().getViewport().setX(currentPlayer.getX() - getAppWidth() / 2.0);
+                                getGameScene().getViewport().setY(currentPlayer.getY() - getAppHeight() / 2.0);
+                            });
+                        } else {
+                            System.out.println("Le joueur n'est pas encore initialisé !");
+                        }
+
+
                     }else if(!(cible instanceof Player)){
                         if(cible instanceof AI iaCible) {
 
