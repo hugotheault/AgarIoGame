@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.scene.Camera;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import sae.launch.agario.controllers.OnlineInGameController;
 import sae.launch.agario.models.Player;
@@ -34,24 +35,55 @@ public class ClientDataReader extends Thread {
         pt.flush();
         while(true){
             try {
-                byte[] buffer = new byte[16000];
+                byte[] buffer = new byte[100000];
                 //TODO : augmenter la taille du buffer si on veut envoyer beaucoup d'éléments
                 int bytesRead;
                 bytesRead = o.getClientSocker().getInputStream().read(buffer);
+
                 if (bytesRead != -1) {
                     String messageRecu = new String(buffer, 0, bytesRead);
                     System.out.println(messageRecu);
                     Pane p = o.getPane();
                     ArrayList<Circle> circles = new ArrayList<>();
+                    Player player = null;
 
                     String[] elements = messageRecu.split("#");
+                    String[] playerAttributes = elements[0].split("/");
+                    for(String attribute: playerAttributes){
+                        int id=0;
+                        double x=0, y=0;
+                        double radius=0;
+                        if(attribute.contains("cox:")) x= Double.parseDouble(attribute.substring(4, attribute.length()));
+                        if(attribute.contains("coy:")) y=Double.parseDouble(attribute.substring(4, attribute.length()));
+                        if(attribute.contains("id:")) id=Integer.parseInt(attribute.substring(3, attribute.length()));
+                        if(attribute.contains("radius:")) radius=Double.parseDouble(attribute.substring(7, attribute.length()));
+                        player = new Player(id, x, y, Math.pow(radius,2));
+                    }
+
                     for(String element: elements){
                         String[] attributs = element.split("/");
-                            int id = Integer.parseInt(attributs[0]);
-                            double x = Double.parseDouble(attributs[1]);
-                            double y = Double.parseDouble(attributs[2]);
-                            double radius = Double.parseDouble(attributs[3]);
-                            circles.add(new Circle(x, y, radius));
+                            int id ;
+                            double x = 0;
+                            double y = 0;
+                            double radius = 0;
+                            Color color;
+                            Double red = null;
+                            Double green = null;
+                            Double blue = null;
+                            for(String attribut: attributs){
+                                if(attribut.contains("cox:")) x= Double.parseDouble(attribut.substring(4, attribut.length()));
+                                if(attribut.contains("coy:")) y=Double.parseDouble(attribut.substring(4, attribut.length()));
+                                if(attribut.contains("id:")) id=Integer.parseInt(attribut.substring(3, attribut.length()));
+                                if(attribut.contains("red:")) red=Double.parseDouble(attribut.substring(4, attribut.length()));
+                                if(attribut.contains("green:")) green=Double.parseDouble(attribut.substring(6, attribut.length()));
+                                if(attribut.contains("blue:")) blue=Double.parseDouble(attribut.substring(5, attribut.length()));
+                                if(attribut.contains("radius:")) radius=Double.parseDouble(attribut.substring(7, attribut.length()));
+                            }
+                            Circle circle = new Circle(x, y, radius);
+                            if(red!=null && green != null && blue != null) {
+                                circle.setFill(Color.color(red, green, blue));
+                            }
+                        circles.add(circle);
 
                     }
 
@@ -70,14 +102,12 @@ public class ClientDataReader extends Thread {
                         directionY /= magnitude;
                     }
 
-                    String[] playerAttributes = elements[0].split("/");
-                    Double mass = Math.pow(Double.parseDouble(playerAttributes[3]), 2);
-                    System.out.println("Joueur créé avec parametres : " + Integer.parseInt(playerAttributes[0]) + " " + " " + Double.parseDouble(playerAttributes[1]) + " " + Double.parseDouble(playerAttributes[2]) + " " + mass);
-                    Player player = new Player(Integer.parseInt(playerAttributes[0]), Double.parseDouble(playerAttributes[1]), Double.parseDouble(playerAttributes[2]), mass);
                     System.out.println("speed : " + player.getSpeed());
                     System.out.println("dir x : " +directionX);
                     double deltaX = Math.round(directionX * player.getSpeed(o.getCoX(), o.getCoY()) * 1000.0)/1000.0;
                     double deltaY = Math.round(directionY * player.getSpeed(o.getCoX(), o.getCoY()) * 1000.0)/1000.0;
+                    System.out.println("deltaX: " + deltaX);
+                    System.out.println("deltaY: " + deltaY);
 
                     String playerDirection = "deplacement:" + deltaX + "/" + deltaY;
                     pt.write(playerDirection);
