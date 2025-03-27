@@ -7,9 +7,9 @@ import java.util.HashMap;
 
 public class AIChaser implements AIStrategy{
     @Override
-    public HashMap<String,Double> execStrategy(Double x, Double y, QuadTree quadtree) {
+    public HashMap<String,Double> execStrategy(Double x, Double y, QuadTree quadtree,AI ai) {
         HashMap<String,Double> coordinates = new HashMap<>();
-        ArrayList<Entity> potentialTargets = quadtree.getEntitiesInRegion(x*100, x*-100, y*100, y*-100);
+        ArrayList<Entity> potentialTargets = quadtree.getEntitiesAroundMovableObjectLarger(ai);
         Double lenghtBetweenEntites= 100000000.0;
         for(Entity e : potentialTargets){
             if(!e.isPellet()) {

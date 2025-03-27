@@ -22,15 +22,15 @@ public class Classement {
         this.currentPlayer = currentPlayer;
         leaderboard.getChildren().clear();
         classement.clear();
-        System.out.println("Affichage classement");
+
         for(MovableObject obj : classement){
-            System.out.println(obj);
+
         }
         classement.addAll(players);
         classement.sort((p1, p2) -> Double.compare(p2.getMass(), p1.getMass()));
         for (int i = 0; i < Math.min(3, classement.size()); i++) {
             MovableObject p = classement.get(i);
-            System.out.println("Classement " + (i + 1) + ": " + p.getID() + " - " + p.getMass());
+
         }
         for(MovableObject m : classement) {
             Label label = new Label((classement.indexOf(m) + 1) + ": " + m.getID() + " - " + (m.getMass() - this.baseWeight));

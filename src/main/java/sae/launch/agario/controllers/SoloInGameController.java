@@ -84,7 +84,7 @@ public class SoloInGameController implements Initializable {
             Random rand = new Random();
             int xSpawn = rand.nextInt(2000);
             int ySpawn = rand.nextInt(2000);
-            AI iaPlayer = new AI(IDGenerator.getGenerator().NextID(), xSpawn, ySpawn, 50, quadTree, new AIRamdom());
+            AI iaPlayer = new AI(IDGenerator.getGenerator().NextID(), xSpawn, ySpawn, 50, quadTree, new AIPellet());
             quadTree.insert(iaPlayer);
         }
         //----------
@@ -121,7 +121,7 @@ public class SoloInGameController implements Initializable {
         classement.addMovableObject(new Player(14,0,0,2));
         classement.addMovableObject(player);
         classement.updateClassement(leaderboard, quadTree.getAllMovableObjects(), player);
-        System.out.println("Classement mis à jour : ");
+
     }
 
     private void showExitConfirmation() {
@@ -171,7 +171,7 @@ public class SoloInGameController implements Initializable {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/sae/launch/agario/AppView.fxml"));
             Parent root = loader.load();
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            System.out.println(((Node) event.getSource()).getScene().getWindow().getHeight());
+           // System.out.println(((Node) event.getSource()).getScene().getWindow().getHeight());
             stage.setScene(new Scene(root));
             stage.setHeight(400);
             stage.setWidth(600);
@@ -245,20 +245,19 @@ public class SoloInGameController implements Initializable {
         }
 
         for (AI ai : quadTree.getAllIAs()) {
-            System.out.println(ai.getID());
+
             for (Entity cible : quadTree.getEntitiesAroundMovableObject(ai)) {
                 if (cible.equals(ai)) continue;
 
-                System.out.println("IA " + ai.getID() + " teste la cible " + cible.getID());
+
 
                 if (ai.canEat(cible)) {
 
-                    System.out.println("IA " + ai.getID() + " mange " + cible.getID());
+
 
                     ai.Absorb(cible);
                     quadTree.remove(cible);
-                    System.out.println(quadTree.getAllPlayers());
-                    System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+
                     Platform.runLater(()->{
                         this.classement.updateClassement(leaderboard, quadTree.getAllMovableObjects(), this.currentPlayer);
                     });

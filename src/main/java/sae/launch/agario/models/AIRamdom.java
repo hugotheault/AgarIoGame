@@ -17,7 +17,7 @@ public class AIRamdom implements AIStrategy {
     }
 
     @Override
-    public HashMap<String, Double> execStrategy(Double x, Double y, QuadTree quadtree) {
+    public HashMap<String, Double> execStrategy(Double x, Double y, QuadTree quadtree,AI ai) {
         Random rand = new Random();
 
         if (counter <= 0) {

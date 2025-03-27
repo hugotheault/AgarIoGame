@@ -7,6 +7,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public interface AIStrategy {
-    public HashMap<String,Double> execStrategy(Double x, Double y, QuadTree quadtree);
+    public HashMap<String,Double> execStrategy(Double x, Double y, QuadTree quadtree, AI ai);
 
 }

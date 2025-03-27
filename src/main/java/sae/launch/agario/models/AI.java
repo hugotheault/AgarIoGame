@@ -31,7 +31,7 @@ public class AI extends MovableObject {
     }
 
     public HashMap<String,Double> execStrategy(){
-        return strategy.execStrategy(this.getX(), this.getY(), tree);
+        return strategy.execStrategy(this.getX(), this.getY(), tree, this);
     }
 
     public void setTree(QuadTree tree) { this.tree = tree; }
