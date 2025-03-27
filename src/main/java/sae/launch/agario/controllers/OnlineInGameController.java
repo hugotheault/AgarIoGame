@@ -194,7 +194,7 @@ public class OnlineInGameController implements Initializable {
         for(int i = 0; i < players.size(); i++){
             Player p = players.get(i);
             quadTree.remove(p);
-            ArrayList<Entity> entities = quadTree.getEntitiesInRegion(p.getX()-1000, p.getY()-1000, p.getX()+1000, p.getY()+1000);
+            ArrayList<Entity> entities = quadTree.getEntitiesInRegion(p.getX(), p.getY(), p.getX(), p.getY());
             StringBuilder s = new StringBuilder();
             s.append(p);
             for(Entity e: entities){
