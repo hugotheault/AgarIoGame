@@ -3,6 +3,7 @@ package sae.launch.agario.models.serverFiles;
 import javafx.application.Platform;
 import javafx.scene.Camera;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import sae.launch.agario.controllers.OnlineInGameController;
 import sae.launch.agario.models.Player;
@@ -43,7 +44,6 @@ public class ClientDataReader extends Thread {
                     Pane p = o.getPane();
                     ArrayList<Circle> circles = new ArrayList<>();
 
-
                     String[] elements = messageRecu.split("#");
                     for(String element: elements){
                         String[] attributs = element.split("/");
@@ -54,7 +54,7 @@ public class ClientDataReader extends Thread {
                             circles.add(new Circle(x, y, radius));
 
                     }
-                    
+
                     Platform.runLater(() -> {
                         p.getChildren().clear();
                         for (Circle circle : circles) {
