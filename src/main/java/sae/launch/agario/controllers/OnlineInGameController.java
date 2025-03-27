@@ -180,7 +180,6 @@ public class OnlineInGameController implements Initializable {
         gameRenderer.updateVisuals(quadTree, players, this.ID);
 
         writeQuadTree(players);
-
     }
 
     private void writeQuadTree(ArrayList<Player> players) {
@@ -191,11 +190,11 @@ public class OnlineInGameController implements Initializable {
             for(Entity e: entities){
                 s.append(e.toString());
             }
+            s.append(p);
 
             System.out.println("msg: " + server.getClientConnexionList().get(i).getLastMessage());
             if(!server.getClientConnexionList().get(i).getLastMessage().equals("")){
-                System.out.println("Un messahge different!!!");
-
+            //todo changer la verif du getLastMessage a ok
                 s.deleteCharAt(s.length() - 1);
                 System.out.println(s);
                 System.out.println("J'envoie le message...");

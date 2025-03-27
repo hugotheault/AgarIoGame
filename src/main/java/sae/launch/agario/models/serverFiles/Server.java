@@ -74,7 +74,7 @@ public class Server {
 				this.getClientConnexionList().add(clientHandler);
 
 
-				this.getPrintWriterList().get(this.getPrintWriterList().size() - 1).write("Vous êtes con");
+				this.getPrintWriterList().get(this.getPrintWriterList().size() - 1).write("Vous êtes connecté");
 
 				Random random = new Random();
 				int ID = IDGenerator.getGenerator().NextID();
@@ -87,7 +87,6 @@ public class Server {
 				this.getPrintWriterList().get(this.getPrintWriterList().size() - 1).write("id:"+ID);
 				this.getPrintWriterList().get(this.getPrintWriterList().size()-1).flush();
 			}
-			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
