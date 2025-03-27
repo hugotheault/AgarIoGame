@@ -92,8 +92,8 @@ public class SoloInGameController implements Initializable {
         pane.setOnMouseMoved(event ->{
             setPlayerXPercent(event.getX() / pane.getWidth());
             setPlayerYPercent(event.getY() / pane.getHeight());
-            setMouseXCursor(event.getX());
-            setMouseYCursor(event.getY());
+            setCoX(event.getX());
+            setCoY(event.getY());
         });
 
         this.threadWorld = new ThreadWorld (gameRenderer, new Runnable() {
@@ -165,10 +165,13 @@ public class SoloInGameController implements Initializable {
 
     private void updateGame() {
         updatePlayers();
+
         pelletController.generatePellets();
         updateAIs();
-        gameRenderer.updateVisuals(quadTree, players);
+        gameRenderer.updateVisuals(quadTree, players,1);
         updateMinimap();
+        gameRenderer.updateVisuals(quadTree, players, 1);
+
     }
 
     @FXML
@@ -200,7 +203,7 @@ public class SoloInGameController implements Initializable {
     }
 
     /**
-     *Update the position of all the players, and wheter they can eat or get eaten
+     *Update the position of all the players, and whether they can eat or get eaten
      */
     private void updatePlayers() {
 

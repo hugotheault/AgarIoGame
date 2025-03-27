@@ -348,6 +348,10 @@ public class QuadTree {
         }
     }
 
+    /**
+     *
+     * @return List of entity Player in the first quadtree's child
+     */
     public ArrayList<Player> getPlayers() {
         ArrayList<Player> players = new ArrayList<>();
 

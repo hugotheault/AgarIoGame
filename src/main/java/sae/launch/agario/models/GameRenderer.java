@@ -19,12 +19,16 @@ public class GameRenderer {
         this.camera = new Camera();
         camera.setZoomFactor(0.1);
     }
+    public GameRenderer(){
+        this.camera = new Camera();
+        camera.setZoomFactor(0.1);
+    }
 
     /**
      * The method called every time the game is updated
      */
-    public void updateVisuals(QuadTree quadTree, ArrayList<Player> players) {
-        camera.updatePosition(quadTree);
+    public void updateVisuals(QuadTree quadTree, ArrayList<Player> players, int IDPlayer) {
+        camera.updatePosition(quadTree, IDPlayer);
         render(quadTree, players);
     }
 
@@ -96,4 +100,7 @@ public class GameRenderer {
         pane.getChildren().add(circle);
     }
 
+    public void setPane(Pane pane){
+        this.pane = pane;
+    }
 }
