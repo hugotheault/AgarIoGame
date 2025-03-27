@@ -91,7 +91,7 @@ public class QuadTree {
     }
 
     public ArrayList<Entity> getEntitiesAroundMovableObject(MovableObject obj) {
-        double radius = 2 * obj.getRadius();
+        double radius = Math.max(obj.getRadius() * 1.5, 50); // Minimum 50 pour ne pas rester bloqué
         Boundary searchArea = new Boundary(obj.getX() - radius, obj.getY() - radius,
                 2 * radius, 2 * radius);
         return getEntitiesInRegion(searchArea);
@@ -117,8 +117,6 @@ public class QuadTree {
      */
     public ArrayList<Entity> getEntitiesInRegion(Boundary region) {
         ArrayList<Entity> result = new ArrayList<>();
-
-
         if (depth == 0) {
             for (Entity entity : entities) {
                 if (region.contains(entity)) {

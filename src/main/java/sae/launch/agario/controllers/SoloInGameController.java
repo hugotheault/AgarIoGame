@@ -79,7 +79,7 @@ public class SoloInGameController implements Initializable {
 
         // test implements IA
 
-        AI iaPlayer = new AI(66, 0, 0, baseMass, quadTree, new AIRamdom());
+        AI iaPlayer = new AI(66, 0, 0, 51, quadTree, new AIRamdom());
         quadTree.insert(iaPlayer);
         System.out.println("IA insérée : " + iaPlayer.getX() + ", " + iaPlayer.getY());
         System.out.println("Joueurs dans QuadTree après insertion :");
@@ -119,6 +119,7 @@ public class SoloInGameController implements Initializable {
         classement.addMovableObject(new Player(13,0,0,500));
         classement.addMovableObject(new Player(14,0,0,2));
         classement.addMovableObject(player);
+        classement.updateClassement(leaderboard, quadTree.getAllMovableObjects(), player);
         System.out.println("Classement mis à jour : ");
     }
 
@@ -184,6 +185,7 @@ public class SoloInGameController implements Initializable {
     private void updatePlayers() {
 
         for(Player player: quadTree.getPlayers()){
+            quadTree.remove(player);
             //Update position du joueur principal
             double directionX = playerXPercent - 0.5;
             double directionY = playerYPercent - 0.5;
@@ -196,6 +198,7 @@ public class SoloInGameController implements Initializable {
             double deltaY = directionY * player.getSpeed(mouseXCursor, mouseYCursor,pane.getWidth() / 2,pane.getHeight() / 2);
             player.setX(player.getX() + deltaX);
             player.setY(player.getY() + deltaY);
+            quadTree.insert(player);
         }
 
         for(Player joueur: quadTree.getAllPlayers()){
@@ -241,13 +244,21 @@ public class SoloInGameController implements Initializable {
         }
 
         for (AI ai : quadTree.getAllIAs()) {
+            System.out.println(ai.getID());
             for (Entity cible : quadTree.getEntitiesAroundMovableObject(ai)) {
                 if (cible.equals(ai)) continue;
+
+                System.out.println("IA " + ai.getID() + " teste la cible " + cible.getID());
+
                 if (ai.canEat(cible)) {
+
+                    System.out.println("IA " + ai.getID() + " mange " + cible.getID());
+
                     ai.Absorb(cible);
                     quadTree.remove(cible);
+                    System.out.println(quadTree.getAllPlayers());
+                    System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
                     Platform.runLater(()->{
-                        scoreLabel.setText(""+(ai.getMass()-baseMass));
                         this.classement.updateClassement(leaderboard, quadTree.getAllMovableObjects(), this.currentPlayer);
                     });
                 }

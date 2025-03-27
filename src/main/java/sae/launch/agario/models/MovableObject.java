@@ -52,5 +52,23 @@ public abstract class MovableObject extends Entity {
         }
     }
 
+    public boolean canEat(Entity pellet) {
+        if (pellet != null) {
+            double dx = this.getX() - pellet.getX();
+            double dy = this.getY() - pellet.getY();
+            double distance = Math.sqrt(dx * dx + dy * dy);
+
+            // Vérifie si l'entité actuelle recouvre bien la cible
+            boolean overlaps = distance <= (this.getRadius() + pellet.getRadius());
+
+            // Vérifie si la cible est assez petite pour être absorbée
+            boolean canEat = this.getRadius() > pellet.getRadius() * 1.2;
+
+            return overlaps && canEat;
+        }
+        return false;
+    }
+
+
 
 }
