@@ -7,16 +7,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane fx:id="AIChoiceBorderPane"
-            prefHeight="400.0"
-            prefWidth="600.0"
-            xmlns="http://javafx.com/javafx/8"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="sae.launch.agario.controllers.AIChoiceController"
-            style="-fx-background-image: url('background.jpg');
-                  -fx-background-size: 120%;
-                  -fx-background-position: center;
-                  -fx-background-repeat: no-repeat;">
+<BorderPane fx:id="AIChoiceBorderPane" prefHeight="400.0" prefWidth="600.0" style="-fx-background-image: url('background.jpg');                   -fx-background-size: 120%;                   -fx-background-position: center;                   -fx-background-repeat: no-repeat;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sae.launch.agario.controllers.AIChoiceController">
 
     <!-- Barre d'outils en haut -->
     <top>
@@ -55,6 +46,15 @@
                         <Label fx:id="chaserAI" text="0" />
                         <Button mnemonicParsing="false" onAction="#onChaserAIMinusButton" style="-fx-background-color: #ff9800; -fx-text-fill: white;" text="-" />
                      </children></VBox>
+                  <VBox alignment="CENTER" spacing="15.0" style="-fx-padding: 20; -fx-background-color: white; -fx-background-radius: 10;">
+                     <children>
+                        <Label prefHeight="68.0" prefWidth="80.0" text="Jouer avec des cellules spéciales ?" textAlignment="CENTER" wrapText="true" />
+                        <CheckBox fx:id="checkBoxSpecialPellet"
+                                  mnemonicParsing="false"
+                                  prefHeight="31.0"
+                                  prefWidth="0.0"/>
+                     </children>
+                  </VBox>
                   </children>
               </HBox>
                 <Button onAction="#onSoloPlayButton" style="-fx-background-color: #4d74cd; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 15px;" text="Lancer la partie" StackPane.alignment="BOTTOM_CENTER">

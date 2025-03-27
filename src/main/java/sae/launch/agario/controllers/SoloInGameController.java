@@ -63,6 +63,7 @@ public class SoloInGameController implements Initializable {
     private int nbRandomsAI = 0;
     private int nbPelletAI = 0;
     private int nbChaserAI = 0;
+    private boolean choiceSpecialPellet;
 
     @Override
     public void initialize(URL u, ResourceBundle r){
@@ -83,9 +84,7 @@ public class SoloInGameController implements Initializable {
         baseMass = player.getMass();
 
         this.pelletController = new PelletController(quadTree, maxPelletNb, pelletSize);
-        pelletController.generatePellets();
-
-
+        pelletController.generatePellets(choiceSpecialPellet);
 
         this.gameRenderer = new GameRenderer(pane);
 
@@ -165,7 +164,7 @@ public class SoloInGameController implements Initializable {
 
     private void updateGame() {
         updatePlayers();
-        pelletController.generatePellets();
+        pelletController.generatePellets(choiceSpecialPellet);
         updateAIs();
         gameRenderer.updateVisuals(quadTree, players);
         updateMinimap();
@@ -329,13 +328,13 @@ public class SoloInGameController implements Initializable {
             gc.setStroke(Color.BLACK);
             gc.strokeRect(0, 0, minimapSize, minimapSize);
 
-            // Définir les dimensions du rectangle de vision (peut être ajusté selon les besoins)
-            double visionWidth = 450; // Largeur de la zone de vision
-            double visionHeight = 350; // Hauteur de la zone de vision
+            // Définir les dimensions du rectangle de vision
+            double visionWidth = 450;
+            double visionHeight = 350;
             double visionScaleX = visionWidth / mapSize;
             double visionScaleY = visionHeight / mapSize;
 
-            // Position de la vision du joueur en minimap (ajustée à la position du joueur)
+            // Position de la vision du joueur
             double visionX = currentPlayer.getX() * scale - visionWidth / 2 * visionScaleX;
             double visionY = currentPlayer.getY() * scale - visionHeight / 2 * visionScaleY;
 
@@ -343,30 +342,32 @@ public class SoloInGameController implements Initializable {
             gc.setStroke(Color.RED);
             gc.strokeRect(visionX, visionY, visionWidth * visionScaleX, visionHeight * visionScaleY);
 
-            // Dessiner les IA et joueurs dans la zone de vision du joueur
+            // Dessiner les IA en fonction de leur masse
             gc.setFill(Color.RED);
             for (AI ia : quadTree.getAllIAs()) {
                 double iaX = ia.getX() * scale;
                 double iaY = ia.getY() * scale;
+                double iaSize = Math.log(ia.getMass() + 1) * 1.5;
 
-                // Si l'IA est dans la zone de vision du joueur
                 if (iaX >= visionX && iaX <= visionX + visionWidth * visionScaleX &&
                         iaY >= visionY && iaY <= visionY + visionHeight * visionScaleY) {
-                    gc.fillOval(iaX, iaY, 4, 4);
+                    gc.fillOval(iaX - iaSize / 2, iaY - iaSize / 2, iaSize, iaSize);
                 }
             }
 
-            // Dessiner le joueur dans la zone de vision
+            // Dessiner le joueur avec une taille proportionnelle à sa masse
             gc.setFill(Color.BLUE);
             double playerX = currentPlayer.getX() * scale;
             double playerY = currentPlayer.getY() * scale;
+            double playerSize = Math.log(currentPlayer.getMass() + 1) * 1.5;
 
             if (playerX >= visionX && playerX <= visionX + visionWidth * visionScaleX &&
                     playerY >= visionY && playerY <= visionY + visionHeight * visionScaleY) {
-                gc.fillOval(playerX, playerY, 5, 5);
+                gc.fillOval(playerX - playerSize / 2, playerY - playerSize / 2, playerSize, playerSize);
             }
         });
     }
+
 
 
 
@@ -456,4 +457,7 @@ public class SoloInGameController implements Initializable {
         this.nbChaserAI = nbChaserAI;
     }
 
+    public void setChoiceSpecialPellet(boolean choiceSpecialPellet) {
+        this.choiceSpecialPellet = choiceSpecialPellet;
+    }
 }
