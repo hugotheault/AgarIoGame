@@ -21,7 +21,7 @@ public class Player extends MovableObject {
             return Math.max(speed,0) ;
         } else{
             double speed = (this.getBaseMouvementSpeed() - (speedSlowMultiplier * Math.log(1 + this.getMass())));
-            return Math.max(speed,0) ;
+            return Math.max(speed,0);
         }
     }
 
