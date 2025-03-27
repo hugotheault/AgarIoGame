@@ -83,7 +83,7 @@ public class QuadTree {
      * @param player Player to analyze
      * @return List of entities in certain range around the player
      */
-    public ArrayList<Entity> getEntitiesAroundPlayer(Player player) {
+    public ArrayList<Entity> getEntitiesAroundPlayer(PlayerLeaf player) {
         double radius = 2 * player.getRadius();
         Boundary searchArea = new Boundary(player.getX() - radius, player.getY() - radius,
                 2 * radius, 2 * radius);
@@ -126,8 +126,10 @@ public class QuadTree {
         ArrayList<Entity> result = new ArrayList<>();
         if (depth == 0) {
             for (Entity entity : entities) {
-                if (region.contains(entity)) {
-                    result.add(entity);
+                if( !(entity instanceof PlayerComposite) ){
+                    if (region.contains(entity)) {
+                        result.add(entity);
+                    }
                 }
             }
             return result;
@@ -246,13 +248,13 @@ public class QuadTree {
      *
      * @return A list of all the players in the quadtree
      */
-    public ArrayList<Player> getAllPlayers() {
-        ArrayList<Player> result = new ArrayList<>();
+    public ArrayList<PlayerComposite> getAllPlayers() {
+        ArrayList<PlayerComposite> result = new ArrayList<>();
 
         if (entities != null) {
             for (Entity entity : entities) {
-                if (entity instanceof Player) {
-                    result.add((Player) entity);
+                if (entity instanceof PlayerComposite) {
+                    result.add((PlayerComposite) entity);
                 }
             }
         }
@@ -348,13 +350,13 @@ public class QuadTree {
         }
     }
 
-    public ArrayList<Player> getPlayers() {
-        ArrayList<Player> players = new ArrayList<>();
+    public ArrayList<PlayerComposite> getPlayers() {
+        ArrayList<PlayerComposite> players = new ArrayList<>();
 
         if (depth == 0) {
             for (Entity entity : entities) {
-                if (entity instanceof Player) {
-                    players.add((Player) entity);
+                if (entity instanceof PlayerComposite) {
+                    players.add((PlayerComposite) entity);
                 }
             }
             return players;

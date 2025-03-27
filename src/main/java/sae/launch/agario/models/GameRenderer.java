@@ -44,11 +44,15 @@ public class GameRenderer {
                     camera.getY() - centerY,
                     camera.getX() + centerX,
                     camera.getY() + centerY)) {
-                drawEntity(centerX, centerY, entity, players);
+                drawEntity(centerX, centerY, entity);
             }
-            ArrayList<Player> entites = quadTree.getAllPlayers();
+            ArrayList<PlayerComposite> entites = quadTree.getAllPlayers();
             for(Entity entity: entites){
-                drawEntity(centerX, centerY, entity, players);
+                if(entity instanceof PlayerComposite){
+                    for(PlayerLeaf player: ((PlayerComposite) entity).getPlayers()){
+                        drawEntity(centerX, centerY, player);
+                    }
+                }
             }
         });
     }
@@ -59,10 +63,14 @@ public class GameRenderer {
      * @param centerY The y axis center of the entity
      * @param entity The entity
      */
-    private void drawEntity(double centerX, double centerY, Entity entity, ArrayList<Player> players) {
+    private void drawEntity(double centerX, double centerY, Entity entity) {
         double entityX = (entity.getX() - camera.getX() + centerX);
         double entityY = (entity.getY() - camera.getY() + centerY);
         double entityRadius = entity.getRadius();
+
+        if(entity instanceof PlayerComposite){
+            return;
+        }
 
         Circle circle = new Circle(entityX, entityY, entityRadius);
 
@@ -77,7 +85,7 @@ public class GameRenderer {
             } else {
                 if ( ((MovableObject)entity).isSpecialPelletIsInvisible()){
                     circle.setFill(Color.LIGHTBLUE);
-                } else{
+                } else if( entity instanceof PlayerLeaf ){
                     circle.setFill(Color.BLUE);
                 }
 

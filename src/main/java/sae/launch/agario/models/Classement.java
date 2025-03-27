@@ -10,7 +10,7 @@ import java.util.Comparator;
 public class Classement {
 
     private ArrayList<MovableObject> classement;
-    private Player currentPlayer;
+    private PlayerComposite currentPlayer;
     private double baseWeight;
 
     public Classement(double baseWeight){
@@ -18,7 +18,7 @@ public class Classement {
         this.classement = new ArrayList<>();
     }
 
-    public void updateClassement(VBox leaderboard, ArrayList<MovableObject> players, Player currentPlayer) {
+    public void updateClassement(VBox leaderboard, ArrayList<MovableObject> players, PlayerComposite currentPlayer) {
         this.currentPlayer = currentPlayer;
         leaderboard.getChildren().clear();
         classement.clear();

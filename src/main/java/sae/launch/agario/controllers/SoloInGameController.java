@@ -41,7 +41,7 @@ public class SoloInGameController implements Initializable {
 
     private GameRenderer gameRenderer;
 
-    private Player currentPlayer;
+    private PlayerComposite currentPlayer;
 
     private double playerXPercent;
     private double playerYPercent;
@@ -64,23 +64,27 @@ public class SoloInGameController implements Initializable {
     private int nbPelletAI = 0;
     private int nbChaserAI = 0;
 
+    private PlayerComposite playerGroup;
+
     @Override
     public void initialize(URL u, ResourceBundle r){
         this.mapSize = 2000;
         this.initialSize = 50;
         this.sizeScaleToEat = 1.15;
         this.maxPelletNb = 500;
-        this.sizeToDivide = 50;
+        this.sizeToDivide = 50*2;
         this.pelletSize = 10;
+        this.baseMass = 50;
 
         quadTree = new QuadTree(mapSize, mapSize, 6, 0, 0);
 
         int idBase = IDGenerator.getGenerator().NextID();
 
-        Player player = new Player(idBase, randomCoordinate(), randomCoordinate(), initialSize);
-        currentPlayer = player;
-        quadTree.insert(player);
-        baseMass = player.getMass();
+        PlayerLeaf player = new PlayerLeaf(idBase, randomCoordinate(), randomCoordinate(), initialSize);
+        this.playerGroup = new PlayerComposite(idBase, player.getX(), player.getY(), baseMass, baseMass*2, this.mapSize);
+        this.playerGroup.addPlayer(player);
+        currentPlayer = this.playerGroup;
+        quadTree.insert(this.playerGroup);
 
         this.pelletController = new PelletController(quadTree, maxPelletNb, pelletSize);
         pelletController.generatePellets();
@@ -110,6 +114,7 @@ public class SoloInGameController implements Initializable {
                     event.consume();
                     showExitConfirmation();
                 });
+                pane.requestFocus();
             // Implementation AI
                 // Random AI
             for (int i = 0; i < nbRandomsAI; i++) {
@@ -130,13 +135,24 @@ public class SoloInGameController implements Initializable {
 
         this.classement = new Classement(baseMass);
         classement.addMovableObject(player);
-        classement.updateClassement(leaderboard, quadTree.getAllMovableObjects(), player);
+        classement.updateClassement(leaderboard, quadTree.getAllMovableObjects(), this.playerGroup);
 
         if (minimap == null) {
             System.out.println("Erreur: minimap est null !");
         } else {
             System.out.println("Minimap bien initialisée.");
         }
+
+        pane.setOnKeyPressed(event -> {
+            if (event.getCode().toString().equals("SPACE")) {
+                dividePlayer(currentPlayer);
+            }
+        });
+    }
+
+    private void dividePlayer(PlayerComposite currentPlayer) {
+        System.out.println("Division");
+        currentPlayer.divide();
     }
 
     private void showExitConfirmation() {
@@ -204,47 +220,71 @@ public class SoloInGameController implements Initializable {
      */
     private void updatePlayers() {
 
-        for(Player player: quadTree.getPlayers()){
-            quadTree.remove(player);
-            //Update position du joueur principal
-            double directionX = playerXPercent - 0.5;
-            double directionY = playerYPercent - 0.5;
-            double magnitude = Math.sqrt(directionX * directionX + directionY * directionY);
-            if (magnitude != 0) {
-                directionX /= magnitude;
-                directionY /= magnitude;
-            }
-            double deltaX = directionX * player.getSpeed(mouseXCursor, mouseYCursor,pane.getWidth() / 2,pane.getHeight() / 2) * player.getSpecialPelletSpeedBoost();
-            double deltaY = directionY * player.getSpeed(mouseXCursor, mouseYCursor,pane.getWidth() / 2,pane.getHeight() / 2) * player.getSpecialPelletSpeedBoost();
-
-            if(coordonneeInMap(player.getX() + deltaX,player.getY() + deltaY)){
+        for(PlayerComposite player: quadTree.getPlayers()){
+            if (player instanceof PlayerComposite composite && composite.canMerge() && composite.canMergeByDistance()) {
+                composite.mergeClosestParts();
+            } else {
+                player.handleCollisions();
+                //Update position du joueur principal
+                double directionX = playerXPercent - 0.5;
+                double directionY = playerYPercent - 0.5;
+                double magnitude = Math.sqrt(directionX * directionX + directionY * directionY);
+                if (magnitude != 0) {
+                    directionX /= magnitude;
+                    directionY /= magnitude;
+                }
+                double deltaX = directionX * player.getSpeed(mouseXCursor, mouseYCursor, pane.getWidth() / 2, pane.getHeight() / 2);
+                double deltaY = directionY * player.getSpeed(mouseXCursor, mouseYCursor, pane.getWidth() / 2, pane.getHeight() / 2);
                 player.setX(player.getX() + deltaX);
                 player.setY(player.getY() + deltaY);
             }
-
-            quadTree.insert(player);
         }
 
-        for(Player joueur: quadTree.getAllPlayers()){
-            for(Entity cible: quadTree.getEntitiesAroundPlayer((Player) joueur)){
-                if(cible.equals(joueur)) continue;
-                if(joueur.canEat(cible)){
-                    joueur.Absorb(cible);
-                    quadTree.remove(cible);
-                    Platform.runLater(()->{
-                        scoreLabel.setText(""+(joueur.getMass()-baseMass));
-                        this.classement.updateClassement(leaderboard, quadTree.getAllMovableObjects(), joueur);
-                    });
-                    if(!(cible instanceof Pellet)){
-                        if(((AI)cible).getStrategy() instanceof AIRamdom) {
-                            AI iaPlayer = new AI(IDGenerator.getGenerator().NextID(), randomCoordinate(), randomCoordinate(), baseMass, quadTree, new AIRamdom());
-                            quadTree.insert(iaPlayer);
-                        }else if(((AI)cible).getStrategy() instanceof AIPellet) {
-                            AI iaPlayer = new AI(IDGenerator.getGenerator().NextID(), randomCoordinate(), randomCoordinate(), baseMass, quadTree, new AIPellet());
-                            quadTree.insert(iaPlayer);
-                        }else if(((AI)cible).getStrategy() instanceof AIChaser) {
-                            AI iaPlayer = new AI(IDGenerator.getGenerator().NextID(), randomCoordinate(), randomCoordinate(), baseMass, quadTree, new AIChaser());
-                            quadTree.insert(iaPlayer);
+        for (PlayerComponent player : playerGroup.getPlayers()) { // Utilisation du composite
+            if (player instanceof MovableObject) {
+                MovableObject p = (MovableObject) player;
+
+                // Mise à jour de la position du joueur principal
+                double directionX = playerXPercent - 0.5;
+                double directionY = playerYPercent - 0.5;
+                double magnitude = Math.sqrt(directionX * directionX + directionY * directionY);
+                if (magnitude != 0) {
+                    directionX /= magnitude;
+                    directionY /= magnitude;
+                }
+                double deltaX = directionX * p.getSpeed(mouseXCursor, mouseYCursor, pane.getWidth() / 2, pane.getHeight() / 2);
+                double deltaY = directionY * p.getSpeed(mouseXCursor, mouseYCursor, pane.getWidth() / 2, pane.getHeight() / 2);
+
+                if (coordonneeInMap(p.getX() + deltaX, p.getY() + deltaY)) {
+                    p.setX(p.getX() + deltaX);
+                    p.setY(p.getY() + deltaY);
+                }
+            }
+        }
+
+
+        for(PlayerComposite joueur: quadTree.getAllPlayers()){
+            for(PlayerLeaf sousJoueur : joueur.getPlayers()){
+                for(Entity cible: quadTree.getEntitiesAroundPlayer((PlayerLeaf) sousJoueur)){
+                    if(cible.equals(joueur)) continue;
+                    if(sousJoueur.canEat(cible)){
+                        sousJoueur.Absorb(cible);
+                        quadTree.remove(cible);
+                        Platform.runLater(()->{
+                            scoreLabel.setText(""+(joueur.getMass()-baseMass));
+                            this.classement.updateClassement(leaderboard, quadTree.getAllMovableObjects(), joueur);
+                        });
+                        if(!(cible instanceof Pellet)){
+                            if(((AI)cible).getStrategy() instanceof AIRamdom) {
+                                AI iaPlayer = new AI(IDGenerator.getGenerator().NextID(), randomCoordinate(), randomCoordinate(), baseMass, quadTree, new AIRamdom());
+                                quadTree.insert(iaPlayer);
+                            }else if(((AI)cible).getStrategy() instanceof AIPellet) {
+                                AI iaPlayer = new AI(IDGenerator.getGenerator().NextID(), randomCoordinate(), randomCoordinate(), baseMass, quadTree, new AIPellet());
+                                quadTree.insert(iaPlayer);
+                            }else if(((AI)cible).getStrategy() instanceof AIChaser) {
+                                AI iaPlayer = new AI(IDGenerator.getGenerator().NextID(), randomCoordinate(), randomCoordinate(), baseMass, quadTree, new AIChaser());
+                                quadTree.insert(iaPlayer);
+                            }
                         }
                     }
                 }
@@ -291,10 +331,10 @@ public class SoloInGameController implements Initializable {
                         this.classement.updateClassement(leaderboard, quadTree.getAllMovableObjects(), this.currentPlayer);
                     });
                     if(cible == currentPlayer){
-                        Player player = new Player(IDGenerator.getGenerator().NextID(), randomCoordinate(), randomCoordinate(), initialSize);
+                        PlayerComposite player = new PlayerComposite(IDGenerator.getGenerator().NextID(), randomCoordinate(), randomCoordinate(), initialSize, baseMass*2, this.mapSize);
                         currentPlayer = player;
                         quadTree.insert(player);
-                    }else if(!(cible instanceof Player)){
+                    }else if(!(cible instanceof PlayerComposite)){
                         if(cible instanceof AI iaCible) {
 
                             if(iaCible.getStrategy() instanceof AIRamdom) {

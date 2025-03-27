@@ -32,20 +32,22 @@ public class Camera {
      * Met à jour la position de la caméra en centrant sur les joueurs suivis.
      */
     public void updatePosition(QuadTree quadtree) {
-        ArrayList<Player> players = quadtree.getPlayers();
+        ArrayList<PlayerComposite> players = quadtree.getPlayers();
 
         if (players.isEmpty()) return;
-
+        double cpt = 0;
         // Calcul du barycentre des joueurs suivis
         double sumX = 0, sumY = 0;
-        for (Player player : players) {
+        for (PlayerLeaf player : players.get(0).getPlayers()) {
             sumX += player.getX();
             sumY += player.getY();
+            cpt++;
         }
 
         // Nouvelle position centrée sur la moyenne des positions des joueurs
-        this.x = sumX / players.size();
-        this.y = sumY / players.size();
+
+        this.x = sumX / cpt;
+        this.y = sumY / cpt;
     }
 
     /**
