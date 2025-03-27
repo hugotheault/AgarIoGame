@@ -24,7 +24,8 @@ public abstract class MovableObject extends Entity {
         return (int)round(this.getMass()) + rangeHorizonModifier;
     }
     public abstract double getSpeed();
-    public abstract double getSpeed(double xCursor,double yCursor);
+
+    public abstract double getSpeed(double xCursor,double yCursor,double paneCenterX,double paneCenterY);
 
     public double getBaseMouvementSpeed() {
         return baseMouvementSpeed;
