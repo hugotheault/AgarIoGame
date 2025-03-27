@@ -41,7 +41,7 @@ public abstract class Entity {
         return mass;
     }
 
-    public boolean isPellet(){return this.getClass()==Pellet.class;}
+    public boolean isPellet(){return this instanceof Pellet;}
 
     public double getRadius() {
         return Math.sqrt(mass);

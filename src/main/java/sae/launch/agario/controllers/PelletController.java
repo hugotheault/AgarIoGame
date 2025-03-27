@@ -5,6 +5,7 @@ import javafx.scene.shape.Circle;
 import sae.launch.agario.QuadTree;
 import sae.launch.agario.models.IDGenerator;
 import sae.launch.agario.models.Pellet;
+import sae.launch.agario.models.SpecialPellet;
 
 import java.util.Random;
 
@@ -27,7 +28,12 @@ public class PelletController {
             Random random = new Random();
             int pelletsToAdd = maxPellets - quadTree.getPelletsNumber();
             while (pelletsToAdd > 0) {
-                Pellet pellet = new Pellet(generator.NextID(), random.nextDouble(quadTree.getLength()), random.nextDouble(quadTree.getHeight()), pelletSize);
+                Pellet pellet;
+                if( random.nextInt(100)> 1) {
+                    pellet = new Pellet(generator.NextID(), random.nextDouble(quadTree.getLength()), random.nextDouble(quadTree.getHeight()), pelletSize);
+                }else{
+                    pellet = new SpecialPellet(generator.NextID(), random.nextDouble(quadTree.getLength()), random.nextDouble(quadTree.getHeight()), pelletSize);
+                }
                 quadTree.insert(pellet);
                 pelletsToAdd--;
             }

@@ -7,7 +7,8 @@ public class SpecialPellet extends Pellet{
     Effect effect;
 
     public SpecialPellet(int ID, double x, double y, double masse) {
-        super(ID, x, y, masse);
+        super(ID, x, y, masse+30);
+        randomEffect();
     }
 
     public void randomEffect(){

@@ -12,7 +12,8 @@ public class AIChaser implements AIStrategy{
         ArrayList<Entity> potentialTargets = quadtree.getEntitiesAroundMovableObjectLarger(ai,800);
         Double lenghtBetweenEntites= 100000000.0;
         for(Entity e : potentialTargets){
-            if(!e.isPellet() && e.getID() != ai.getID() && (e.getMass())*1.2 < ai.getMass()) {
+            if(!e.isPellet() && e.getID() != ai.getID() && (e.getMass())*1.2 < ai.getMass() && !((MovableObject)e).isSpecialPelletIsInvisible()) {
+
                 if (Math.sqrt(Math.pow((e.getX() - x), 2) + Math.pow((e.getY() - y), 2)) < lenghtBetweenEntites) {
                     coordinates.put("x", e.getX());
                     coordinates.put("y", e.getY());

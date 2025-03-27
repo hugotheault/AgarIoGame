@@ -5,7 +5,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import sae.launch.agario.QuadTree;
-
+import javafx.scene.effect.Glow;
 
 import java.util.ArrayList;
 
@@ -68,10 +68,27 @@ public class GameRenderer {
 
         if (entity instanceof MovableObject) {
             if(entity instanceof AI){
-                circle.setFill(Color.RED);
+                if( ((AI)entity).isSpecialPelletIsInvisible()){
+                    circle.setFill(Color.TRANSPARENT);
+                } else{
+                    circle.setFill(Color.RED);
+                }
+
             } else {
-                circle.setFill(Color.BLUE);
+                if ( ((MovableObject)entity).isSpecialPelletIsInvisible()){
+                    circle.setFill(Color.LIGHTBLUE);
+                } else{
+                    circle.setFill(Color.BLUE);
+                }
+
             }
+        } else if(entity instanceof SpecialPellet) {
+            circle.setFill(Color.YELLOW);
+            circle.setStroke(Color.YELLOW);
+            circle.setStrokeWidth(2);
+            Glow glow = new Glow();
+            glow.setLevel(2);
+            circle.setEffect(glow);
         } else {
             circle.setFill(((Pellet) entity).getColor());
         }
