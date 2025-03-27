@@ -85,13 +85,13 @@ public class SoloInGameController implements Initializable {
         this.pelletController = new PelletController(quadTree, maxPelletNb, pelletSize);
         pelletController.generatePellets();
 
-
-
         this.gameRenderer = new GameRenderer(pane);
 
         pane.setOnMouseMoved(event ->{
             setPlayerXPercent(event.getX() / pane.getWidth());
             setPlayerYPercent(event.getY() / pane.getHeight());
+            setMouseXCursor(event.getX());
+            setMouseYCursor(event.getY());
             setCoX(event.getX());
             setCoY(event.getY());
         });
