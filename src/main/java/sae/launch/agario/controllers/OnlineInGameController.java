@@ -201,7 +201,7 @@ public class OnlineInGameController implements Initializable {
                 server.getPrintWriterList().get(i).flush();
             }
             if(lastMessage.contains("deplacement:")){
-                String message = lastMessage.substring(14, lastMessage.length()-1);
+                String message = lastMessage.substring(12, lastMessage.length()-1);
                 String[] deplacements = message.split("/");
                 System.out.println("msg : " + message);
                 System.out.println("deplacement de 0: " + deplacements[0]);
@@ -238,21 +238,6 @@ public class OnlineInGameController implements Initializable {
      *Update the position of all the players, and whether they can eat or get eaten
      */
     private void updatePlayers() {
-
-        for(Player player: quadTree.getPlayers()){
-            //Update position du joueur principal
-            double directionX = playerXPercent - 0.5;
-            double directionY = playerYPercent - 0.5;
-            double magnitude = Math.sqrt(directionX * directionX + directionY * directionY);
-            if (magnitude != 0) {
-                directionX /= magnitude;
-                directionY /= magnitude;
-            }
-            double deltaX = directionX * player.getSpeed(coX, coY, pane.getWidth()/2, pane.getHeight()/2);
-            double deltaY = directionY * player.getSpeed(coX, coY, pane.getWidth()/2, pane.getHeight()/2);
-            player.setX(player.getX() + deltaX);
-            player.setY(player.getY() + deltaY);
-        }
 
 
 
