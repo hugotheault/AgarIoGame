@@ -11,7 +11,6 @@ public abstract class MovableObject extends Entity {
     public MovableObject(int ID, double x, double y, double mass) {
         super(ID, x, y, mass);
         slowRangeRay = this.getRay();
-
     }
     public double getRay() {
         return 10*Math.sqrt(this.getMass()) ;

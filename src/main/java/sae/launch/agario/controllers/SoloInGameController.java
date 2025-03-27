@@ -62,10 +62,11 @@ public class SoloInGameController implements Initializable {
         this.maxPelletNb = 500;
         this.sizeToDivide = this.initialSize * 2;
         this.pelletSize = 10;
+        baseMass = 50;
 
         quadTree = new QuadTree(mapSize, mapSize, 6, 0, 0);
         PlayerLeaf playerLeaf = new PlayerLeaf(IDGenerator.getGenerator().NextID(), 100, 100, initialSize);
-        PlayerComposite player = new PlayerComposite(IDGenerator.getGenerator().NextID(), 100, 100, initialSize);
+        PlayerComposite player = new PlayerComposite(IDGenerator.getGenerator().NextID(), 100, 100, initialSize, baseMass*2);
         player.addPlayer(playerLeaf);
         int idBase = IDGenerator.getGenerator().NextID();
         quadTree.insert(player);
@@ -78,7 +79,7 @@ public class SoloInGameController implements Initializable {
 
         player.addPlayer(playerLeaf);
         players.add(player);
-        baseMass = 50;
+
 
         this.gameRenderer = new GameRenderer(pane);
 
@@ -112,7 +113,7 @@ public class SoloInGameController implements Initializable {
 
         pane.setOnKeyPressed(event -> {
             if (event.getCode().toString().equals("SPACE")) {
-                dividePlayer(quadTree.getAllPlayers().get(-1));
+                dividePlayer(quadTree.getAllPlayers().get(0));
             }
         });
 
@@ -143,14 +144,12 @@ public class SoloInGameController implements Initializable {
         gameRenderer.updateVisuals(quadTree, players);
     }
 
-    private void dividePlayer(PlayerComponant player) {
-        System.out.println(player.getMass()+" : "+sizeToDivide);
+    private void dividePlayer(PlayerComposite player) {
+        System.out.println(player.getMass() + " : "+ sizeToDivide);
         System.out.println(player.getRay());
         if(player.getMass() >= sizeToDivide) {
-            PlayerLeaf p = new PlayerLeaf(player.getID(), player.getX()+player.getRay()/10, player.getY()+player.getRay()/10, player.getMass()/2);
-            player.setMass(player.getMass()/2);
-            quadTree.insert(p);
-            updateGame();
+            System.out.println("Division");
+            player.divide(mouseXCursor, mouseYCursor,pane.getWidth() / 2,pane.getHeight() / 2);
         }
     }
 
@@ -223,9 +222,9 @@ public class SoloInGameController implements Initializable {
 
         for(PlayerComposite joueur: quadTree.getAllPlayers()){
             for( PlayerLeaf playerLeaf : joueur.getAllPlayer() ){
-                for(Entity cible: quadTree.getEntitiesAroundPlayer((PlayerComposite) joueur)){
-                    if(cible.equals(joueur)) continue;
-                    if(joueur.canEat(cible)){
+                for(Entity cible: quadTree.getEntitiesAroundPlayer((PlayerLeaf) playerLeaf)){
+                    if(cible.equals(playerLeaf)) continue;
+                    if(playerLeaf.canEat(cible)){
                         System.out.println("Absorption d'un pellet de masse" + cible.getMass());
                         joueur.setMass(playerLeaf, cible.getMass());
                         quadTree.remove(cible);

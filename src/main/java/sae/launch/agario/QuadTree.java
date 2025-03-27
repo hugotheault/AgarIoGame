@@ -87,7 +87,7 @@ public class QuadTree {
      * @param player Player to analyze
      * @return List of entities in certain range around the player
      */
-    public ArrayList<Entity> getEntitiesAroundPlayer(PlayerComposite player) {
+    public ArrayList<Entity> getEntitiesAroundPlayer(PlayerLeaf player) {
         double radius = 2 * player.getRadius();
         Boundary searchArea = new Boundary(player.getX() - radius, player.getY() - radius,
                 2 * radius, 2 * radius);

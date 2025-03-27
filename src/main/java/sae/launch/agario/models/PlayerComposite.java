@@ -1,17 +1,21 @@
 package sae.launch.agario.models;
 
+import sae.launch.agario.controllers.SoloInGameController;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class PlayerComposite extends MovableObject implements PlayerComponant {
     private ArrayList<PlayerLeaf> players;
     private double totalMass;
+    private double minimumMassToDivide;
 
     // Constructor
-    public PlayerComposite(int ID, double x, double y, double mass) {
+    public PlayerComposite(int ID, double x, double y, double mass, double minimumMass) {
         super(ID, x, y, mass);
         this.players = new ArrayList<PlayerLeaf>();
         totalMass = mass;
+        this.minimumMassToDivide = minimumMass;
     }
 
     @Override
@@ -25,6 +29,10 @@ public class PlayerComposite extends MovableObject implements PlayerComponant {
     @Override
     public double getMass() {
         return totalMass;
+    }
+
+    public double getRadius() {
+        return Math.sqrt(totalMass);
     }
 
     @Override
@@ -71,12 +79,30 @@ public class PlayerComposite extends MovableObject implements PlayerComponant {
 
     public void setMass(PlayerLeaf playerLeaf, double mass){
         if (players.contains(playerLeaf)) {
-            System.out.println("setMass appelé pour " + playerLeaf + "ajout d'une masse de " + mass);
             playerLeaf.setMass(playerLeaf.getMass() + mass);
             totalMass += mass;
         } else {
             System.out.println("Erreur : PlayerLeaf non trouvé dans PlayerComposite");
         }
+    }
+
+    public void divide(double xCursor, double yCursor, double paneCenterX,double paneCenterY){
+        for(PlayerLeaf player : getAllPlayer()){
+            System.out.println(player.toString());
+        }
+        ArrayList<PlayerLeaf> tempPlayers = new ArrayList<PlayerLeaf>();
+        for(PlayerLeaf player : getAllPlayer()){
+            tempPlayers.add(player);
+        }
+        for( PlayerLeaf player : tempPlayers){
+            if(player.getMass() >= minimumMassToDivide){
+                player.setMass(player.getMass()/2);
+                PlayerLeaf newPlayer = new PlayerLeaf(this.getID(), player.getX() + player.getRay(), player.getY() + player.getRay(), player.getMass());
+                newPlayer.getSpeed(xCursor, yCursor, paneCenterX, paneCenterY);
+                this.players.add(newPlayer);
+            }
+        }
+
     }
 
     public void addPlayer(PlayerLeaf player) {

@@ -48,7 +48,9 @@ public class GameRenderer {
             }
             ArrayList<PlayerComposite> entites = quadTree.getAllPlayers();
             for(PlayerComposite entity: entites){
-                drawEntity(centerX, centerY, (Entity) entity, players);
+                for( PlayerLeaf player : entity.getAllPlayer() ){
+                    drawEntity(centerX, centerY, (Entity) player, players);
+                }
             }
         });
     }
@@ -67,8 +69,8 @@ public class GameRenderer {
         Circle circle = new Circle(entityX, entityY, entityRadius);
 
         if (entity instanceof PlayerComposite) {
-        }
-        if (entity instanceof PlayerComposite) {
+            return;
+        } else if (entity instanceof PlayerLeaf) {
             circle.setFill(Color.BLUE);
         } else {
             circle.setFill(((Pellet) entity).getColor());
