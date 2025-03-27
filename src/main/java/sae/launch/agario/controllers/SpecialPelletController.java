@@ -15,7 +15,8 @@ public class SpecialPelletController {
     private Circle specialPelletCircle;
 
     /**
-     *
+     * Defines the graphic representation of a special pellet 
+     * @see SpecialPellet
      * @param specialPellet Special pellet
      * @param width width of the game field
      * @param height height of the game field

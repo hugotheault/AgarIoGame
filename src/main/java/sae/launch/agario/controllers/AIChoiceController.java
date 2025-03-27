@@ -31,7 +31,11 @@ public class AIChoiceController implements Initializable {
     protected void onQuitButton() {
         showExitConfirmation();
     }
-
+    
+    /**
+     * Displays a popup to confirm the quit action
+     * @see #onQuitButton()
+     */
     private void showExitConfirmation() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Quitter l'application");
@@ -51,6 +55,13 @@ public class AIChoiceController implements Initializable {
         }
     }
 
+    /**
+     * Load the main page 
+     * Uses "/sae/launch/agario/AppView.fxml"
+     * @param event   a mouse click
+     * @throws IOException
+     * @see AppView.fxml
+     */
     @FXML
     protected void onMenuButton(ActionEvent event) throws IOException {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/sae/launch/agario/AppView.fxml"));
@@ -61,6 +72,13 @@ public class AIChoiceController implements Initializable {
             stage.setWidth(600);
             stage.show();
     }
+    
+    /**
+     * Load and start the game with the chosen amount of AI
+     * Uses "/sae/launch/agario/InGameView.fxml"
+     * @param event  a mouse click
+     * @throws IOException
+     */
 
     @FXML
     protected void onSoloPlayButton(ActionEvent event) throws IOException {
@@ -76,6 +94,11 @@ public class AIChoiceController implements Initializable {
         soloInGameController.setNbChaserAI(Integer.parseInt(chaserAI.getText()));
     }
 
+    /**
+     * Add an Ai of type "Random" to the game, with a maximum of 20
+     * @param event  a mouse click
+     * @throws IOException
+     */
     @FXML
     protected void onRandomAIPlusButton(ActionEvent event) throws IOException {
         int res = Integer.parseInt(randomAI.getText());
@@ -87,6 +110,11 @@ public class AIChoiceController implements Initializable {
         }
     }
 
+    /**
+     * Substract an Ai of type "Random" to the game, with a minimum of 0
+     * @param event  a mouse click
+     * @throws IOException
+     */
     @FXML
     protected void onRandomAIMinusButton(ActionEvent event) throws IOException {
         int res = Integer.parseInt(randomAI.getText());
@@ -97,7 +125,12 @@ public class AIChoiceController implements Initializable {
             randomAI.setText(Integer.toString(res));
         }
     }
-
+    
+    /**
+     * Add an Ai of type "Pellet" to the game, with a maximum of 20
+     * @param event  a mouse click
+     * @throws IOException
+     */
     @FXML
     protected void onPelletAIPlusButton(ActionEvent event) throws IOException {
         int res = Integer.parseInt(pelletAI.getText());
@@ -109,6 +142,11 @@ public class AIChoiceController implements Initializable {
         }
     }
 
+    /**
+     * Substract an Ai of type "Pellet" to the game, with a minimum of 0
+     * @param event  a mouse click
+     * @throws IOException
+     */
     @FXML
     protected void onPelletAIMinusButton(ActionEvent event) throws IOException {
         int res = Integer.parseInt(pelletAI.getText());
@@ -119,7 +157,12 @@ public class AIChoiceController implements Initializable {
             pelletAI.setText(Integer.toString(res));
         }
     }
-
+    
+    /**
+     * Add an Ai of type "Chaser" to the game, with a maximum of 20
+     * @param event  a mouse click
+     * @throws IOException
+     */
     @FXML
     protected void onChaserAIPlusButton(ActionEvent event) throws IOException {
         int res = Integer.parseInt(chaserAI.getText());
@@ -131,6 +174,11 @@ public class AIChoiceController implements Initializable {
         }
     }
 
+    /**
+     * Substract an Ai of type "Chaser" to the game, with a minimum of 0
+     * @param event  a mouse click
+     * @throws IOException
+     */
     @FXML
     protected void onChaserAIMinusButton(ActionEvent event) throws IOException {
         int res = Integer.parseInt(chaserAI.getText());

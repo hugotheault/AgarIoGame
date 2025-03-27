@@ -18,6 +18,10 @@ public class App extends Application {
     @FXML
     private VBox vbox;
 
+    /**
+     * Load the main menu
+     * Uses AppView
+     */
     @Override
     public void start(Stage stage) throws IOException {
         scene = new Scene(loadFXML("AppView"), 600, 400);

@@ -32,27 +32,29 @@ public class OnlineInGameController implements Initializable {
     public static int desiredScreenWidth = 300;
     public double ratioPane;
 
-    private int ID;
+    private int ID;	//Used for the client side
 
-    private boolean isHost;
+    private boolean isHost; //Indicates whether the code owner is hosting or playing a game 
     private Server server;
+    
+    //Client's tools for communication
     private PrintWriter clientPrintWriter;
     private Socket clientSocker;
 
 
 
 
-
+    //Host's tools to emulate the game locally
     private @FXML Pane pane;
     private ThreadWorld threadWorld;
     private QuadTree quadTree;
     private PelletController pelletController;
     ClientDataReader ecouteur;
     private ArrayList<Player> players;
+    
+    private GameRenderer gameRenderer; //Local game 
 
-    private GameRenderer gameRenderer;
-
-
+    //Characteristics sent by the player to the server
     private double playerXPercent;
     private double playerYPercent;
     private double coX;
@@ -65,6 +67,9 @@ public class OnlineInGameController implements Initializable {
     private double sizeToDivide;
     private double pelletSize;
 
+    /**
+     * Initiates the game on the host's side
+     */
     public OnlineInGameController() {
         //reads the properties file
         FileInputStream input = null;
@@ -99,6 +104,12 @@ public class OnlineInGameController implements Initializable {
             }
         });
     }
+    /**
+     * Connects to the host and initiates the game on the client's side 
+     * @param ip	Host ipv4 address
+     * @param port	Host used port
+     * @throws IOException
+     */
     public OnlineInGameController(String ip, int port) throws IOException {
         //reads the properties file
         FileInputStream input = null;
@@ -179,6 +190,11 @@ public class OnlineInGameController implements Initializable {
         }
     }
 
+    /**
+     * Update the game's state and send informations to the players
+     * @see #writeQuadTree()
+     * @see #updateGame()
+     */
     private void updateGame() {
         pelletController.generatePellets();
         gameRenderer.updateVisuals(quadTree, players, this.ID);
@@ -188,6 +204,10 @@ public class OnlineInGameController implements Initializable {
         updatePlayers();
     }
 
+    /**
+     * Updates the entities positions and status inside the Quadtree
+     * Reads the players' actions
+     */
     private void writeQuadTree() {
         System.out.println("Nb players : " + quadTree.getAllPlayers().size());
 

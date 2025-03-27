@@ -20,16 +20,26 @@ public class AI extends MovableObject {
         this.strategy = strategy;
     }
 
+    /**
+     * @return the speed of an AI
+     */
     @Override
     public double getSpeed() {
         return aiBaseRatioSpeed * getSpecialPelletSpeedBoost() * (this.getBaseMouvementSpeed() - (this.getSpeedSlowMultiplier() * Math.log(1 + this.getMass())));
     }
 
+    /**
+     * @return the speed of a player
+     */
     @Override
     public double getSpeed(double xCursor, double yCursor, double paneCenterX, double paneCenterY) {
         throw new IllegalCallerException(" AI ne peux pas appeler cette méthode");
     }
 
+    /**
+     * Defines the Ai's next move
+     * @return the coordinates of the AI's destination
+     */
     public HashMap<String,Double> execStrategy(){
         return strategy.execStrategy(this.getX(), this.getY(), tree, this);
     }

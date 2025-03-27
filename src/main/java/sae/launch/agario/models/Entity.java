@@ -47,6 +47,11 @@ public abstract class Entity {
         return Math.sqrt(mass);
     }
 
+    /**
+     * 
+     * @param pellet The entity compared the this Entity
+     * @return  if this Entity can eat the Pellet
+     */
     public boolean canEat(Entity pellet) {
         if (pellet != null) {
             double dx = this.getX() - pellet.getX();
