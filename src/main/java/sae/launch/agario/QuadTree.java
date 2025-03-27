@@ -1,8 +1,6 @@
 package sae.launch.agario;
 
-import sae.launch.agario.models.Entity;
-import sae.launch.agario.models.Pellet;
-import sae.launch.agario.models.Player;
+import sae.launch.agario.models.*;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -88,6 +86,13 @@ public class QuadTree {
     public ArrayList<Entity> getEntitiesAroundPlayer(Player player) {
         double radius = 2 * player.getRadius();
         Boundary searchArea = new Boundary(player.getX() - radius, player.getY() - radius,
+                2 * radius, 2 * radius);
+        return getEntitiesInRegion(searchArea);
+    }
+
+    public ArrayList<Entity> getEntitiesAroundMovableObject(MovableObject obj) {
+        double radius = 2 * obj.getRadius();
+        Boundary searchArea = new Boundary(obj.getX() - radius, obj.getY() - radius,
                 2 * radius, 2 * radius);
         return getEntitiesInRegion(searchArea);
     }
@@ -206,6 +211,32 @@ public class QuadTree {
         return this.length;
     }
 
+    public ArrayList<MovableObject> getAllMovableObjects() {
+        ArrayList<MovableObject> result = new ArrayList<>();
+
+        if (entities != null) {
+            for (Entity entity : entities) {
+                if (entity instanceof MovableObject) {
+                    result.add((MovableObject) entity);
+                }
+            }
+        }
+        if (NWTree != null) {
+            result.addAll(NWTree.getAllMovableObjects());
+        }
+        if (NETree != null) {
+            result.addAll(NETree.getAllMovableObjects());
+        }
+        if (SWTree != null) {
+            result.addAll(SWTree.getAllMovableObjects());
+        }
+        if (SETree != null) {
+            result.addAll(SETree.getAllMovableObjects());
+        }
+
+        return result;
+    }
+
     /**
      *
      * @return A list of all the players in the quadtree
@@ -231,6 +262,32 @@ public class QuadTree {
         }
         if (SETree != null) {
             result.addAll(SETree.getAllPlayers());
+        }
+
+        return result;
+    }
+
+    public ArrayList<AI> getAllIAs(){
+        ArrayList<AI> result = new ArrayList<>();
+
+        if (entities != null) {
+            for (Entity entity : entities) {
+                if (entity instanceof AI) {
+                    result.add((AI) entity);
+                }
+            }
+        }
+        if (NWTree != null) {
+            result.addAll(NWTree.getAllIAs());
+        }
+        if (NETree != null) {
+            result.addAll(NETree.getAllIAs());
+        }
+        if (SWTree != null) {
+            result.addAll(SWTree.getAllIAs());
+        }
+        if (SETree != null) {
+            result.addAll(SETree.getAllIAs());
         }
 
         return result;
@@ -288,11 +345,6 @@ public class QuadTree {
         }
     }
 
-    /**
-     *
-     * @param playerIDs List of all the player's ID
-     * @return List of entity Player in the first quadtree's child
-     */
     public ArrayList<Player> getPlayers() {
         ArrayList<Player> players = new ArrayList<>();
 

@@ -18,6 +18,7 @@ import javafx.scene.control.Label;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -36,6 +37,7 @@ public class SoloInGameController implements Initializable {
 
     private GameRenderer gameRenderer;
 
+    private Player currentPlayer;
 
     private double playerXPercent;
     private double playerYPercent;
@@ -66,15 +68,25 @@ public class SoloInGameController implements Initializable {
         quadTree = new QuadTree(mapSize, mapSize, 6, 0, 0);
 
         int idBase = IDGenerator.getGenerator().NextID();
-        quadTree.insert(new Player(idBase, 100, 100, initialSize));
+
+        Player player = new Player(idBase, 100, 100, initialSize);
+        currentPlayer = player;
+        quadTree.insert(player);
+        baseMass = player.getMass();
 
         this.pelletController = new PelletController(quadTree, maxPelletNb, pelletSize);
         pelletController.generatePellets();
 
-        this.players = new ArrayList<>();
-        Player player = new Player(idBase, 50, 50, initialSize);
-        players.add(player);
-        baseMass = player.getMass();
+        // test implements IA
+
+        AI iaPlayer = new AI(66, 0, 0, baseMass, quadTree, new AIRamdom());
+        quadTree.insert(iaPlayer);
+        System.out.println("IA insérée : " + iaPlayer.getX() + ", " + iaPlayer.getY());
+        System.out.println("Joueurs dans QuadTree après insertion :");
+        for (Entity e : quadTree.getAllMovableObjects()) {
+            System.out.println(e.getClass().getSimpleName() + " - X: " + e.getX() + ", Y: " + e.getY());
+        }
+        //----------
 
         this.gameRenderer = new GameRenderer(pane);
 
@@ -102,11 +114,11 @@ public class SoloInGameController implements Initializable {
         });
 
         this.classement = new Classement(baseMass);
-        classement.addPlayer(new Player(11,0,0,10));
-        classement.addPlayer(new Player(12,0,0,50));
-        classement.addPlayer(new Player(13,0,0,500));
-        classement.addPlayer(new Player(14,0,0,2));
-        classement.addPlayer(player);
+        classement.addMovableObject(new Player(11,0,0,10));
+        classement.addMovableObject(new Player(12,0,0,50));
+        classement.addMovableObject(new Player(13,0,0,500));
+        classement.addMovableObject(new Player(14,0,0,2));
+        classement.addMovableObject(player);
         System.out.println("Classement mis à jour : ");
     }
 
@@ -132,6 +144,7 @@ public class SoloInGameController implements Initializable {
     private void updateGame() {
         updatePlayers();
         pelletController.generatePellets();
+        updateAIs();
         gameRenderer.updateVisuals(quadTree, players);
     }
 
@@ -185,10 +198,6 @@ public class SoloInGameController implements Initializable {
             player.setY(player.getY() + deltaY);
         }
 
-
-
-        //todo update la position des joueurs IA
-
         for(Player joueur: quadTree.getAllPlayers()){
             for(Entity cible: quadTree.getEntitiesAroundPlayer((Player) joueur)){
                 if(cible.equals(joueur)) continue;
@@ -197,12 +206,56 @@ public class SoloInGameController implements Initializable {
                     quadTree.remove(cible);
                     Platform.runLater(()->{
                         scoreLabel.setText(""+(joueur.getMass()-baseMass));
-                        this.classement.updateClassement(leaderboard, quadTree.getAllPlayers(), joueur);
+                        this.classement.updateClassement(leaderboard, quadTree.getAllMovableObjects(), joueur);
                     });
                 }
             }
         }
     }
+
+    private void updateAIs() {
+        for (AI ai : quadTree.getAllIAs()) {
+            ai.setTree(quadTree);
+            HashMap<String, Double> strategyObjective = ai.execStrategy();
+
+            double targetX = strategyObjective.get("x");
+            double targetY = strategyObjective.get("y");
+
+            double dx = targetX - ai.getX();
+            double dy = targetY - ai.getY();
+            double distance = Math.sqrt(dx * dx + dy * dy);
+
+            quadTree.remove(ai);
+
+            if (distance > ai.getSpeed()) {
+                // Mouvement fluide avec interpolation
+                ai.setX(ai.getX() + (dx / distance) * ai.getSpeed());
+                ai.setY(ai.getY() + (dy / distance) * ai.getSpeed());
+            } else {
+                // L'IA arrive directement à la cible si elle est proche
+                ai.setX(targetX);
+                ai.setY(targetY);
+            }
+
+            quadTree.insert(ai);
+        }
+
+        for (AI ai : quadTree.getAllIAs()) {
+            for (Entity cible : quadTree.getEntitiesAroundMovableObject(ai)) {
+                if (cible.equals(ai)) continue;
+                if (ai.canEat(cible)) {
+                    ai.Absorb(cible);
+                    quadTree.remove(cible);
+                    Platform.runLater(()->{
+                        scoreLabel.setText(""+(ai.getMass()-baseMass));
+                        this.classement.updateClassement(leaderboard, quadTree.getAllMovableObjects(), this.currentPlayer);
+                    });
+                }
+            }
+        }
+    }
+
+
 
 
     /*

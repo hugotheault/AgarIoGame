@@ -1,20 +1,36 @@
 package sae.launch.agario.models;
 
 import sae.launch.agario.QuadTree;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
-import java.util.Timer;
 
-public class AIRamdom implements AIStrategy{
-    @Override
-    public HashMap<String,Double> execStrategy(Double x, Double y, QuadTree quadtree) {
+public class AIRamdom implements AIStrategy {
+    private double targetX;
+    private double targetY;
+    private int counter = 10; // Durée avant de changer de direction
+    private static final int MAX_COUNTER = 50; // Temps avant de choisir un nouvel objectif
+
+    public AIRamdom() {
         Random rand = new Random();
-        HashMap<String, Double> coordinates = new HashMap<>();
-        coordinates.put("x", rand.nextDouble());
-        coordinates.put("y", rand.nextDouble());
-        return coordinates;
+        targetX = rand.nextDouble() * 500;
+        targetY = rand.nextDouble() * 500;
     }
 
+    @Override
+    public HashMap<String, Double> execStrategy(Double x, Double y, QuadTree quadtree) {
+        Random rand = new Random();
+
+        if (counter <= 0) {
+            targetX = rand.nextDouble() * 500;
+            targetY = rand.nextDouble() * 500;
+            counter = MAX_COUNTER;
+        } else {
+            counter--;
+        }
+
+        HashMap<String, Double> coordinates = new HashMap<>();
+        coordinates.put("x", targetX);
+        coordinates.put("y", targetY);
+        return coordinates;
+    }
 }

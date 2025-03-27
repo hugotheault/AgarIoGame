@@ -9,8 +9,8 @@ import java.util.Comparator;
 
 public class Classement {
 
-    private ArrayList<Player> classement;
-
+    private ArrayList<MovableObject> classement;
+    private Player currentPlayer;
     private double baseWeight;
 
     public Classement(double baseWeight){
@@ -18,7 +18,8 @@ public class Classement {
         this.classement = new ArrayList<>();
     }
 
-    public void updateClassement(VBox leaderboard, ArrayList<Player> players, Player currentPlayer) {
+    public void updateClassement(VBox leaderboard, ArrayList<MovableObject> players, Player currentPlayer) {
+        this.currentPlayer = currentPlayer;
         leaderboard.getChildren().clear();
         classement.clear();
         System.out.println("Affichage classement");
@@ -28,10 +29,10 @@ public class Classement {
         classement.addAll(players);
         classement.sort((p1, p2) -> Double.compare(p2.getMass(), p1.getMass()));
         for (int i = 0; i < Math.min(3, classement.size()); i++) {
-            Player p = classement.get(i);
+            MovableObject p = classement.get(i);
             System.out.println("Classement " + (i + 1) + ": " + p.getID() + " - " + p.getMass());
         }
-        for(Player m : classement) {
+        for(MovableObject m : classement) {
             Label label = new Label((classement.indexOf(m) + 1) + ": " + m.getID() + " - " + (m.getMass() - this.baseWeight));
             label.setStyle("-fx-text-fill: white;");
             if(m.getID() == currentPlayer.getID()){
@@ -41,20 +42,20 @@ public class Classement {
         }
     }
 
-    public void addPlayer(Player p) {
+    public void addMovableObject(MovableObject p) {
         classement.add(p);
     }
 
-    public void removePlayer(Player p) {
+    public void removeMovableObject(MovableObject p) {
         classement.remove(p);
     }
 
-    public Player getPlayer(Integer indice, VBox leaderboard, ArrayList<Player> players) {
-        updateClassement(leaderboard, players, players.get(indice));
+    public MovableObject getMovableObject(Integer indice, VBox leaderboard, ArrayList<MovableObject> players) {
+        updateClassement(leaderboard, players, this.currentPlayer);
         return classement.get(indice);
     }
 
-    public ArrayList<Player> getClassement() {
+    public ArrayList<MovableObject> getClassement() {
         return this.classement;
     }
 }

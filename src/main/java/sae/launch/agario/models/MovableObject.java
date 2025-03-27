@@ -1,12 +1,14 @@
 package sae.launch.agario.models;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 import static java.lang.Math.round;
 
 public abstract class MovableObject extends Entity {
 
     private final int rangeHorizonModifier = 100;
     private final double baseMouvementSpeed = 5;
-
+    private final static double speedSlowMultiplier = 0.5;
     private final double slowRangeRay;
     public MovableObject(int ID, double x, double y, double mass) {
         super(ID, x, y, mass);
@@ -34,6 +36,8 @@ public abstract class MovableObject extends Entity {
     public double getSlowRangeRay() {
         return slowRangeRay;
     }
+
+    public double getSpeedSlowMultiplier(){return speedSlowMultiplier;}
 
     /**
      * Add the absorbedEntity mass to the MovableObject mass, this function didn't check anything
