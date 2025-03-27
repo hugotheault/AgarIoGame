@@ -21,8 +21,8 @@ public class AIRamdom implements AIStrategy {
         Random rand = new Random();
 
         if (counter <= 0) {
-            targetX = rand.nextDouble() * 500;
-            targetY = rand.nextDouble() * 500;
+            targetX = rand.nextDouble() * 2000;
+            targetY = rand.nextDouble() * 2000;
             counter = MAX_COUNTER;
         } else {
             counter--;

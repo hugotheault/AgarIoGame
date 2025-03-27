@@ -17,10 +17,7 @@ import javafx.stage.Stage;
 import javafx.scene.control.Label;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import sae.launch.agario.QuadTree;
 import sae.launch.agario.models.*;
@@ -56,6 +53,10 @@ public class SoloInGameController implements Initializable {
     private double mouseXCursor;
     private double mouseYCursor;
 
+    private final double nbRandomsAI = 50;
+    private final double nbPelletAI = 0;
+    private final double nbChaserAI = 0;
+
     @Override
     public void initialize(URL u, ResourceBundle r){
         this.mapSize = 2000;
@@ -79,12 +80,12 @@ public class SoloInGameController implements Initializable {
 
         // test implements IA
 
-        AI iaPlayer = new AI(66, 0, 0, 51, quadTree, new AIRamdom());
-        quadTree.insert(iaPlayer);
-        System.out.println("IA insérée : " + iaPlayer.getX() + ", " + iaPlayer.getY());
-        System.out.println("Joueurs dans QuadTree après insertion :");
-        for (Entity e : quadTree.getAllMovableObjects()) {
-            System.out.println(e.getClass().getSimpleName() + " - X: " + e.getX() + ", Y: " + e.getY());
+        for (int i = 0; i < nbRandomsAI; i++) {
+            Random rand = new Random();
+            int xSpawn = rand.nextInt(2000);
+            int ySpawn = rand.nextInt(2000);
+            AI iaPlayer = new AI(IDGenerator.getGenerator().NextID(), xSpawn, ySpawn, 50, quadTree, new AIRamdom());
+            quadTree.insert(iaPlayer);
         }
         //----------
 

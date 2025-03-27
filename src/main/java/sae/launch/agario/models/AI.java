@@ -2,13 +2,17 @@ package sae.launch.agario.models;
 
 import sae.launch.agario.QuadTree;
 
+import java.awt.*;
 import java.util.HashMap;
+
+import static java.awt.Color.red;
 
 public class AI extends MovableObject {
 
     private final AIStrategy strategy;
     private QuadTree tree;
     private final double aiBaseRatioSpeed = 0.4;
+    private Color couleur = red;
 
     public AI(int ID, double x, double y, double mass, QuadTree tree, AIStrategy strategy) {
         super(ID, x, y, mass);

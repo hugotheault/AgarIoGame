@@ -67,7 +67,11 @@ public class GameRenderer {
         Circle circle = new Circle(entityX, entityY, entityRadius);
 
         if (entity instanceof MovableObject) {
-            circle.setFill(Color.BLUE);
+            if(entity instanceof AI){
+                circle.setFill(Color.RED);
+            } else {
+                circle.setFill(Color.BLUE);
+            }
         } else {
             circle.setFill(((Pellet) entity).getColor());
         }

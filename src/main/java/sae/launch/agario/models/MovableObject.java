@@ -7,7 +7,7 @@ import static java.lang.Math.round;
 public abstract class MovableObject extends Entity {
 
     private final int rangeHorizonModifier = 100;
-    private final double baseMouvementSpeed = 5;
+    private final double baseMouvementSpeed = 10;
     private final static double speedSlowMultiplier = 0.5;
     private final double slowRangeRay;
     public MovableObject(int ID, double x, double y, double mass) {
@@ -62,13 +62,10 @@ public abstract class MovableObject extends Entity {
             boolean overlaps = distance <= (this.getRadius() + pellet.getRadius());
 
             // Vérifie si la cible est assez petite pour être absorbée
-            boolean canEat = this.getRadius() > pellet.getRadius() * 1.2;
+            boolean canEat = this.getMass() > pellet.getMass() * 1.2;
 
             return overlaps && canEat;
         }
         return false;
     }
-
-
-
 }

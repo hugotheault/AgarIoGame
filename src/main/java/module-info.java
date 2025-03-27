@@ -8,6 +8,7 @@ module sae.launch.agario {
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
     requires com.fasterxml.jackson.annotation;
+    requires java.desktop;
 
     opens sae.launch.agario.models to javafx.fxml;
     exports sae.launch.agario.models;
