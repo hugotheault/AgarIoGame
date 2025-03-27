@@ -185,13 +185,12 @@ public class OnlineInGameController implements Initializable {
     private void writeQuadTree(ArrayList<Player> players) {
         for(int i = 0; i < players.size(); i++){
             Player p = players.get(i);
-            ArrayList<Entity> entities = quadTree.getEntitiesInRegion(p.getX()-300, p.getY()-300, p.getX()+300, p.getY()+300);
+            ArrayList<Entity> entities = quadTree.getEntitiesInRegion(p.getX()-100, p.getY()-100, p.getX()+100, p.getY()+100);
             StringBuilder s = new StringBuilder();
             s.append(p);
             for(Entity e: entities){
                 s.append(e.toString());
             }
-            System.out.println("msg: " + server.getClientConnexionList().get(i).getLastMessage());
             String lastMessage = server.getClientConnexionList().get(i).getLastMessage();
             if(!lastMessage.equals("")){
             //todo changer la verif du getLastMessage a ok
@@ -202,13 +201,15 @@ public class OnlineInGameController implements Initializable {
                 server.getPrintWriterList().get(i).flush();
             }
             if(lastMessage.contains("deplacement:")){
-                String message = lastMessage.substring(12, lastMessage.length()-1);
+                String message = lastMessage.substring(14, lastMessage.length()-1);
                 String[] deplacements = message.split("/");
                 System.out.println("msg : " + message);
                 System.out.println("deplacement de 0: " + deplacements[0]);
 
                 double deplacementX = Double.parseDouble(deplacements[0]);
                 double deplacementY = Double.parseDouble(deplacements[1]);
+                System.out.println("Deplacement x : " + deplacementX);
+                System.out.println("Deplacemenet Y : " + deplacementY);
                 p.setX(p.getX()+deplacementX);
                 p.setY(p.getY()+deplacementY);
             }
