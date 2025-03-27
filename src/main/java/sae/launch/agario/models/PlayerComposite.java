@@ -71,6 +71,14 @@ public class PlayerComposite extends MovableObject implements PlayerComponant {
         return players;
     }
 
+    public void setMass(PlayerLeaf playerLeaf, double mass){
+        if (players.contains(playerLeaf)) {
+            playerLeaf.setMass(playerLeaf.getMass() + mass);
+        } else {
+            System.out.println("Erreur : PlayerLeaf non trouvé dans PlayerComposite");
+        }
+    }
+
     public void addPlayer(PlayerLeaf player) {
         this.players.add(player);
     }

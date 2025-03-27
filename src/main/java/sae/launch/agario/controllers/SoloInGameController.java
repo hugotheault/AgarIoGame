@@ -222,15 +222,18 @@ public class SoloInGameController implements Initializable {
         //todo update la position des joueurs IA
 
         for(PlayerComposite joueur: quadTree.getAllPlayers()){
-            for(Entity cible: quadTree.getEntitiesAroundPlayer((PlayerComposite) joueur)){
-                if(cible.equals(joueur)) continue;
-                if(joueur.canEat(cible)){
-                    joueur.setMass(joueur.getMass()+cible.getMass());
-                    quadTree.remove(cible);
-                    Platform.runLater(()->{
-                        scoreLabel.setText(""+(joueur.getMass()-baseMass));
-                        this.classement.updateClassement(leaderboard, quadTree.getAllPlayers());
-                    });
+            for( PlayerLeaf playerLeaf : joueur.getAllPlayer() ){
+                for(Entity cible: quadTree.getEntitiesAroundPlayer((PlayerComposite) joueur)){
+                    if(cible.equals(joueur)) continue;
+                    if(joueur.canEat(cible)){
+                        joueur.setMass(playerLeaf, cible.getMass());
+                        quadTree.remove(cible);
+                        Platform.runLater(()->{
+                            System.out.println("Masse du joueur = " + joueur.getMass());
+                            scoreLabel.setText(""+(joueur.getMass()-baseMass));
+                            this.classement.updateClassement(leaderboard, quadTree.getAllPlayers());
+                        });
+                    }
                 }
             }
         }
