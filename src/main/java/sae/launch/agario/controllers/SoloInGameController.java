@@ -103,8 +103,12 @@ public class SoloInGameController implements Initializable {
                     event.consume();
                     showExitConfirmation();
                 });
-            // test implements IA
+            // Implementation AI
+                // Random AI
 
+            System.out.println("IA Random: " + nbRandomsAI);
+            System.out.println("IA Pellet: " + nbPelletAI);
+            System.out.println("IA Chaser: " + nbChaserAI);
             for (int i = 0; i < nbRandomsAI; i++) {
                 Random rand = new Random();
                 int xSpawn = rand.nextInt(2000);
@@ -112,7 +116,22 @@ public class SoloInGameController implements Initializable {
                 AI iaPlayer = new AI(IDGenerator.getGenerator().NextID(), xSpawn, ySpawn, 50, quadTree, new AIRamdom());
                 quadTree.insert(iaPlayer);
             }
-            //----------
+                // Pellet AI
+            for (int i = 0; i < nbPelletAI; i++) {
+                Random rand = new Random();
+                int xSpawn = rand.nextInt(2000);
+                int ySpawn = rand.nextInt(2000);
+                AI iaPlayer = new AI(IDGenerator.getGenerator().NextID(), xSpawn, ySpawn, 50, quadTree, new AIPellet());
+                quadTree.insert(iaPlayer);
+            }
+                // Chase AI
+            for (int i = 0; i < nbChaserAI; i++) {
+                Random rand = new Random();
+                int xSpawn = rand.nextInt(2000);
+                int ySpawn = rand.nextInt(2000);
+                AI iaPlayer = new AI(IDGenerator.getGenerator().NextID(), xSpawn, ySpawn, 50, quadTree, new AIChaser());
+                quadTree.insert(iaPlayer);
+            }
         });
 
         this.classement = new Classement(baseMass);

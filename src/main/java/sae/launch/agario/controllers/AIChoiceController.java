@@ -73,7 +73,7 @@ public class AIChoiceController implements Initializable {
         SoloInGameController soloInGameController = loader.getController();
         soloInGameController.setNbRandomsAI(Integer.parseInt(randomAI.getText()));
         soloInGameController.setNbPelletAI(Integer.parseInt(pelletAI.getText()));
-        soloInGameController.setNbPelletAI(Integer.parseInt(chaserAI.getText()));
+        soloInGameController.setNbChaserAI(Integer.parseInt(chaserAI.getText()));
     }
 
     @FXML
