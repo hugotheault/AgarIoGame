@@ -8,6 +8,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
@@ -15,6 +16,11 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.scene.control.Label;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.paint.Color;
+
+
+import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
@@ -26,6 +32,7 @@ public class SoloInGameController implements Initializable {
     private @FXML VBox leaderboard;
     private @FXML Pane pane;
     private @FXML Label scoreLabel;
+    private @FXML Canvas minimap;
     private ThreadWorld threadWorld;
     private QuadTree quadTree;
     private PelletController pelletController;
@@ -159,6 +166,7 @@ public class SoloInGameController implements Initializable {
         pelletController.generatePellets();
         updateAIs();
         gameRenderer.updateVisuals(quadTree, players);
+        updateMinimap();
     }
 
     @FXML
@@ -303,6 +311,29 @@ public class SoloInGameController implements Initializable {
             }
         }
     }
+
+    private void updateMinimap() {
+        double minimapSize = 150;
+        double scale = minimapSize / mapSize;
+
+        GraphicsContext gc = minimap.getGraphicsContext2D();
+        gc.clearRect(0, 0, minimapSize, minimapSize);
+
+        // Drawing minimap border
+        gc.setStroke(Color.WHITE);
+        gc.strokeRect(0, 0, minimapSize, minimapSize);
+
+        // Drawing IAs
+        gc.setFill(Color.RED);
+        for (AI ia : quadTree.getAllIAs()) {
+            gc.fillOval(ia.getX() * scale, ia.getY() * scale, 4, 4);
+        }
+
+        // Drawing the Player
+        gc.setFill(Color.BLUE);
+        gc.fillOval(currentPlayer.getX() * scale, currentPlayer.getY() * scale, 5, 5);
+    }
+
 
     private boolean coordonneeInMap(double x, double y){
         return (x > 0 && x < mapSize && y > 0 && y < mapSize);
