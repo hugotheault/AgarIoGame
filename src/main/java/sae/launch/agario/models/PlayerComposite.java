@@ -5,11 +5,13 @@ import java.util.List;
 
 public class PlayerComposite extends MovableObject implements PlayerComponant {
     private ArrayList<PlayerLeaf> players;
+    private double totalMass;
 
     // Constructor
     public PlayerComposite(int ID, double x, double y, double mass) {
         super(ID, x, y, mass);
         this.players = new ArrayList<PlayerLeaf>();
+        totalMass = mass;
     }
 
     @Override
@@ -22,11 +24,7 @@ public class PlayerComposite extends MovableObject implements PlayerComponant {
 
     @Override
     public double getMass() {
-        double totalMass = 0;
-        for (PlayerLeaf player : players) {
-            totalMass += player.getMass();
-        }
-        return totalMass; // Masse totale du groupe
+        return totalMass;
     }
 
     @Override
@@ -73,7 +71,9 @@ public class PlayerComposite extends MovableObject implements PlayerComponant {
 
     public void setMass(PlayerLeaf playerLeaf, double mass){
         if (players.contains(playerLeaf)) {
+            System.out.println("setMass appelé pour " + playerLeaf + "ajout d'une masse de " + mass);
             playerLeaf.setMass(playerLeaf.getMass() + mass);
+            totalMass += mass;
         } else {
             System.out.println("Erreur : PlayerLeaf non trouvé dans PlayerComposite");
         }

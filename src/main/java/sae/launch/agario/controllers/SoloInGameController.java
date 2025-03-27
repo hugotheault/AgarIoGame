@@ -226,6 +226,7 @@ public class SoloInGameController implements Initializable {
                 for(Entity cible: quadTree.getEntitiesAroundPlayer((PlayerComposite) joueur)){
                     if(cible.equals(joueur)) continue;
                     if(joueur.canEat(cible)){
+                        System.out.println("Absorption d'un pellet de masse" + cible.getMass());
                         joueur.setMass(playerLeaf, cible.getMass());
                         quadTree.remove(cible);
                         Platform.runLater(()->{
