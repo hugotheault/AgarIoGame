@@ -197,8 +197,12 @@ public class SoloInGameController implements Initializable {
             }
             double deltaX = directionX * player.getSpeed(mouseXCursor, mouseYCursor,pane.getWidth() / 2,pane.getHeight() / 2);
             double deltaY = directionY * player.getSpeed(mouseXCursor, mouseYCursor,pane.getWidth() / 2,pane.getHeight() / 2);
-            player.setX(player.getX() + deltaX);
-            player.setY(player.getY() + deltaY);
+
+            if(coordonneeInMap(player.getX() + deltaX,player.getY() + deltaY)){
+                player.setX(player.getX() + deltaX);
+                player.setY(player.getY() + deltaY);
+            }
+
             quadTree.insert(player);
         }
 
@@ -229,19 +233,20 @@ public class SoloInGameController implements Initializable {
             double dy = targetY - ai.getY();
             double distance = Math.sqrt(dx * dx + dy * dy);
 
-            quadTree.remove(ai);
+            if( coordonneeInMap(targetX,targetY)) {
+                quadTree.remove(ai);
+                if (distance > ai.getSpeed()) {
+                    // Mouvement fluide avec interpolation
+                    ai.setX(ai.getX() + (dx / distance) * ai.getSpeed());
+                    ai.setY(ai.getY() + (dy / distance) * ai.getSpeed());
+                } else {
+                    // L'IA arrive directement à la cible si elle est proche
+                    ai.setX(targetX);
+                    ai.setY(targetY);
+                }
 
-            if (distance > ai.getSpeed()) {
-                // Mouvement fluide avec interpolation
-                ai.setX(ai.getX() + (dx / distance) * ai.getSpeed());
-                ai.setY(ai.getY() + (dy / distance) * ai.getSpeed());
-            } else {
-                // L'IA arrive directement à la cible si elle est proche
-                ai.setX(targetX);
-                ai.setY(targetY);
+                quadTree.insert(ai);
             }
-
-            quadTree.insert(ai);
         }
 
         for (AI ai : quadTree.getAllIAs()) {
@@ -264,6 +269,10 @@ public class SoloInGameController implements Initializable {
                 }
             }
         }
+    }
+
+    private boolean coordonneeInMap(double x, double y){
+        return (x > 0 && x < mapSize && y > 0 && y < mapSize);
     }
 
 
