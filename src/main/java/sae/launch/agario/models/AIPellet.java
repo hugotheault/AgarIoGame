@@ -12,7 +12,7 @@ public class AIPellet implements AIStrategy {
 
         HashMap<String, Double> coordinates = new HashMap<>();
        // ArrayList<Entity> potentialTargets = quadtree.getEntitiesInRegion(x * 100, x * -100, y * 100, y * -100);
-        ArrayList<Entity> potentialTargets = quadtree.getEntitiesAroundMovableObjectLarger(ai);
+        ArrayList<Entity> potentialTargets = quadtree.getEntitiesAroundMovableObjectLarger(ai,300);
         Double lenghtBetweenEntites = 100000000.0;
 
         for (Entity e : potentialTargets) {

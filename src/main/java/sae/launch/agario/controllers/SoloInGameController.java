@@ -84,7 +84,7 @@ public class SoloInGameController implements Initializable {
             Random rand = new Random();
             int xSpawn = rand.nextInt(2000);
             int ySpawn = rand.nextInt(2000);
-            AI iaPlayer = new AI(IDGenerator.getGenerator().NextID(), xSpawn, ySpawn, 50, quadTree, new AIPellet());
+            AI iaPlayer = new AI(IDGenerator.getGenerator().NextID(), xSpawn, ySpawn, 50, quadTree, new AIChaser());
             quadTree.insert(iaPlayer);
         }
         //----------

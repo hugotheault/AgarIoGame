@@ -11,7 +11,7 @@ public class AI extends MovableObject {
 
     private final AIStrategy strategy;
     private QuadTree tree;
-    private final double aiBaseRatioSpeed = 0.4;
+    private final double aiBaseRatioSpeed = 0.7;
     private Color couleur = red;
 
     public AI(int ID, double x, double y, double mass, QuadTree tree, AIStrategy strategy) {
