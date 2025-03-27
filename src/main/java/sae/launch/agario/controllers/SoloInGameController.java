@@ -29,42 +29,48 @@ import sae.launch.agario.QuadTree;
 import sae.launch.agario.models.*;
 
 public class SoloInGameController implements Initializable {
+
+    /* Fxml elements in the different views */
     private @FXML VBox leaderboard;
     private @FXML Pane pane;
     private @FXML Label scoreLabel;
     private @FXML Canvas minimap;
-    private ThreadWorld threadWorld;
-    private QuadTree quadTree;
-    private PelletController pelletController;
 
+    /* Variables for the player management */
     private ArrayList<Player> players;
-
-    private GameRenderer gameRenderer;
-
     private Player currentPlayer;
-
     private double playerXPercent;
     private double playerYPercent;
     private double coX;
     private double coY;
 
+    /* Different variables for all the game */
     private double baseMass;
-    private double mapSize;
+    private int mapSize;
     private double initialSize;
-    private double sizeScaleToEat; //Ex: 1.33 -> You need 33% more mass to eat someone else
+    private double sizeScaleToEat;
     private int maxPelletNb;
     private double sizeToDivide;
     private double pelletSize;
     private Classement classement;
-
+    private ThreadWorld threadWorld;
+    private QuadTree quadTree;
+    private PelletController pelletController;
+    private GameRenderer gameRenderer;
     private double mouseXCursor;
     private double mouseYCursor;
 
+    /* Information of the param page to launch the game */
     private int nbRandomsAI = 0;
     private int nbPelletAI = 0;
     private int nbChaserAI = 0;
     private boolean choiceSpecialPellet;
 
+    /**
+     * Initialisation of the game
+     * @param u a pointer to the ressource file
+     * @param r
+     */
     @Override
     public void initialize(URL u, ResourceBundle r){
         this.mapSize = 2000;
@@ -138,6 +144,9 @@ public class SoloInGameController implements Initializable {
         }
     }
 
+    /**
+     * Show window for exit confirmation
+     */
     private void showExitConfirmation() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Quitter l'application");
@@ -157,11 +166,18 @@ public class SoloInGameController implements Initializable {
         }
     }
 
+    /**
+     * Function to create a random coordinate
+     * @return a random int between 0 and mapSize
+     */
     private int randomCoordinate(){
         Random rand = new Random();
-        return rand.nextInt(2000);
+        return rand.nextInt(mapSize);
     }
 
+    /**
+     * Function to update the game, called every 33ms
+     */
     private void updateGame() {
         updatePlayers();
         pelletController.generatePellets(choiceSpecialPellet);
@@ -170,11 +186,19 @@ public class SoloInGameController implements Initializable {
         updateMinimap();
     }
 
+    /**
+     * Quit button to exit the application
+     */
     @FXML
     protected void onQuitButton() {
         showExitConfirmation();
     }
 
+    /**
+     * Button to return to the menu of the application
+     * @param event click on the button
+     * @throws IOException
+     */
     @FXML
     protected void onMenuButton(ActionEvent event) throws IOException {
         // create the alert
@@ -199,7 +223,7 @@ public class SoloInGameController implements Initializable {
     }
 
     /**
-     *Update the position of all the players, and wheter they can eat or get eaten
+     * Update the position of all the players, and wheter they can eat or get eaten
      */
     private void updatePlayers() {
 
@@ -251,6 +275,9 @@ public class SoloInGameController implements Initializable {
         }
     }
 
+    /**
+     * Update the position of all the AIs, and wheter they can eat or get eaten
+     */
     private void updateAIs() {
 
         for (AI ai : quadTree.getAllIAs()) {
@@ -313,6 +340,9 @@ public class SoloInGameController implements Initializable {
         }
     }
 
+    /**
+     * Update the view of the minimap
+     */
     private void updateMinimap() {
         Platform.runLater(() -> {
             double minimapSize = 150;
@@ -368,25 +398,17 @@ public class SoloInGameController implements Initializable {
         });
     }
 
-
-
-
-
     private boolean coordonneeInMap(double x, double y){
         return (x > 0 && x < mapSize && y > 0 && y < mapSize);
     }
 
+   /* ------ Getter and setters ------ */
 
-
-
-    /*
-    Getters and Setters
-     */
     public double getMapSize() {
         return mapSize;
     }
 
-    public void setMapSize(double mapSize) {
+    public void setMapSize(int mapSize) {
         this.mapSize = mapSize;
     }
 
