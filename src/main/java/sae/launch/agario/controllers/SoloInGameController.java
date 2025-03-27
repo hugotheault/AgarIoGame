@@ -129,12 +129,14 @@ public class SoloInGameController implements Initializable {
         });
 
         this.classement = new Classement(baseMass);
-        classement.addMovableObject(new Player(11,0,0,10));
-        classement.addMovableObject(new Player(12,0,0,50));
-        classement.addMovableObject(new Player(13,0,0,500));
-        classement.addMovableObject(new Player(14,0,0,2));
         classement.addMovableObject(player);
         classement.updateClassement(leaderboard, quadTree.getAllMovableObjects(), player);
+
+        if (minimap == null) {
+            System.out.println("Erreur: minimap est null !");
+        } else {
+            System.out.println("Minimap bien initialisée.");
+        }
     }
 
     private void showExitConfirmation() {
@@ -313,26 +315,60 @@ public class SoloInGameController implements Initializable {
     }
 
     private void updateMinimap() {
-        double minimapSize = 150;
-        double scale = minimapSize / mapSize;
+        Platform.runLater(() -> {
+            double minimapSize = 150;
+            double scale = minimapSize / mapSize;
 
-        GraphicsContext gc = minimap.getGraphicsContext2D();
-        gc.clearRect(0, 0, minimapSize, minimapSize);
+            GraphicsContext gc = minimap.getGraphicsContext2D();
 
-        // Drawing minimap border
-        gc.setStroke(Color.WHITE);
-        gc.strokeRect(0, 0, minimapSize, minimapSize);
+            // Remplir le fond de la minimap en blanc
+            gc.setFill(Color.WHITE);
+            gc.fillRect(0, 0, minimapSize, minimapSize);
 
-        // Drawing IAs
-        gc.setFill(Color.RED);
-        for (AI ia : quadTree.getAllIAs()) {
-            gc.fillOval(ia.getX() * scale, ia.getY() * scale, 4, 4);
-        }
+            // Dessiner la bordure de la minimap
+            gc.setStroke(Color.BLACK);
+            gc.strokeRect(0, 0, minimapSize, minimapSize);
 
-        // Drawing the Player
-        gc.setFill(Color.BLUE);
-        gc.fillOval(currentPlayer.getX() * scale, currentPlayer.getY() * scale, 5, 5);
+            // Définir les dimensions du rectangle de vision (peut être ajusté selon les besoins)
+            double visionWidth = 450; // Largeur de la zone de vision
+            double visionHeight = 350; // Hauteur de la zone de vision
+            double visionScaleX = visionWidth / mapSize;
+            double visionScaleY = visionHeight / mapSize;
+
+            // Position de la vision du joueur en minimap (ajustée à la position du joueur)
+            double visionX = currentPlayer.getX() * scale - visionWidth / 2 * visionScaleX;
+            double visionY = currentPlayer.getY() * scale - visionHeight / 2 * visionScaleY;
+
+            // Dessiner le rectangle de vision du joueur en rouge
+            gc.setStroke(Color.RED);
+            gc.strokeRect(visionX, visionY, visionWidth * visionScaleX, visionHeight * visionScaleY);
+
+            // Dessiner les IA et joueurs dans la zone de vision du joueur
+            gc.setFill(Color.RED);
+            for (AI ia : quadTree.getAllIAs()) {
+                double iaX = ia.getX() * scale;
+                double iaY = ia.getY() * scale;
+
+                // Si l'IA est dans la zone de vision du joueur
+                if (iaX >= visionX && iaX <= visionX + visionWidth * visionScaleX &&
+                        iaY >= visionY && iaY <= visionY + visionHeight * visionScaleY) {
+                    gc.fillOval(iaX, iaY, 4, 4);
+                }
+            }
+
+            // Dessiner le joueur dans la zone de vision
+            gc.setFill(Color.BLUE);
+            double playerX = currentPlayer.getX() * scale;
+            double playerY = currentPlayer.getY() * scale;
+
+            if (playerX >= visionX && playerX <= visionX + visionWidth * visionScaleX &&
+                    playerY >= visionY && playerY <= visionY + visionHeight * visionScaleY) {
+                gc.fillOval(playerX, playerY, 5, 5);
+            }
+        });
     }
+
+
 
 
     private boolean coordonneeInMap(double x, double y){
