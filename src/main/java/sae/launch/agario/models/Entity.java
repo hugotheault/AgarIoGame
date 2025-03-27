@@ -47,4 +47,29 @@ public abstract class Entity {
         return Math.sqrt(mass);
     }
 
+    public boolean canEat(Entity pellet) {
+        if (pellet != null) {
+            double dx = this.getX() - pellet.getX();
+            double dy = this.getY() - pellet.getY();
+            double distance = Math.sqrt(dx * dx + dy * dy);
+
+            // Vérifie si l'entité actuelle recouvre la pellet
+            boolean overlaps = distance <= (this.getRadius());
+
+            // Vérifie si le rayon de la pellet est inférieur au rayon de l'entité actuelle
+            boolean canEat = pellet.getRadius() < this.getRadius();
+
+            return overlaps && canEat;
+        }
+        return false;
+    }
+
+    @Override
+    public String toString(){
+        return "id:"+this.getID()+"/cox:"+this.getX()+"/coy:"+this.getY()+"/mass:"+this.getRadius()+"#";
+    }
+    public String toStringRounded(){
+        return "id:"+this.getID()+"/cox:"+Math.round(this.getX())+"/coy:"+Math.round(this.getY())+"/mass:"+Math.round(this.getRadius())+"#";
+    }
+
 }

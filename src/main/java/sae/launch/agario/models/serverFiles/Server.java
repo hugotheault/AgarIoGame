@@ -1,30 +1,28 @@
 package sae.launch.agario.models.serverFiles;
 
-import java.io.FileInputStream;
+import sae.launch.agario.controllers.OnlineInGameController;
+import sae.launch.agario.models.IDGenerator;
+import sae.launch.agario.models.Player;
+
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Properties;
+import java.util.Random;
 
 public class Server {
 	private Thread askConnexion = new Thread(new ServerSocketRunnerConnections(this));
 	private Thread threadWorld = new Thread(new ServerSocketRunnerWorld(this));
-	private ArrayList<Thread> clientConnectionList = new ArrayList<Thread>();
-	private ArrayList<PrintWriter> printWriterList = new ArrayList<PrintWriter>();
+	private ArrayList<ClientHandler> clientConnectionList = new ArrayList<ClientHandler>();
+	private ArrayList<PrintWriter> printWriterList = new ArrayList();
+	private OnlineInGameController onlineInGameController;
 	
-	public Server() {
+	public Server(OnlineInGameController onlineInGameController) {
 		try {
 			threadWorld.start();
 			askConnexion.start();
+			this.onlineInGameController = onlineInGameController;
 
-			//reads the properties file
-			FileInputStream input = new FileInputStream("application.properties");
-			Properties properties  = new Properties();
-			properties.load(input);
-			//Create an instance of Game
-			//Must give parameters quadtree,idbase,playersIDs, pane, camera, threadWorld
 		}catch(Exception exception){
 			System.out.println(exception.getMessage());
 		}
@@ -43,7 +41,7 @@ public class Server {
 
 
 
-	public ArrayList<Thread> getClientConnexionList() {
+	public ArrayList<ClientHandler> getClientConnexionList() {
 		return clientConnectionList;
 	}
 
@@ -75,10 +73,20 @@ public class Server {
 				clientHandler.start();
 				this.getClientConnexionList().add(clientHandler);
 
-				this.getPrintWriterList().get(this.getPrintWriterList().size() - 1).write("Bonjour");
-				this.getPrintWriterList().get(this.getPrintWriterList().size() - 1).flush();
+
+				this.getPrintWriterList().get(this.getPrintWriterList().size() - 1).write("Vous êtes connecté");
+
+				Random random = new Random();
+				int ID = IDGenerator.getGenerator().NextID();
+				System.out.println("Longueur : " + this.onlineInGameController.getQuadTree().getLength());
+				System.out.println("Largeur : " + this.onlineInGameController.getQuadTree().getHeight());
+				this.onlineInGameController.getPlayers().add(new Player(ID,
+						random.nextDouble(this.onlineInGameController.getQuadTree().getLength()),
+						random.nextDouble(this.onlineInGameController.getQuadTree().getHeight()),
+						onlineInGameController.getInitialSize()));
+				this.getPrintWriterList().get(this.getPrintWriterList().size() - 1).write("id:"+ID);
+				this.getPrintWriterList().get(this.getPrintWriterList().size()-1).flush();
 			}
-			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
