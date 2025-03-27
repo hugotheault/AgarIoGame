@@ -29,6 +29,9 @@ import sae.launch.agario.models.serverFiles.Server;
 
 public class OnlineInGameController implements Initializable {
 
+    public static int desiredScreenWidth = 300;
+    public double ratioPane;
+
     private int ID;
 
     private boolean isHost;
@@ -146,17 +149,20 @@ public class OnlineInGameController implements Initializable {
         }
         System.out.println("Je suis hors de la boucle");
 
-
         ecouteur = new ClientDataReader(this);
-
-
-
     }
 
 
     @Override
     public void initialize(URL u, ResourceBundle r) {
         System.out.println("Initialize");
+        this.ratioPane = pane.getWidth() / desiredScreenWidth;
+
+        pane.widthProperty().addListener((observable, oldValue, newValue) -> {
+            this.ratioPane = newValue.doubleValue() / desiredScreenWidth;
+            System.out.println("Updated ratioPane: " + this.ratioPane);
+        });
+
         pane.setOnMouseMoved(event ->{
             setPlayerXPercent(event.getX() / pane.getWidth());
             setPlayerYPercent(event.getY() / pane.getHeight());
@@ -194,7 +200,7 @@ public class OnlineInGameController implements Initializable {
         for(int i = 0; i < players.size(); i++){
             Player p = players.get(i);
             quadTree.remove(p);
-            ArrayList<Entity> entities = quadTree.getEntitiesInRegion(p.getX()-200, p.getY()-200, p.getX()+200, p.getY()+200);
+            ArrayList<Entity> entities = quadTree.getEntitiesInRegion(p.getX()-desiredScreenWidth/2, p.getY()-desiredScreenWidth/2, p.getX()+desiredScreenWidth/2, p.getY()+desiredScreenWidth/2);
             StringBuilder s = new StringBuilder();
             s.append(p);
             for(Entity e: entities){

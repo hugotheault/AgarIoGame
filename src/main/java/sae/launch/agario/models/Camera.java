@@ -50,7 +50,6 @@ public class Camera {
         this.y = sumY / players.size();
     }
     public void updatePosition(Player player) {
-        double sumX = 0, sumY = 0;
         this.x = player.getX();
         this.y = player.getY();
     }
