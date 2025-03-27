@@ -27,13 +27,17 @@ public class Classement {
         for (int i = 0; i < Math.min(3, classement.size()); i++) {
             MovableObject p = classement.get(i);
         }
+        int count = 0;
         for(MovableObject m : classement) {
-            Label label = new Label((classement.indexOf(m) + 1) + ": " + m.getID() + " - " + (m.getMass() - this.baseWeight));
-            label.setStyle("-fx-text-fill: white;");
-            if(m.getID() == currentPlayer.getID()){
-                label.setStyle("-fx-font-weight: bold;-fx-effect: dropshadow(gaussian, gold, 10, 0.5, 0, 0);-fx-text-fill: white;");
+            if(count < 10){
+                Label label = new Label((classement.indexOf(m) + 1) + ": " + m.getID() + " - " + (m.getMass() - this.baseWeight));
+                label.setStyle("-fx-text-fill: white;");
+                if(m.getID() == currentPlayer.getID()){
+                    label.setStyle("-fx-font-weight: bold;-fx-effect: dropshadow(gaussian, gold, 10, 0.5, 0, 0);-fx-text-fill: white;");
+                }
+                leaderboard.getChildren().add(label);
             }
-            leaderboard.getChildren().add(label);
+            count ++;
         }
     }
 
