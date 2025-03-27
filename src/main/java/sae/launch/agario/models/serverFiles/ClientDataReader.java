@@ -1,6 +1,7 @@
 package sae.launch.agario.models.serverFiles;
 
 import javafx.application.Platform;
+import javafx.scene.Camera;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
 import sae.launch.agario.controllers.OnlineInGameController;
@@ -14,6 +15,7 @@ import java.util.Arrays;
 public class ClientDataReader extends Thread {
 
     private OnlineInGameController o;
+    private Camera camera;
 
     public ClientDataReader(OnlineInGameController o){
         this.o=o;
@@ -31,6 +33,7 @@ public class ClientDataReader extends Thread {
         while(true){
             try {
                 byte[] buffer = new byte[1024];
+                //TODO : augmenter la taille du buffer si on veut envoyer beaucoup d'éléments
                 int bytesRead;
                 bytesRead = o.getClientSocker().getInputStream().read(buffer);
                 if (bytesRead != -1) {
@@ -48,6 +51,7 @@ public class ClientDataReader extends Thread {
                             double radius = Double.parseDouble(attributs[2]);
                             circles.add(new Circle(x, y, radius));
                     }
+                    
                     Platform.runLater(() -> {
                         p.getChildren().clear();
                         for (Circle circle : circles) {
