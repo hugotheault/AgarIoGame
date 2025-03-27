@@ -212,8 +212,8 @@ public class SoloInGameController implements Initializable {
                 directionX /= magnitude;
                 directionY /= magnitude;
             }
-            double deltaX = directionX * player.getSpeed(mouseXCursor, mouseYCursor,pane.getWidth() / 2,pane.getHeight() / 2);
-            double deltaY = directionY * player.getSpeed(mouseXCursor, mouseYCursor,pane.getWidth() / 2,pane.getHeight() / 2);
+            double deltaX = directionX * player.getSpeed(mouseXCursor, mouseYCursor,pane.getWidth() / 2,pane.getHeight() / 2) * player.getSpecialPelletSpeedBoost();
+            double deltaY = directionY * player.getSpeed(mouseXCursor, mouseYCursor,pane.getWidth() / 2,pane.getHeight() / 2) * player.getSpecialPelletSpeedBoost();
 
             if(coordonneeInMap(player.getX() + deltaX,player.getY() + deltaY)){
                 player.setX(player.getX() + deltaX);
@@ -227,7 +227,7 @@ public class SoloInGameController implements Initializable {
             for(Entity cible: quadTree.getEntitiesAroundPlayer((Player) joueur)){
                 if(cible.equals(joueur)) continue;
                 if(joueur.canEat(cible)){
-                    joueur.setMass(joueur.getMass()+cible.getMass());
+                    joueur.Absorb(cible);
                     quadTree.remove(cible);
                     Platform.runLater(()->{
                         scoreLabel.setText(""+(joueur.getMass()-baseMass));

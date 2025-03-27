@@ -22,7 +22,7 @@ public class AI extends MovableObject {
 
     @Override
     public double getSpeed() {
-        return aiBaseRatioSpeed * (this.getBaseMouvementSpeed() - (this.getSpeedSlowMultiplier() * Math.log(1 + this.getMass())));
+        return aiBaseRatioSpeed * getSpecialPelletSpeedBoost() * (this.getBaseMouvementSpeed() - (this.getSpeedSlowMultiplier() * Math.log(1 + this.getMass())));
     }
 
     @Override
