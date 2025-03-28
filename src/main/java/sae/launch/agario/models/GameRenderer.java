@@ -1,11 +1,15 @@
 package sae.launch.agario.models;
 
 import javafx.application.Platform;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import sae.launch.agario.QuadTree;
 import javafx.scene.effect.Glow;
+import javafx.animation.FadeTransition;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 
@@ -84,10 +88,21 @@ public class GameRenderer {
 
             } else {
                 if ( ((MovableObject)entity).isSpecialPelletIsInvisible()){
-                    circle.setFill(Color.LIGHTBLUE);
-                } else if( entity instanceof PlayerLeaf ){
-                    circle.setFill(Color.BLUE);
+                    Image motif = new Image(getClass().getResource("/unicaen.png").toExternalForm());
+
+                    circle.setFill(new ImagePattern(motif));
+                    circle.setOpacity(0.4);
+
+                } else if (entity instanceof PlayerLeaf) {
+                    try {
+                        Image motif = new Image(getClass().getResource("/unicaen.png").toExternalForm());
+                        circle.setFill(new ImagePattern(motif));
+
+                    } catch (NullPointerException e) {
+                        System.out.println("Image non trouvée !");
+                    }
                 }
+
 
             }
         } else if(entity instanceof SpecialPellet) {
