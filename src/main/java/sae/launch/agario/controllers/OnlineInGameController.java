@@ -144,7 +144,6 @@ public class OnlineInGameController implements Initializable {
                 break;
             }
         }
-        System.out.println("Je suis hors de la boucle");
 
 
         ecouteur = new ClientDataReader(this);
@@ -183,7 +182,6 @@ public class OnlineInGameController implements Initializable {
     }
 
     private void writeQuadTree() {
-        System.out.println("Nb players : " + quadTree.getAllPlayers().size());
 
         //TODO verifier si la méthode est utile
         for(Player player: players){

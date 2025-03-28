@@ -70,6 +70,9 @@ public class ClientDataReader extends Thread {
                 int id = 0;
                 double x = 0, y = 0, radius = 0;
                 double mass = 0;
+                Double red = null;
+                Double green = null;
+                Double blue = null;
                 for (String attribute : playerAttributes) {
                     if (attribute.contains("cox:")) x = Double.parseDouble(attribute.substring(4, attribute.length()));
                     if (attribute.contains("coy:")) y = Double.parseDouble(attribute.substring(4, attribute.length()));
@@ -78,6 +81,12 @@ public class ClientDataReader extends Thread {
                         mass = Double.parseDouble(attribute.substring(5, attribute.length()));
                     if (attribute.contains("radius:"))
                         radius = Double.parseDouble(attribute.substring(7, attribute.length()));
+                    if(attribute.contains("green:"))
+                        green = Double.parseDouble(attribute.substring(6, attribute.length()));
+                    if(attribute.contains("blue:"))
+                        blue = Double.parseDouble(attribute.substring(5, attribute.length()));
+                    if(attribute.contains("red:"))
+                        red = Double.parseDouble(attribute.substring(4, attribute.length()));
                 }
                 player = new Player(id, x, y, mass);
                 camera.updatePosition(player);
@@ -87,9 +96,9 @@ public class ClientDataReader extends Thread {
                     y = 0;
                     mass = 0;
                     Color color;
-                    Double red = null;
-                    Double green = null;
-                    Double blue = null;
+                    red = null;
+                    green = null;
+                    blue = null;
                     for (String attribut : attributs) {
                         if (attribut.contains("cox:")) x = Double.parseDouble(attribut.substring(4, attribut.length()));
                         if (attribut.contains("coy:")) y = Double.parseDouble(attribut.substring(4, attribut.length()));
