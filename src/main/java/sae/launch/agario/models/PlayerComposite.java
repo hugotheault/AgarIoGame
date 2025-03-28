@@ -11,7 +11,6 @@ public class PlayerComposite extends MovableObject implements PlayerComponent {
     private ArrayList<PlayerLeaf> players = new ArrayList<>();
     private final double minimumMassToDivide;   //You can't create Leafs if you're not big enough
     private long timeSinceSplit = System.currentTimeMillis();   //You can't create Leafs if you have not waited enough
-    private final double minimumMassToDivide;
     private double mapSize;
 
     public PlayerComposite(int ID, double x, double y, double mass, double minMassToDivide, double mapSize) {
