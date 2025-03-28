@@ -24,6 +24,7 @@ Sur la branche Rendu-2 il y a le jeu jouable en réseau.
 ```sh
     git checkout Rendu-2
   ```
+Sur la branche choixSpecialPellet, on peut voir le fonctionnement des IA correct.
 
 ## Technologies utilisées
 - **Java 17**
