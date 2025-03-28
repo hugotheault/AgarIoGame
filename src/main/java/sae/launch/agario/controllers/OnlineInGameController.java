@@ -175,7 +175,6 @@ public class OnlineInGameController implements Initializable {
     private void updateGame() {
         System.out.println("Updating");
         pelletController.generatePellets(choiceSpecialPellet);
-        gameRenderer.updateVisuals(quadTree, players);
 
         writeQuadTree();
 
