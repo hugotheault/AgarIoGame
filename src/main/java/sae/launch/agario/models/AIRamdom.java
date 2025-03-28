@@ -16,6 +16,9 @@ public class AIRamdom implements AIStrategy {
         targetY = rand.nextDouble() * 500;
     }
 
+    /**
+     * Defines a random objective for the Ai to move
+     */
     @Override
     public HashMap<String, Double> execStrategy(Double x, Double y, QuadTree quadtree,AI ai) {
         Random rand = new Random();

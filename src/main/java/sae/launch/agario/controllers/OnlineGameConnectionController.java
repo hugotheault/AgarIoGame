@@ -25,6 +25,9 @@ public class OnlineGameConnectionController implements Initializable {
     @FXML
     BorderPane borderPane;
 
+    /**
+     * Load the view of the online game
+     */
     @Override
     public void initialize(URL u, ResourceBundle r){
         Platform.runLater(() -> {
@@ -36,6 +39,10 @@ public class OnlineGameConnectionController implements Initializable {
         });
     }
 
+    /**
+     * Displays a popup to confirm the quit action
+     * @see #onQuitButton()
+     */
     private void showExitConfirmation() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Quitter l'application");

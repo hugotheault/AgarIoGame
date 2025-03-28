@@ -11,6 +11,10 @@ public class SpecialPellet extends Pellet{
         randomEffect();
     }
 
+    /**
+     * Affects a random effect to this SpecialPellet
+     * @see Effect
+     */
     public void randomEffect(){
         Random random = new Random();
         this.effect = Effect.values()[random.nextInt(4)];

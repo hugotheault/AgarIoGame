@@ -7,8 +7,10 @@ import java.util.List;
 
 public class PlayerComposite extends MovableObject implements PlayerComponent {
 
-    private static final double MERGE_DISTANCE_THRESHOLD = 20;
+    private static final double MERGE_DISTANCE_THRESHOLD = 20;  //If other PlayerComposite are within this distance value, they merge
     private ArrayList<PlayerLeaf> players = new ArrayList<>();
+    private final double minimumMassToDivide;   //You can't create Leafs if you're not big enough
+    private long timeSinceSplit = System.currentTimeMillis();   //You can't create Leafs if you have not waited enough
     private final double minimumMassToDivide;
     private double mapSize;
 
@@ -92,6 +94,9 @@ public class PlayerComposite extends MovableObject implements PlayerComponent {
         return (x > 0 && x < mapSize && y > 0 && y < mapSize);
     }
 
+    /**
+     * Divides this Entity into an ArrayList of Leafs
+     */
     public void divide() {
         if (players.size() < 16) { // Exemple : on ne divise pas plus de 16 fragments
             ArrayList<PlayerLeaf> newPlayers = new ArrayList<>();
@@ -119,9 +124,13 @@ public class PlayerComposite extends MovableObject implements PlayerComponent {
                 }
             }
             this.players = newPlayers;
+            timeSinceSplit = System.currentTimeMillis();
         }
     }
 
+    /**
+     * @return whether this Entity existed for long enough to merge with others
+     */
     public boolean canMergeByTime() {
         for( PlayerLeaf part1 : this.players ) {
             for (PlayerLeaf part2 : this.players) {
@@ -133,6 +142,9 @@ public class PlayerComposite extends MovableObject implements PlayerComponent {
         return false;
     }
 
+    /**
+     * @return whether this Entity is close enough to merge with others
+     */
     public boolean canMergeByDistance() {
         for (PlayerLeaf part1 : this.players) {
             for (PlayerLeaf part2 : this.players) {
@@ -144,6 +156,31 @@ public class PlayerComposite extends MovableObject implements PlayerComponent {
         return false;
     }
 
+    /**
+     * Search for entities to merge with
+     * @deprecated
+     * @param part
+     * @return
+     */
+    public PlayerLeaf getClosestMergeCandidate(PlayerLeaf part) {
+        PlayerLeaf closest = null;
+        double minDistance = Double.MAX_VALUE;
+
+        for (PlayerLeaf other : this.players) {
+            if (part != other) { // Éviter de tester avec soi-même
+                double distance = part.getDistance(other);
+                if (distance < MERGE_DISTANCE_THRESHOLD && distance < minDistance) {
+                    closest = other;
+                    minDistance = distance;
+                }
+            }
+        }
+        return closest; // Retourne le plus proche à fusionner
+    }
+
+    /**
+     * Merge this Entity with the closest Leafs
+     */
     public void mergeClosestParts() {
         if (this.players.size() < 2) {
             return; // Impossible de fusionner avec une seule cellule
@@ -180,6 +217,9 @@ public class PlayerComposite extends MovableObject implements PlayerComponent {
         }
     }
 
+    /**
+     * Is executed when a collision between different entities of the same player occurs
+     */
     public void handleCollisions() {
         for (int i = 0; i < this.players.size(); i++) {
             for (int j = i + 1; j < this.players.size(); j++) {

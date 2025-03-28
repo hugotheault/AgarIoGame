@@ -30,6 +30,9 @@ public class AppController implements Initializable {
     private static Scene scene;
     private @FXML StackPane stackPane;
 
+    /**
+     * Load the game window
+     */
     public void initialize(URL u, ResourceBundle r){
         Platform.runLater(() -> {
             Stage stage = (Stage) stackPane.getScene().getWindow();
@@ -40,6 +43,9 @@ public class AppController implements Initializable {
         });
     }
 
+    /**
+     * Displays a popup to confirm the quit action
+     */
     private void showExitConfirmation() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Quitter l'application");
@@ -59,6 +65,12 @@ public class AppController implements Initializable {
         }
     }
 
+    /**
+     * Load the AI choice menu
+     * Uses "src/main/ressources/sae.launch.agario.AIChoiceView"
+     * @param event  a mouse click
+     * @throws IOException
+     */
     @FXML
     protected void onLocalButtonClick(ActionEvent event) throws IOException {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -69,6 +81,11 @@ public class AppController implements Initializable {
         stage.show();
     }
 
+    /**
+     * Load the menu to join an online game
+     * @param event
+     * @throws IOException
+     */
     @FXML
     protected void onMultiButtonClick(ActionEvent event) throws IOException {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();

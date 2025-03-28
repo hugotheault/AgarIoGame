@@ -9,8 +9,8 @@ import java.util.Comparator;
 
 public class Classement {
 
-    private ArrayList<MovableObject> classement;
-    private PlayerComposite currentPlayer;
+    private ArrayList<MovableObject> classement;  //Players and Ai in the game
+    private PlayerComposite currentPlayer;  //Solo player
     private double baseWeight;
 
     public Classement(double baseWeight){
@@ -18,6 +18,12 @@ public class Classement {
         this.classement = new ArrayList<>();
     }
 
+    /**
+     * Updates the leaderBoard based on players and AI mass
+     * @param leaderboard   Graphic element
+     * @param players   List of players and AI alive
+     * @param currentPlayer     Solo player
+     */
     public void updateClassement(VBox leaderboard, ArrayList<MovableObject> players, PlayerComposite currentPlayer) {
         this.currentPlayer = currentPlayer;
         leaderboard.getChildren().clear();

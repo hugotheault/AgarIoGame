@@ -7,6 +7,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class AIPellet implements AIStrategy {
+    /**
+     * Finds the closest Pellet near the Ai and follows it
+     * If no Pellets are near it, if moves randomly
+     */
     @Override
     public HashMap<String, Double> execStrategy(Double x, Double y, QuadTree quadtree,AI ai) {
 

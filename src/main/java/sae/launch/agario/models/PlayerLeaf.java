@@ -3,6 +3,7 @@ package sae.launch.agario.models;
 import javafx.scene.paint.Color;
 
 public class PlayerLeaf extends MovableObject implements PlayerComponent {
+    //A PlayerLeaf is a part of a player that doesn't have sons
 
     private final Color color;
 
@@ -28,11 +29,23 @@ public class PlayerLeaf extends MovableObject implements PlayerComponent {
         super.setMass(mass);
     }
 
+    /**
+     * @see Player#getSpeed()
+     * @return
+     */
     @Override
     public double getSpeed() {
         throw new IllegalCallerException(" Player ne peux pas appeler cette méthode");
     }
 
+    /**
+     * @see Player#getSpeed(double, double, double, double) 
+     * @param xCursor
+     * @param yCursor
+     * @param paneCenterX
+     * @param paneCenterY
+     * @return
+     */
     @Override
     public double getSpeed(double xCursor, double yCursor, double paneCenterX, double paneCenterY) {
         if(isInSlowCircle(xCursor,yCursor,paneCenterX,paneCenterY)){
@@ -46,6 +59,14 @@ public class PlayerLeaf extends MovableObject implements PlayerComponent {
         }
     }
 
+    /**
+     * @see Player#getSpeed(double, double, double, double)  
+     * @param xCursor
+     * @param yCursor
+     * @param paneCenterX
+     * @param paneCenterY
+     * @return
+     */
     public boolean isInSlowCircle(double xCursor, double yCursor, double paneCenterX,double paneCenterY){
         boolean isInSlowCircleRight = xCursor >= paneCenterX && xCursor <= paneCenterX +this.getSlowRangeRay();
         boolean isInSlowCircleLeft = xCursor <= paneCenterX && xCursor >= paneCenterX -this.getSlowRangeRay();
@@ -59,18 +80,32 @@ public class PlayerLeaf extends MovableObject implements PlayerComponent {
         }
     }
 
+    /**
+     * Calculates the distance between this Leaf and one of it's brother
+     * @param other the brother
+     * @return
+     */
     public double getDistance(PlayerLeaf other) {
         double dx = this.getX() - other.getX();
         double dy = this.getY() - other.getY();
         return Math.sqrt(dx * dx + dy * dy); // Distance euclidienne
     }
 
+    /**
+     * Indicates if this Leaf touches one of it's brother
+     * @param other the brother
+     * @return
+     */
     public boolean collidesWith(PlayerLeaf other) {
         double distance = this.getDistance(other);
         double sumRadii = this.getRay() / 2 + other.getRay() / 2;
         return distance < sumRadii;
     }
 
+    /**
+     * Set both Leaf's position to make them "bounce" on each other
+     * @param other the brother
+     */
     public void bounceOff(PlayerLeaf other) {
         // Calculer la direction entre les deux objets
         double dx = (this.getX() - other.getX()) - (this.getRay() + other.getRay());
