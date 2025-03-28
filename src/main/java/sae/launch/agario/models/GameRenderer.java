@@ -23,7 +23,7 @@ public class GameRenderer {
     /**
      * The method called every time the game is updated
      */
-    public void updateVisuals(QuadTree quadTree, ArrayList<Player> players) {
+    public void updateVisuals(QuadTree quadTree, ArrayList<PlayerComposite> players) {
         camera.updatePosition(quadTree);
         render(quadTree, players);
     }
@@ -31,7 +31,7 @@ public class GameRenderer {
     /**
      * Render all the Entities on the pane
      */
-    private void render(QuadTree quadTree, ArrayList<Player> players) {
+    private void render(QuadTree quadTree, ArrayList<PlayerComposite> players) {
         // Exécute les opérations sur le thread de JavaFX
         Platform.runLater(() -> {
             pane.getChildren().clear();
@@ -86,7 +86,7 @@ public class GameRenderer {
                 if ( ((MovableObject)entity).isSpecialPelletIsInvisible()){
                     circle.setFill(Color.LIGHTBLUE);
                 } else if( entity instanceof PlayerLeaf ){
-                    circle.setFill(Color.BLUE);
+                    circle.setFill(((PlayerLeaf)entity).getColor());
                 }
 
             }

@@ -201,7 +201,7 @@ public class SoloInGameController implements Initializable {
         updatePlayers();
         pelletController.generatePellets(choiceSpecialPellet);
         updateAIs();
-        gameRenderer.updateVisuals(quadTree, players);
+        gameRenderer.updateVisuals(quadTree, quadTree.getAllPlayers());
         updateMinimap();
     }
 
@@ -247,8 +247,8 @@ public class SoloInGameController implements Initializable {
     private void updatePlayers() {
 
         for(PlayerComposite player: quadTree.getPlayers()){
-            if (player instanceof PlayerComposite composite && composite.canMerge() && composite.canMergeByDistance()) {
-                composite.mergeClosestParts();
+            if (player.canMergeByTime() && player.canMergeByDistance()) {
+                player.mergeClosestParts();
             } else {
                 player.handleCollisions();
                 //Update position du joueur principal

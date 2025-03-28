@@ -126,7 +126,11 @@ public class QuadTree {
         ArrayList<Entity> result = new ArrayList<>();
         if (depth == 0) {
             for (Entity entity : entities) {
-                if( !(entity instanceof PlayerComposite) ){
+                if( entity instanceof PlayerComposite ){
+                    for( PlayerLeaf playerLeaf : ((PlayerComposite)entity).getPlayers() ){
+                        result.add(playerLeaf);
+                    }
+                } else {
                     if (region.contains(entity)) {
                         result.add(entity);
                     }

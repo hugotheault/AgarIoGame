@@ -1,9 +1,16 @@
 package sae.launch.agario.models;
 
+import javafx.scene.paint.Color;
+
 public class PlayerLeaf extends MovableObject implements PlayerComponent {
+
+    private final Color color;
+
+    private long timeSinceSplit;
 
     public PlayerLeaf(int ID, double x, double y, double mass) {
         super(ID, x, y, mass);
+        this.color = Color.color(0.0,0.0,1.0);
     }
 
     @Override
@@ -96,6 +103,18 @@ public class PlayerLeaf extends MovableObject implements PlayerComponent {
             other.setX(other.getX() - otherReboundSpeed * nx);
             other.setY(other.getY() - otherReboundSpeed * ny);
         }
+    }
+
+    public Color getColor(){
+        return this.color;
+    }
+
+    public void startTimer(){
+        this.timeSinceSplit = (long) (5000 + this.getMass()/100);
+    }
+
+    public long getTimer(){
+        return this.timeSinceSplit;
     }
 
 }

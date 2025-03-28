@@ -1,5 +1,7 @@
 package sae.launch.agario.models;
 
+import javafx.scene.paint.Color;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +10,6 @@ public class PlayerComposite extends MovableObject implements PlayerComponent {
     private static final double MERGE_DISTANCE_THRESHOLD = 20;
     private ArrayList<PlayerLeaf> players = new ArrayList<>();
     private final double minimumMassToDivide;
-    private long timeSinceSplit = System.currentTimeMillis();
     private double mapSize;
 
     public PlayerComposite(int ID, double x, double y, double mass, double minMassToDivide, double mapSize) {
@@ -106,11 +107,11 @@ public class PlayerComposite extends MovableObject implements PlayerComponent {
                         coordY1 = Math.min(Math.max(0, coordY1), mapSize);
                     }
                     if( !coordonneeInMap(coordX2, coordY2)) {
-                        coordX2 = Math.min(Math.max(1, coordX2), mapSize-1);
-                        coordY2 = Math.min(Math.max(1, coordY2), mapSize-1);
+                        coordX2 = Math.min(Math.max(5, coordX2), mapSize-5);
+                        coordY2 = Math.min(Math.max(5, coordY2), mapSize-5);
                     }
-                    PlayerLeaf p1 = new PlayerLeaf(player.getID(), player.getX() + player.getRadius()/2, player.getY() - player.getRadius()/2, newMass);
-                    PlayerLeaf p2 = new PlayerLeaf(player.getID(), player.getX() - player.getRadius()/2, player.getY() + player.getRadius()/2, newMass);
+                    PlayerLeaf p1 = new PlayerLeaf(player.getID(), coordX1, coordY1, newMass);
+                    PlayerLeaf p2 = new PlayerLeaf(player.getID(), coordX2, coordY2, newMass);
                     newPlayers.add(p1);
                     newPlayers.add(p2);
                 } else {
@@ -118,13 +119,18 @@ public class PlayerComposite extends MovableObject implements PlayerComponent {
                 }
             }
             this.players = newPlayers;
-            timeSinceSplit = System.currentTimeMillis();
         }
     }
 
-    public boolean canMerge() {
-        long elapsedTime = System.currentTimeMillis() - timeSinceSplit;
-        return elapsedTime > 5000; // Fusion possible après 5 secondes
+    public boolean canMergeByTime() {
+        for( PlayerLeaf part1 : this.players ) {
+            for (PlayerLeaf part2 : this.players) {
+                if ( (System.currentTimeMillis() - part1.getTimer()) > (5000 + part1.getMass()/100) && (System.currentTimeMillis() - part2.getTimer() > 5000 + part2.getMass())) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public boolean canMergeByDistance() {
@@ -136,22 +142,6 @@ public class PlayerComposite extends MovableObject implements PlayerComponent {
             }
         }
         return false;
-    }
-
-    public PlayerLeaf getClosestMergeCandidate(PlayerLeaf part) {
-        PlayerLeaf closest = null;
-        double minDistance = Double.MAX_VALUE;
-
-        for (PlayerLeaf other : this.players) {
-            if (part != other) { // Éviter de tester avec soi-même
-                double distance = part.getDistance(other);
-                if (distance < MERGE_DISTANCE_THRESHOLD && distance < minDistance) {
-                    closest = other;
-                    minDistance = distance;
-                }
-            }
-        }
-        return closest; // Retourne le plus proche à fusionner
     }
 
     public void mergeClosestParts() {
