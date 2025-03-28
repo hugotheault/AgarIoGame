@@ -81,8 +81,8 @@ public class OnlineGameConnectionController implements Initializable {
     @FXML
     protected void onConnectButton(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/sae/launch/agario/InGameView.fxml"));
-            loader.setController(new OnlineInGameController(inputIPCo.getText(), Integer.parseInt(inputPortCo.getText())));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/sae/launch/agario/OnlineGamePlayView.fxml"));
+            loader.setController(new OnlineGamePlayViewController(inputIPCo.getText(), Integer.parseInt(inputPortCo.getText())));
             Parent root = loader.load();
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
