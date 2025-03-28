@@ -22,6 +22,9 @@ public class AIChoiceController implements Initializable {
     @FXML private Label pelletAI;
     @FXML private Label chaserAI;
     @FXML private CheckBox checkBoxSpecialPellet;
+    @FXML private TextField mapSize;
+    @FXML private TextField pelletNumber;
+    @FXML private TextField playerSpeed;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -93,6 +96,9 @@ public class AIChoiceController implements Initializable {
             soloInGameController.setNbPelletAI(Integer.parseInt(pelletAI.getText()));
             soloInGameController.setNbChaserAI(Integer.parseInt(chaserAI.getText()));
             soloInGameController.setChoiceSpecialPellet(checkBoxSpecialPellet.isSelected());
+            //soloInGameController.setMapSize(Double.parseDouble(mapSize.getText()));
+            //soloInGameController.setPelletNb(Integer.parseInt(pelletNumber.getText()));
+            //soloInGameController.setPlayerSpeed(Integer.parseInt(playerSpeed.getText()));
     }
 
     /**

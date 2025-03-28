@@ -29,38 +29,39 @@
                             <Label text="IA aléatoire" />
                             <Label fx:id="randomAI" text="0" />
                             <Button mnemonicParsing="false" onAction="#onRandomAIMinusButton" style="-fx-background-color: #ff9800; -fx-text-fill: white;" text="-" />
+                        <Label text="Taille de la carte" textAlignment="CENTER" wrapText="true" />
+                        <TextField fx:id="mapSize" disable="true" />
                          </children>
                       </VBox>
-                      <VBox alignment="CENTER" spacing="15.0" style="-fx-padding: 20; -fx-background-color: white; -fx-background-radius: 10;">
+                      <VBox alignment="CENTER" prefHeight="315.0" prefWidth="240.0" spacing="15.0" style="-fx-padding: 20; -fx-background-color: white; -fx-background-radius: 10;">
                          <children>
                             <Button mnemonicParsing="false" onAction="#onPelletAIPlusButton" style="-fx-background-color: #4CAF50; -fx-text-fill: white;" text="+" />
                             <Label text="IA récoleuse" />
                             <Label fx:id="pelletAI" text="0" />
                             <Button mnemonicParsing="false" onAction="#onPelletAIMinusButton" style="-fx-background-color: #ff9800; -fx-text-fill: white;" text="-" />
+                        <Label text="Vitesse du joueur" textAlignment="CENTER" wrapText="true" />
+                        <TextField fx:id="playerSpeed" disable="true" />
                          </children>
                       </VBox>
-                  <VBox alignment="CENTER" spacing="15.0" style="-fx-padding: 20; -fx-background-color: white; -fx-background-radius: 10;">
+                  <VBox alignment="CENTER" prefHeight="315.0" prefWidth="231.0" spacing="15.0" style="-fx-padding: 20; -fx-background-color: white; -fx-background-radius: 10;">
                      <children>
                         <Button mnemonicParsing="false" onAction="#onChaserAIPlusButton" style="-fx-background-color: #4CAF50; -fx-text-fill: white;" text="+" />
                         <Label text="IA chasseuse" />
                         <Label fx:id="chaserAI" text="0" />
                         <Button mnemonicParsing="false" onAction="#onChaserAIMinusButton" style="-fx-background-color: #ff9800; -fx-text-fill: white;" text="-" />
-                     </children></VBox>
-                  <VBox alignment="CENTER" spacing="15.0" style="-fx-padding: 20; -fx-background-color: white; -fx-background-radius: 10;">
+                        <Label prefHeight="49.0" prefWidth="85.0" text="Nombre de pastilles" textAlignment="CENTER" wrapText="true" />
+                        <TextField fx:id="pelletNumber" disable="true" />
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER" prefHeight="315.0" prefWidth="231.0" spacing="15.0" style="-fx-padding: 20; -fx-background-color: white; -fx-background-radius: 10;">
                      <children>
                         <Label prefHeight="68.0" prefWidth="80.0" text="Jouer avec des cellules spéciales ?" textAlignment="CENTER" wrapText="true" />
-                        <CheckBox fx:id="checkBoxSpecialPellet"
-                                  mnemonicParsing="false"
-                                  prefHeight="31.0"
-                                  prefWidth="0.0"/>
+                        <CheckBox fx:id="checkBoxSpecialPellet" mnemonicParsing="false" prefHeight="31.0" prefWidth="0.0" />
+                            <Button onAction="#onSoloPlayButton" style="-fx-background-color: #4d74cd; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 15px;" text="Lancer la partie" textAlignment="CENTER" wrapText="true" />
                      </children>
                   </VBox>
                   </children>
               </HBox>
-                <Button onAction="#onSoloPlayButton" style="-fx-background-color: #4d74cd; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 15px;" text="Lancer la partie" StackPane.alignment="BOTTOM_CENTER">
-               <StackPane.margin>
-                  <Insets bottom="10.0" right="8.0" />
-               </StackPane.margin></Button>
          </children>
       </StackPane>
    </center>

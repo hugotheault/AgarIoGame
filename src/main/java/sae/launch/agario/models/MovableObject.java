@@ -7,7 +7,7 @@ import static java.lang.Math.round;
 public abstract class MovableObject extends Entity {
 
     private final int rangeHorizonModifier = 100;
-    private final double baseMouvementSpeed = 10;
+    private double baseMouvementSpeed = 10;
     private final static double speedSlowMultiplier = 0.5;
     private final double slowRangeRay;
 
