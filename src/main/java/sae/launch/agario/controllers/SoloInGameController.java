@@ -201,7 +201,7 @@ public class SoloInGameController implements Initializable {
         updatePlayers();
         pelletController.generatePellets(choiceSpecialPellet);
         updateAIs();
-        gameRenderer.updateVisuals(quadTree, players,1);
+        gameRenderer.updateVisuals(quadTree, players);
         updateMinimap();
     }
 

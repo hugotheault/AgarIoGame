@@ -52,7 +52,7 @@ public class OnlineInGameController implements Initializable {
 
     private GameRenderer gameRenderer;
 
-
+    private boolean choiceSpecialPellet;
     private double playerXPercent;
     private double playerYPercent;
     private double coX;
@@ -88,7 +88,7 @@ public class OnlineInGameController implements Initializable {
         this.gameRenderer = new GameRenderer();
 
         this.pelletController = new PelletController(quadTree, maxPelletNb, pelletSize);
-        pelletController.generatePellets();
+        pelletController.generatePellets(choiceSpecialPellet);
 
         this.players = new ArrayList<>();
 
@@ -180,8 +180,8 @@ public class OnlineInGameController implements Initializable {
     }
 
     private void updateGame() {
-        pelletController.generatePellets();
-        gameRenderer.updateVisuals(quadTree, players, this.ID);
+        pelletController.generatePellets(choiceSpecialPellet);
+        gameRenderer.updateVisuals(quadTree, players);
 
         writeQuadTree();
 
