@@ -111,13 +111,16 @@ public class ClientDataReader extends Thread {
                         circle.setFill(Color.color(red, green, blue));
                     }
                     circles.add(circle);
+
                 }
+
                 Platform.runLater(() -> {
                     p.getChildren().clear();
                     for (Circle circle : circles) {
                         p.getChildren().add(circle);
                     }
                 });
+                System.out.println("Joueur : radius : " + player.getRadius() + " mass : " + player.getMass() + " vitesse X calculée : " + player.getSpeed(o.getCoX(), o.getCoY(), o.getPane().getWidth()/2, o.getPane().getHeight()/2));
 
                     double directionX = o.getPlayerXPercent() - 0.5;
                     double directionY = o.getPlayerYPercent() - 0.5;

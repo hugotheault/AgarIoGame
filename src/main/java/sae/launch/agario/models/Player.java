@@ -15,12 +15,18 @@ public class Player extends MovableObject {
     @Override
     public double getSpeed(double xCursor, double yCursor, double paneCenterX,double paneCenterY) {
         if(isInSlowCircle(xCursor,yCursor,paneCenterX,paneCenterY)){
+            System.out.println("je suis dans slow speed circle");
             double slowRateX = Math.abs((paneCenterX - xCursor)/this.getSlowRangeRay());
             double slowRateY = Math.abs((paneCenterY - yCursor)/this.getSlowRangeRay());
             double speed = (this.getBaseMouvementSpeed() - (speedSlowMultiplier * Math.log(1 + this.getMass()))) * Math.max(slowRateX,slowRateY);
             return Math.max(speed,0) ;
         } else{
+
             double speed = (this.getBaseMouvementSpeed() - (speedSlowMultiplier * Math.log(1 + this.getMass())));
+            System.out.println("math log " + Math.log(1+this.getMass()));
+            System.out.println("base moov speed : " + this.getBaseMouvementSpeed());
+            System.out.println("speedslowmultiplier " + speedSlowMultiplier);
+            System.out.println("speed : " + speed);
             return Math.max(speed,0);
         }
     }
