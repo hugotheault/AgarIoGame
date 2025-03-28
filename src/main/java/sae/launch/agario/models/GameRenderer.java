@@ -23,6 +23,10 @@ public class GameRenderer {
         this.camera = new Camera();
         camera.setZoomFactor(0.1);
     }
+    public GameRenderer(){
+        this.camera = new Camera();
+        camera.setZoomFactor(0.1);
+    }
 
     /**
      * The method called every time the game is updated
@@ -117,4 +121,7 @@ public class GameRenderer {
         pane.getChildren().add(circle);
     }
 
+    public void setPane(Pane pane){
+        this.pane = pane;
+    }
 }
