@@ -252,10 +252,9 @@ public class OnlineInGameController implements Initializable {
      *Update the position of all the players, and whether they can eat or get eaten
      */
     private void updatePlayers() {
-        //todo update la position des joueurs IA
 
-        for(Player joueur: quadTree.getAllPlayers()){
-            for(Entity cible: quadTree.getEntitiesAroundPlayer((Player) joueur)){
+        for(PlayerComposite joueur: quadTree.getAllPlayers()){
+            for(Entity cible: quadTree.getEntitiesAroundPlayer((PlayerLeaf)joueur.getPlayers())){
                 if(cible.equals(joueur)) continue;
                 if(joueur.canEat(cible)){
                     joueur.setMass(joueur.getMass()+cible.getMass());
