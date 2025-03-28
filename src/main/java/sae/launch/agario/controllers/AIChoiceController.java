@@ -85,6 +85,7 @@ public class AIChoiceController implements Initializable {
     @FXML
     protected void onSoloPlayButton(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/sae/launch/agario/InGameView.fxml"));
+        loader.setController(new SoloInGameController());
         Parent root = loader.load();
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(root));

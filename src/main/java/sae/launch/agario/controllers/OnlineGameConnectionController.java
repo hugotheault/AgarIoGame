@@ -12,6 +12,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -28,6 +29,12 @@ public class OnlineGameConnectionController implements Initializable {
     /**
      * Load the view of the online game
      */
+    @FXML
+    TextField inputIPCo;
+
+    @FXML
+    TextField inputPortCo;
+
     @Override
     public void initialize(URL u, ResourceBundle r){
         Platform.runLater(() -> {
@@ -81,12 +88,9 @@ public class OnlineGameConnectionController implements Initializable {
     @FXML
     protected void onConnectButton(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/sae/launch/agario/InGameView.fxml"));
-            loader.setController(new OnlineInGameController());
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/sae/launch/agario/OnlineGamePlayView.fxml"));
+            loader.setController(new OnlineGamePlayViewController(inputIPCo.getText(), Integer.parseInt(inputPortCo.getText())));
             Parent root = loader.load();
-
-            InetAddress ip = InetAddress.getLocalHost();
-            System.out.println(ip.getHostAddress());
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
