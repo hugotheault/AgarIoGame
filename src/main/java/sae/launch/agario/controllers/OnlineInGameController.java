@@ -20,6 +20,7 @@ import java.net.Socket;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Properties;
+import java.util.Random;
 import java.util.ResourceBundle;
 
 import sae.launch.agario.QuadTree;
@@ -255,7 +256,9 @@ public class OnlineInGameController implements Initializable {
                     if(cible.equals(joueur)) continue;
                     if(joueur.canEat(cible)){
                         joueur.setMass(joueur.getMass()+cible.getMass());
-                        quadTree.remove(cible);
+                        Random random = new Random();
+                        cible.setX(random.nextDouble(mapSize));
+                        cible.setY(random.nextDouble(mapSize));
                     }
                 }
         }
