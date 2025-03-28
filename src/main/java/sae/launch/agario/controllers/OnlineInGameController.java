@@ -259,6 +259,7 @@ public class OnlineInGameController implements Initializable {
                         Random random = new Random();
                         cible.setX(random.nextDouble(mapSize));
                         cible.setY(random.nextDouble(mapSize));
+                        cible.setMass(50);
                     }
                 }
         }
