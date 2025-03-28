@@ -20,9 +20,9 @@ Sur la branche Rendu-1 il y a le jeu jouable en solo.
   ```sh
     git checkout Rendu-1
   ```
-Sur la branche Rendu-2 il y a le jeu jouable en réseau.
+Sur la branche choixSpecialPellet, on peut voir le bon fonctionnement des IAs.
 ```sh
-    git checkout Rendu-2
+    git checkout choixSpecialPellet
   ```
 
 ## Technologies utilisées
