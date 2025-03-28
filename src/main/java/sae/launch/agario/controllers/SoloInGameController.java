@@ -251,7 +251,6 @@ public class SoloInGameController implements Initializable {
                 player.mergeClosestParts();
             } else {
                 player.handleCollisions();
-                //Update position du joueur principal
                 double directionX = playerXPercent - 0.5;
                 double directionY = playerYPercent - 0.5;
                 double magnitude = Math.sqrt(directionX * directionX + directionY * directionY);
@@ -266,11 +265,10 @@ public class SoloInGameController implements Initializable {
             }
         }
 
-        for (PlayerComponent player : playerGroup.getPlayers()) { // Utilisation du composite
+        for (PlayerComponent player : playerGroup.getPlayers()) {
             if (player instanceof MovableObject) {
                 MovableObject p = (MovableObject) player;
 
-                // Mise à jour de la position du joueur principal
                 double directionX = playerXPercent - 0.5;
                 double directionY = playerYPercent - 0.5;
                 double magnitude = Math.sqrt(directionX * directionX + directionY * directionY);
@@ -337,11 +335,9 @@ public class SoloInGameController implements Initializable {
             if( coordonneeInMap(targetX,targetY)) {
                 quadTree.remove(ai);
                 if (distance > ai.getSpeed()) {
-                    // Mouvement fluide avec interpolation
                     ai.setX(ai.getX() + (dx / distance) * ai.getSpeed());
                     ai.setY(ai.getY() + (dy / distance) * ai.getSpeed());
                 } else {
-                    // L'IA arrive directement à la cible si elle est proche
                     ai.setX(targetX);
                     ai.setY(targetY);
                 }
@@ -393,29 +389,23 @@ public class SoloInGameController implements Initializable {
 
             GraphicsContext gc = minimap.getGraphicsContext2D();
 
-            // Remplir le fond de la minimap en blanc
             gc.setFill(Color.WHITE);
             gc.fillRect(0, 0, minimapSize, minimapSize);
 
-            // Dessiner la bordure de la minimap
             gc.setStroke(Color.BLACK);
             gc.strokeRect(0, 0, minimapSize, minimapSize);
 
-            // Définir les dimensions du rectangle de vision (peut être ajusté selon les besoins)
-            double visionWidth = 450; // Largeur de la zone de vision
-            double visionHeight = 350; // Hauteur de la zone de vision
+            double visionWidth = 450;
+            double visionHeight = 350;
             double visionScaleX = visionWidth / mapSize;
             double visionScaleY = visionHeight / mapSize;
 
-            // Position de la vision du joueur
             double visionX = currentPlayer.getX() * scale - visionWidth / 2 * visionScaleX;
             double visionY = currentPlayer.getY() * scale - visionHeight / 2 * visionScaleY;
 
-            // Dessiner le rectangle de vision du joueur en rouge
             gc.setStroke(Color.RED);
             gc.strokeRect(visionX, visionY, visionWidth * visionScaleX, visionHeight * visionScaleY);
 
-            // Dessiner les IA en fonction de leur masse
             gc.setFill(Color.RED);
             for (AI ia : quadTree.getAllIAs()) {
                 double iaX = ia.getX() * scale;
@@ -428,7 +418,6 @@ public class SoloInGameController implements Initializable {
                 }
             }
 
-            // Dessiner le joueur avec une taille proportionnelle à sa masse
             gc.setFill(Color.BLUE);
             double playerX = currentPlayer.getX() * scale;
             double playerY = currentPlayer.getY() * scale;

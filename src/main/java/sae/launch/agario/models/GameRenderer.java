@@ -36,7 +36,6 @@ public class GameRenderer {
      * Render all the Entities on the pane
      */
     private void render(QuadTree quadTree, ArrayList<PlayerComposite> players) {
-        // Exécute les opérations sur le thread de JavaFX
         Platform.runLater(() -> {
             pane.getChildren().clear();
 

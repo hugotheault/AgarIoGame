@@ -69,7 +69,7 @@ public class PlayerComposite extends MovableObject implements PlayerComponent {
 
     @Override
     public double getSpeed() {
-        return Math.max(1, 10 / Math.sqrt(getMass())); // Même logique que PlayerLeaf
+        return Math.max(1, 10 / Math.sqrt(getMass()));
     }
 
     @Override
@@ -97,7 +97,7 @@ public class PlayerComposite extends MovableObject implements PlayerComponent {
      * Divides this Entity into an ArrayList of Leafs
      */
     public void divide() {
-        if (players.size() < 16) { // Exemple : on ne divise pas plus de 16 fragments
+        if (players.size() < 16) {
             ArrayList<PlayerLeaf> newPlayers = new ArrayList<>();
             for (PlayerLeaf player : players) {
                 if( player.getMass() >= minimumMassToDivide ){
@@ -166,7 +166,7 @@ public class PlayerComposite extends MovableObject implements PlayerComponent {
         double minDistance = Double.MAX_VALUE;
 
         for (PlayerLeaf other : this.players) {
-            if (part != other) { // Éviter de tester avec soi-même
+            if (part != other) {
                 double distance = part.getDistance(other);
                 if (distance < MERGE_DISTANCE_THRESHOLD && distance < minDistance) {
                     closest = other;
@@ -174,7 +174,7 @@ public class PlayerComposite extends MovableObject implements PlayerComponent {
                 }
             }
         }
-        return closest; // Retourne le plus proche à fusionner
+        return closest;
     }
 
     /**
@@ -182,14 +182,13 @@ public class PlayerComposite extends MovableObject implements PlayerComponent {
      */
     public void mergeClosestParts() {
         if (this.players.size() < 2) {
-            return; // Impossible de fusionner avec une seule cellule
+            return;
         }
 
         PlayerLeaf part1 = null;
         PlayerLeaf part2 = null;
         double minDistance = Double.MAX_VALUE;
 
-        // Trouver les deux cellules les plus proches
         for (int i = 0; i < this.players.size(); i++) {
             for (int j = i + 1; j < this.players.size(); j++) {
                 PlayerLeaf p1 = this.players.get(i);
@@ -204,12 +203,9 @@ public class PlayerComposite extends MovableObject implements PlayerComponent {
             }
         }
 
-        // Vérifier qu'on a trouvé deux cellules valides
         if (part1 != null && part2 != null) {
-            // Créer une nouvelle cellule fusionnée
             PlayerLeaf mergedCell = new PlayerLeaf(IDGenerator.getGenerator().NextID(), this.getX(),this.getY(), part1.getMass()+part2.getMass());
 
-            // Ajouter la nouvelle cellule et retirer les anciennes
             this.players.add(mergedCell);
             this.players.remove(part1);
             this.players.remove(part2);
