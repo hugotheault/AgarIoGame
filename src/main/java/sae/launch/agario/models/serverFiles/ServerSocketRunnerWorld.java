@@ -10,6 +10,9 @@ public class ServerSocketRunnerWorld implements Runnable{
 		this.server = serv;
 	}
 
+	/**
+	 * Listen to the world to see its evolution
+	 */
 	@Override
 	public void run() {
 		while(true) {
