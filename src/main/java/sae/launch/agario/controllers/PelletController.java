@@ -23,16 +23,20 @@ public class PelletController {
         this.generator = IDGenerator.getGenerator();
     }
 
-    public void generatePellets() {
+    public void generatePellets(boolean choiceSpecialPellet) {
         if (quadTree.getPelletsNumber() < maxPellets) {
             Random random = new Random();
             int pelletsToAdd = maxPellets - quadTree.getPelletsNumber();
             while (pelletsToAdd > 0) {
                 Pellet pellet;
-                if( random.nextInt(100)> 1) {
-                    pellet = new Pellet(generator.NextID(), random.nextDouble(quadTree.getLength()), random.nextDouble(quadTree.getHeight()), pelletSize);
+                if(choiceSpecialPellet) {
+                    if(random.nextInt(100)> 1){
+                        pellet = new Pellet(generator.NextID(), random.nextDouble(quadTree.getLength()), random.nextDouble(quadTree.getHeight()), pelletSize);
+                    }else{
+                        pellet = new SpecialPellet(generator.NextID(), random.nextDouble(quadTree.getLength()), random.nextDouble(quadTree.getHeight()), pelletSize);
+                    }
                 }else{
-                    pellet = new SpecialPellet(generator.NextID(), random.nextDouble(quadTree.getLength()), random.nextDouble(quadTree.getHeight()), pelletSize);
+                    pellet = new Pellet(generator.NextID(), random.nextDouble(quadTree.getLength()), random.nextDouble(quadTree.getHeight()), pelletSize);
                 }
                 quadTree.insert(pellet);
                 pelletsToAdd--;

@@ -29,14 +29,14 @@ import sae.launch.agario.QuadTree;
 import sae.launch.agario.models.*;
 
 public class SoloInGameController implements Initializable {
+
+    /* Fxml elements in the different views */
     private @FXML VBox leaderboard;
     private @FXML Pane pane;
     private @FXML Label scoreLabel;
     private @FXML Canvas minimap;
-    private ThreadWorld threadWorld;
-    private QuadTree quadTree;
-    private PelletController pelletController;
 
+    /* Variables for the player management */
     private ArrayList<Player> players;
 
     private GameRenderer gameRenderer;
@@ -48,24 +48,34 @@ public class SoloInGameController implements Initializable {
     private double coX;
     private double coY;
 
+    /* Different variables for all the game */
     private double baseMass;
     private double mapSize;
     private double initialSize;
-    private double sizeScaleToEat; //Ex: 1.33 -> You need 33% more mass to eat someone else
+    private double sizeScaleToEat;
     private int maxPelletNb;
     private double sizeToDivide;
     private double pelletSize;
     private Classement classement;
-
+    private ThreadWorld threadWorld;
+    private QuadTree quadTree;
+    private PelletController pelletController;
     private double mouseXCursor;
     private double mouseYCursor;
 
+    /* Information of the param page to launch the game */
     private int nbRandomsAI = 0;
     private int nbPelletAI = 0;
     private int nbChaserAI = 0;
+    private boolean choiceSpecialPellet;
 
     private PlayerComposite playerGroup;
 
+    /**
+     * Initialisation of the game
+     * @param u a pointer to the ressource file
+     * @param r
+     */
     @Override
     public void initialize(URL u, ResourceBundle r){
         this.mapSize = 2000;
@@ -87,9 +97,7 @@ public class SoloInGameController implements Initializable {
         quadTree.insert(this.playerGroup);
 
         this.pelletController = new PelletController(quadTree, maxPelletNb, pelletSize);
-        pelletController.generatePellets();
-
-
+        pelletController.generatePellets(choiceSpecialPellet);
 
         this.gameRenderer = new GameRenderer(pane);
 
@@ -155,6 +163,9 @@ public class SoloInGameController implements Initializable {
         currentPlayer.divide();
     }
 
+    /**
+     * Show window for exit confirmation
+     */
     private void showExitConfirmation() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Quitter l'application");
@@ -174,24 +185,39 @@ public class SoloInGameController implements Initializable {
         }
     }
 
-    private int randomCoordinate(){
+    /**
+     * Function to create a random coordinate
+     * @return a random int between 0 and mapSize
+     */
+    private double randomCoordinate(){
         Random rand = new Random();
-        return rand.nextInt(2000);
+        return rand.nextDouble(mapSize);
     }
 
+    /**
+     * Function to update the game, called every 33ms
+     */
     private void updateGame() {
         updatePlayers();
-        pelletController.generatePellets();
+        pelletController.generatePellets(choiceSpecialPellet);
         updateAIs();
         gameRenderer.updateVisuals(quadTree, players);
         updateMinimap();
     }
 
+    /**
+     * Quit button to exit the application
+     */
     @FXML
     protected void onQuitButton() {
         showExitConfirmation();
     }
 
+    /**
+     * Button to return to the menu of the application
+     * @param event click on the button
+     * @throws IOException
+     */
     @FXML
     protected void onMenuButton(ActionEvent event) throws IOException {
         // create the alert
@@ -216,7 +242,7 @@ public class SoloInGameController implements Initializable {
     }
 
     /**
-     *Update the position of all the players, and wheter they can eat or get eaten
+     * Update the position of all the players, and wheter they can eat or get eaten
      */
     private void updatePlayers() {
 
@@ -292,6 +318,9 @@ public class SoloInGameController implements Initializable {
         }
     }
 
+    /**
+     * Update the position of all the AIs, and wheter they can eat or get eaten
+     */
     private void updateAIs() {
 
         for (AI ai : quadTree.getAllIAs()) {
@@ -354,6 +383,9 @@ public class SoloInGameController implements Initializable {
         }
     }
 
+    /**
+     * Update the view of the minimap
+     */
     private void updateMinimap() {
         Platform.runLater(() -> {
             double minimapSize = 150;
@@ -375,7 +407,7 @@ public class SoloInGameController implements Initializable {
             double visionScaleX = visionWidth / mapSize;
             double visionScaleY = visionHeight / mapSize;
 
-            // Position de la vision du joueur en minimap (ajustée à la position du joueur)
+            // Position de la vision du joueur
             double visionX = currentPlayer.getX() * scale - visionWidth / 2 * visionScaleX;
             double visionY = currentPlayer.getY() * scale - visionHeight / 2 * visionScaleY;
 
@@ -383,44 +415,38 @@ public class SoloInGameController implements Initializable {
             gc.setStroke(Color.RED);
             gc.strokeRect(visionX, visionY, visionWidth * visionScaleX, visionHeight * visionScaleY);
 
-            // Dessiner les IA et joueurs dans la zone de vision du joueur
+            // Dessiner les IA en fonction de leur masse
             gc.setFill(Color.RED);
             for (AI ia : quadTree.getAllIAs()) {
                 double iaX = ia.getX() * scale;
                 double iaY = ia.getY() * scale;
+                double iaSize = Math.log(ia.getMass() + 1) * 1.5;
 
-                // Si l'IA est dans la zone de vision du joueur
                 if (iaX >= visionX && iaX <= visionX + visionWidth * visionScaleX &&
                         iaY >= visionY && iaY <= visionY + visionHeight * visionScaleY) {
-                    gc.fillOval(iaX, iaY, 4, 4);
+                    gc.fillOval(iaX - iaSize / 2, iaY - iaSize / 2, iaSize, iaSize);
                 }
             }
 
-            // Dessiner le joueur dans la zone de vision
+            // Dessiner le joueur avec une taille proportionnelle à sa masse
             gc.setFill(Color.BLUE);
             double playerX = currentPlayer.getX() * scale;
             double playerY = currentPlayer.getY() * scale;
+            double playerSize = Math.log(currentPlayer.getMass() + 1) * 1.5;
 
             if (playerX >= visionX && playerX <= visionX + visionWidth * visionScaleX &&
                     playerY >= visionY && playerY <= visionY + visionHeight * visionScaleY) {
-                gc.fillOval(playerX, playerY, 5, 5);
+                gc.fillOval(playerX - playerSize / 2, playerY - playerSize / 2, playerSize, playerSize);
             }
         });
     }
-
-
-
 
     private boolean coordonneeInMap(double x, double y){
         return (x > 0 && x < mapSize && y > 0 && y < mapSize);
     }
 
+   /* ------ Getter and setters ------ */
 
-
-
-    /*
-    Getters and Setters
-     */
     public double getMapSize() {
         return mapSize;
     }
@@ -496,4 +522,7 @@ public class SoloInGameController implements Initializable {
         this.nbChaserAI = nbChaserAI;
     }
 
+    public void setChoiceSpecialPellet(boolean choiceSpecialPellet) {
+        this.choiceSpecialPellet = choiceSpecialPellet;
+    }
 }
