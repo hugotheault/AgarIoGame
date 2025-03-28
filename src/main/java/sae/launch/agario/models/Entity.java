@@ -1,6 +1,7 @@
 package sae.launch.agario.models;
 
 public abstract class Entity {
+    //AN Entity is either a Player, a Pellet or an AI
     private final int ID;
     private double x;
     private double y;

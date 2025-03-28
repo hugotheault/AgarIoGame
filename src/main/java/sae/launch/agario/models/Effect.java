@@ -15,6 +15,10 @@ public enum Effect {
     private final double SpecialPelletSpeedSlowValue = 0.5;
     private final long SpecialPelletDurationEffect = 3000;
 
+    /**
+     * Updates the characteristics of a player or an AI depending on the pellet
+     * @param obj   The object you want to apply effect on
+     */
     public void ApplyEffect(MovableObject obj){
         switch(this){
             case SPEED_BOOST -> {
@@ -33,6 +37,10 @@ public enum Effect {
 
     }
 
+    /**
+     * Updates the object's speed characteristic back to normal
+     * @param obj   the object
+     */
     public void ResetSpeedModification(MovableObject obj){
         Timer timer = new Timer();
         TimerTask task = new TimerTask() {
@@ -45,6 +53,10 @@ public enum Effect {
 
     }
 
+    /**
+     * Updates the object's invisible characteristic back to normal
+     * @param obj   the object
+     */
     public void ResetInvisibleEffect(MovableObject obj){
         Timer timer = new Timer();
         TimerTask task = new TimerTask() {

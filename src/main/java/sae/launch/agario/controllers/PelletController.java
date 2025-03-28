@@ -16,6 +16,12 @@ public class PelletController {
     private int maxPellets;
     private double pelletSize;
 
+    /**
+     * Defines the characteristics of the pellets in the game
+     * @param quadTree	The game's Quadtree @see Quadtree
+     * @param maxPellets	The game's max amount of pellets displayed at the same time
+     * @param pelletSize	Size of the pellets
+     */
     public PelletController(QuadTree quadTree, int maxPellets, double pelletSize) {
         this.quadTree = quadTree;
         this.maxPellets = maxPellets;
@@ -23,6 +29,9 @@ public class PelletController {
         this.generator = IDGenerator.getGenerator();
     }
 
+    /**
+     * Inserts the pellets into the quadtree
+     */
     public void generatePellets(boolean choiceSpecialPellet) {
         if (quadTree.getPelletsNumber() < maxPellets) {
             Random random = new Random();
@@ -44,6 +53,10 @@ public class PelletController {
         }
     }
 
+    /**
+     * Remove the designated Pellet from the Quadtree
+     * @param pellet
+     */
     public void removePellet(Pellet pellet) {
         quadTree.remove(pellet);
     }

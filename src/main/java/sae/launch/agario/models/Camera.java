@@ -29,7 +29,7 @@ public class Camera {
     public void setZoomFactor(double zoomFactor) { this.zoomFactor = zoomFactor; }
 
     /**
-     * Met à jour la position de la caméra en centrant sur les joueurs suivis.
+     * Updates the Camera's position based on followed players
      */
     public void updatePosition(QuadTree quadtree) {
         ArrayList<PlayerComposite> players = quadtree.getPlayers();
@@ -51,7 +51,7 @@ public class Camera {
     }
 
     /**
-     * Retourne la zone visible en fonction de la position et du zoom de la caméra.
+     * @return the visible zone based on Camera's position and zoom
      */
     public Boundary getVisibleRegion(double screenWidth, double screenHeight) {
         double viewWidth = screenWidth / zoomFactor;

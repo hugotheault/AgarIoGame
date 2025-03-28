@@ -6,6 +6,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class AIChaser implements AIStrategy{
+    /**
+     * Finds the closest MovableObject near the Ai and follows it
+     * If no items are near it, if searches for Pellets
+     */
     @Override
     public HashMap<String,Double> execStrategy(Double x, Double y, QuadTree quadtree,AI ai) {
         HashMap<String,Double> coordinates = new HashMap<>();

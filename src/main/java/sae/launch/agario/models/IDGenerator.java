@@ -11,11 +11,18 @@ public class IDGenerator {
         generator = this;
     }
 
+    /**
+     * @return the next Id available for a new Entity
+     */
     public int NextID() {
         IDcounter += 1;
         return IDcounter;
     }
 
+    /**
+     * Implements the Singleton
+     * @return  the Singleton instance
+     */
     public static IDGenerator getGenerator() {
         if (generator == null) {
             return new IDGenerator();
