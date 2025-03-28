@@ -3,6 +3,7 @@ package sae.launch.agario.models.serverFiles;
 import sae.launch.agario.controllers.OnlineInGameController;
 import sae.launch.agario.models.IDGenerator;
 import sae.launch.agario.models.Player;
+import sae.launch.agario.models.PlayerComposite;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -80,10 +81,16 @@ public class Server {
 				int ID = IDGenerator.getGenerator().NextID();
 				System.out.println("Longueur : " + this.onlineInGameController.getQuadTree().getLength());
 				System.out.println("Largeur : " + this.onlineInGameController.getQuadTree().getHeight());
-				this.onlineInGameController.getPlayers().add(new Player(ID,
+				Player player = new Player(ID,
 						random.nextDouble(this.onlineInGameController.getQuadTree().getLength()),
 						random.nextDouble(this.onlineInGameController.getQuadTree().getHeight()),
-						onlineInGameController.getInitialSize()));
+						onlineInGameController.getInitialSize());
+				PlayerComposite playerC = new PlayerComposite(ID,
+						random.nextDouble(this.onlineInGameController.getQuadTree().getLength()),
+						random.nextDouble(this.onlineInGameController.getQuadTree().getHeight()),
+						onlineInGameController.getInitialSize(), 50 , onlineInGameController.getMapSize());
+				this.onlineInGameController.getPlayers().add(player);
+				this.onlineInGameController.getQuadTree().insert(playerC);
 				this.getPrintWriterList().get(this.getPrintWriterList().size() - 1).write("id:"+ID);
 				this.getPrintWriterList().get(this.getPrintWriterList().size()-1).flush();
 			}

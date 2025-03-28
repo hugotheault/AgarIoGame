@@ -8,6 +8,8 @@ import javafx.scene.shape.Circle;
 import sae.launch.agario.controllers.OnlineInGameController;
 import sae.launch.agario.models.Camera;
 import sae.launch.agario.models.Player;
+import sae.launch.agario.models.PlayerComposite;
+import sae.launch.agario.models.PlayerLeaf;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -63,7 +65,9 @@ public class ClientDataReader extends Thread {
                     //String messageRecu = new String(buffer, 0, bytesRead);
                     Pane p = o.getPane();
                     ArrayList<Circle> circles = new ArrayList<>();
-                    Player player = null;
+                    PlayerComposite playerComposite = null;
+                    PlayerLeaf playerLeaf = null;
+                    Player player=null;
 
                     String[] elements = messageFinal.split("#");
                     String[] playerAttributes = elements[0].split("/");
@@ -76,14 +80,17 @@ public class ClientDataReader extends Thread {
                         if(attribute.contains("id:")) id=Integer.parseInt(attribute.substring(3, attribute.length()));
                         if(attribute.contains("mass:")) mass=Double.parseDouble(attribute.substring(5, attribute.length()));
                     }
-                player = new Player(id, x, y, Math.sqrt(mass));
-                    camera.updatePosition(player);
-                    for(String element: elements){
+
+                    playerLeaf = new PlayerLeaf(id, x, y, mass);
+                playerComposite = new PlayerComposite(id, playerLeaf.getX(), playerLeaf.getY(), mass, mass*2, o.getMapSize());
+                playerComposite.addPlayer(playerLeaf);
+                camera.updatePosition(playerComposite);
+
+                for(String element: elements){
                         String[] attributs = element.split("/");
                         x = 0;
                         y = 0;
                         mass = 0;
-                            Color color;
                             Double red = null;
                             Double green = null;
                             Double blue = null;
@@ -96,12 +103,12 @@ public class ClientDataReader extends Thread {
                                 if(attribut.contains("blue:")) blue=Double.parseDouble(attribut.substring(5, attribut.length()));
                                 if(attribut.contains("mass:")) mass=Double.parseDouble(attribut.substring(5, attribut.length()));
                             }
-                            Circle circle = new Circle((x-camera.getX()+o.getPane().getWidth() / 2)*(o.ratioPane), (y-camera.getY()+o.getPane().getHeight()/2)*(o.ratioPane), Math.sqrt(mass));
+                            Circle circle = new Circle((x-camera.getX()+o.getPane().getWidth() / 2), (y-camera.getY()+o.getPane().getHeight()/2), Math.sqrt(mass));
+                            if(mass>20) System.out.println("MASSE ENORME : " + mass);
                             if(red!=null && green != null && blue != null) {
                                 circle.setFill(Color.color(red, green, blue));
                             }
                         circles.add(circle);
-
                     }
                     Platform.runLater(() -> {
                         p.getChildren().clear();
@@ -109,6 +116,7 @@ public class ClientDataReader extends Thread {
                             p.getChildren().add(circle);
                         }
                     });
+                System.out.println("Coordonnées du joueur : " + playerComposite.getX() + " / " + playerComposite.getY());
 
                     double directionX = o.getPlayerXPercent() - 0.5;
                     double directionY = o.getPlayerYPercent() - 0.5;
@@ -118,8 +126,8 @@ public class ClientDataReader extends Thread {
                         directionY /= magnitude;
                     }
 
-                    double deltaX = Math.round(directionX * player.getSpeed(o.getCoX(), o.getCoY(), o.getPane().getWidth()/2, o.getPane().getHeight()/2) * 1000.0)/1000.0;
-                    double deltaY = Math.round(directionY * player.getSpeed(o.getCoX(), o.getCoY(),o.getPane().getWidth()/2, o.getPane().getHeight()/2) * 1000.0)/1000.0;
+                    double deltaX = Math.round(directionX * playerComposite.getSpeed(o.getCoX(), o.getCoY(), o.getPane().getWidth()/2, o.getPane().getHeight()/2) * 1000.0)/1000.0;
+                    double deltaY = Math.round(directionY * playerComposite.getSpeed(o.getCoX(), o.getCoY(),o.getPane().getWidth()/2, o.getPane().getHeight()/2) * 1000.0)/1000.0;
                     String playerDirection = "deplacement:" + deltaX + "/" + deltaY;
                     pt.write(playerDirection);
                     pt.flush();

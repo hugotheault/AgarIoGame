@@ -29,9 +29,6 @@ import sae.launch.agario.models.serverFiles.Server;
 
 public class OnlineInGameController implements Initializable {
 
-    public static int desiredScreenWidth = 300;
-    public double ratioPane;
-
     private int ID;
 
     private boolean isHost;
@@ -156,12 +153,7 @@ public class OnlineInGameController implements Initializable {
     @Override
     public void initialize(URL u, ResourceBundle r) {
         System.out.println("Initialize");
-        this.ratioPane = pane.getWidth() / desiredScreenWidth;
 
-        pane.widthProperty().addListener((observable, oldValue, newValue) -> {
-            this.ratioPane = newValue.doubleValue() / desiredScreenWidth;
-            System.out.println("Updated ratioPane: " + this.ratioPane);
-        });
 
         pane.setOnMouseMoved(event ->{
             setPlayerXPercent(event.getX() / pane.getWidth());
@@ -180,6 +172,7 @@ public class OnlineInGameController implements Initializable {
     }
 
     private void updateGame() {
+        System.out.println("Updating");
         pelletController.generatePellets(choiceSpecialPellet);
         gameRenderer.updateVisuals(quadTree, players);
 
@@ -189,20 +182,24 @@ public class OnlineInGameController implements Initializable {
     }
 
     private void writeQuadTree() {
-        System.out.println("Nb players : " + quadTree.getAllPlayers().size());
 
         //TODO verifier si la méthode est utile
         for(Player player: players){
             quadTree.remove(player);
             quadTree.insert(player);
         }
+        System.out.println("Nb players : " + quadTree.getAllPlayers().size());
+
+        System.out.println(players.size());
 
         for(int i = 0; i < players.size(); i++){
             Player p = players.get(i);
             quadTree.remove(p);
-            ArrayList<Entity> entities = quadTree.getEntitiesInRegion(p.getX()-desiredScreenWidth/2, p.getY()-desiredScreenWidth/2, p.getX()+desiredScreenWidth/2, p.getY()+desiredScreenWidth/2);
+            ArrayList<Entity> entities = quadTree.getEntitiesInRegion(p.getX()-500, p.getY()-500, p.getX()+500, p.getY()+500);
             StringBuilder s = new StringBuilder();
             s.append(p);
+            System.out.println("x: " + p.getX());
+            System.out.println("nb e,totes : " + entities.size());
             for(Entity e: entities){
                 s.append(e.toStringRounded());
             }
@@ -253,14 +250,14 @@ public class OnlineInGameController implements Initializable {
      */
     private void updatePlayers() {
 
-        for(PlayerComposite joueur: quadTree.getAllPlayers()){
-            for(Entity cible: quadTree.getEntitiesAroundPlayer((PlayerLeaf)joueur.getPlayers())){
-                if(cible.equals(joueur)) continue;
-                if(joueur.canEat(cible)){
-                    joueur.setMass(joueur.getMass()+cible.getMass());
-                    quadTree.remove(cible);
+        for(Player joueur: quadTree.getPlayersN()){
+                for(Entity cible: quadTree.getEntitiesAroundPlayerN(joueur)){
+                    if(cible.equals(joueur)) continue;
+                    if(joueur.canEat(cible)){
+                        joueur.setMass(joueur.getMass()+cible.getMass());
+                        quadTree.remove(cible);
+                    }
                 }
-            }
         }
     }
 

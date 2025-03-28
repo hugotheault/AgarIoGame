@@ -377,5 +377,38 @@ public class QuadTree {
         return players;
 
     }
+    public ArrayList<Player> getPlayersN() {
+        ArrayList<Player> players = new ArrayList<>();
 
+        if (depth == 0) {
+            for (Entity entity : entities) {
+                if (entity instanceof Player) {
+                    players.add((Player) entity);
+                }
+            }
+            return players;
+        }
+        if (NWTree != null) {
+            players.addAll(NWTree.getPlayersN());
+        }
+        if (NETree != null) {
+            players.addAll(NETree.getPlayersN());
+        }
+        if (SWTree != null) {
+            players.addAll(SWTree.getPlayersN());
+        }
+        if (SETree != null) {
+            players.addAll(SETree.getPlayersN());
+        }
+
+        return players;
+
+    }
+
+    public ArrayList<Entity> getEntitiesAroundPlayerN(Player joueur) {
+        double radius = 2 * joueur.getRadius();
+        Boundary searchArea = new Boundary(joueur.getX() - radius, joueur.getY() - radius,
+                2 * radius, 2 * radius);
+        return getEntitiesInRegion(searchArea);
+    }
 }

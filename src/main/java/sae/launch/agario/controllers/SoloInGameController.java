@@ -247,9 +247,13 @@ public class SoloInGameController implements Initializable {
     private void updatePlayers() {
 
         for(PlayerComposite player: quadTree.getPlayers()){
-            if (player instanceof PlayerComposite composite && composite.canMerge() && composite.canMergeByDistance()) {
-                composite.mergeClosestParts();
-            } else {
+            if (player instanceof PlayerComposite) {
+                PlayerComposite composite = (PlayerComposite) player;
+                if (composite.canMerge() && composite.canMergeByDistance()) {
+                    composite.mergeClosestParts();
+                }
+            }
+            else {
                 player.handleCollisions();
                 //Update position du joueur principal
                 double directionX = playerXPercent - 0.5;

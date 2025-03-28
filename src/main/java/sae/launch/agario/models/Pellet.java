@@ -30,10 +30,10 @@ public class Pellet extends Entity {
 
     @Override
     public String toString(){
-        return "id:"+this.getID()+"/cox:"+this.getX()+"/coy:"+this.getY()+"/mass:"+this.getRadius()+"#";
+        return "id:"+this.getID()+"/cox:"+Math.round(this.getX())+"/coy:"+Math.round(this.getY())+"/mass:"+Math.round(this.getMass())+"/red:"+Math.round(color.getRed()*100.0)/100.0+"/blue:"+Math.round(color.getBlue()*100.0)/100.0+"/green:"+Math.round(color.getGreen()*100.0)/100.0+"#";
     }
     public String toStringRounded(){
-        return "id:"+this.getID()+"/cox:"+Math.round(this.getX())+"/coy:"+Math.round(this.getY())+"/mass:"+Math.round(this.getRadius())+"#";
+        return "id:"+this.getID()+"/cox:"+Math.round(this.getX())+"/coy:"+Math.round(this.getY())+"/mass:"+Math.round(this.getMass())+"/red:"+Math.round(color.getRed()*100.0)/100.0+"/blue:"+Math.round(color.getBlue()*100.0)/100.0+"/green:"+Math.round(color.getGreen()*100.0)/100.0+"#";
     }
 
 }
