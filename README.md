@@ -28,10 +28,10 @@ Sur la branche choixSpecialPellet, on peut voir le bon fonctionnement des IAs en
   ```
 
 ### Lancement du jeu
-   Pour lancer le jeu il vous suffit de vous mettre dans le fichier src/main/java/sae/launch/agario/models/App.java, et de lancer le projet.
-   Si vous souhaiter héberger un serveur et jouer sur la meme machine il suffit de lancer deux configurations qui lancent le même projet, et vous connecter
+- Pour lancer le jeu il vous suffit de vous mettre dans le fichier src/main/java/sae/launch/agario/models/App.java, et de lancer le projet.
+- Si vous souhaiter héberger un serveur et jouer sur la meme machine il suffit de lancer deux configurations qui lancent le même projet, et vous connecter
    au serveur avec 127.0.0.1 (car c'est vous l'hôte) et 8081 en port.
-   Pour rejoindre un serveur, il faut entrer l'ip de la machine du serveur et entrer 8081 comme port.
+- Pour rejoindre un serveur, il faut entrer l'ip de la machine du serveur et entrer 8081 comme port.
 
 
 ## Fonctionnalités implémentés
@@ -47,21 +47,21 @@ Sur la branche choixSpecialPellet, on peut voir le bon fonctionnement des IAs en
 ### Explication des IAs
 Il existe 3 type d'IA :
 - IA aléatoire
-  Cette IA ce déplace aléatoirement dans la map, sans avoir de réel but.
+-    Cette IA ce déplace aléatoirement dans la map, sans avoir de réel but.
 - IA récolteuse
-  Cette IA cherche à manger le plus de pastilles possible, ainsi elle ne vous mangera pas, sauf si vous vous mettez devant elle bien sûr.
+-    Cette IA cherche à manger le plus de pastilles possible, ainsi elle ne vous mangera pas, sauf si vous vous mettez devant elle bien sûr.
 - IA chasseuse
-  Cette IA cherche à tout prix à vous manger. Si malheuresement elle est encore trop petite pour vous manger, elle ne va pas venir vers vous pour mourir mais
+-    Cette IA cherche à tout prix à vous manger. Si malheuresement elle est encore trop petite pour vous manger, elle ne va pas venir vers vous pour mourir mais
   elle va aller chercher des pastilles pour ensuite venir vous manger dès qu'elle sera assez grosse. Elle se transforme en quelque sorte en une IA récolteuse.
 
 ### Explications des pastilles spéciales
 Il existe 4 type de pastilles spéciales :
 - Boost de vitesse (x2)
-   Augmentation de la vitesse pendant quelques secondes.
+-    Augmentation de la vitesse pendant quelques secondes.
 - Ralentissement (x0.5)
-   Diminution de la vitesse pendant quelques secondes.
+-    Diminution de la vitesse pendant quelques secondes.
 - Invisibilité
-  Cela rend le joueur invisible à la vue des IA, donc surtout pour les IA chasseuse. Vous ne serais donc pas poursuivis pendant quelques secondes.
+-    Cela rend le joueur invisible à la vue des IA, donc surtout pour les IA chasseuse. Vous ne serais donc pas poursuivis pendant quelques secondes.
 - Division (non implémentée mais pastilles existantes donc elles donnent juste de la nouriture)
 
 ## Contributeurs
